@@ -1,103 +1,98 @@
-import Image from "next/image";
+// pages/index.tsx
+"use client"
+import { useEffect, useState } from 'react';
 
-export default function Home() {
+import type { NextPage } from 'next';
+import type { AiToolCategory, AiTool } from '../types/type';
+import { getPopularCategories,getLatestTools } from '@/lib/supabase/services/service';
+
+const Home: NextPage = () => {
+  const [popularCategories, setPopularCategories] = useState<AiToolCategory[]>([]);
+  const [latestTools, setLatestTools] = useState<AiTool[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchHomePageData() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const { data: popularCategoriesData, error: popularCategoriesError } = await getPopularCategories(5);
+        if (popularCategoriesError) {
+          console.error('Erreur lors de la récupération des catégories populaires :', popularCategoriesError);
+          setError('Erreur lors du chargement des données.');
+        } else {
+          setPopularCategories(popularCategoriesData || []);
+        }
+
+        const { data: latestToolsData, error: latestToolsError } = await getLatestTools(8);
+        if (latestToolsError) {
+          console.error('Erreur lors de la récupération des derniers outils :', latestToolsError);
+          setError('Erreur lors du chargement des données.');
+        } else {
+          setLatestTools(latestToolsData || []);
+        }
+      } catch (err) {
+        console.error('Erreur inattendue lors de la récupération des données :', err);
+        setError('Erreur inattendue lors du chargement des données.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchHomePageData();
+  }, []);
+
+  if (loading) {
+    return <div>Chargement des données...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="container mx-auto py-8">
+      <header className="text-center mb-8">
+        <h1 className="text-4xl font-bold mb-4">Le plus grand annuaire d'IA au monde</h1>
+        <p className="text-lg text-gray-700 mb-6">Découvrez les IA qui vont transformer votre travail.</p>
+        <input type="text" placeholder="Rechercher des outils IA..." className="w-full md:w-1/2 px-4 py-2 border rounded-md" />
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Catégories Populaires</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {popularCategories.map(category => (
+            <div key={category.id} className="bg-gray-100 rounded-md p-4 text-center">
+              <a href={`/outils?category=${category.slug}`} className="text-blue-500 hover:underline">{category.name}</a>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
+      </section>
+
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Derniers Outils Ajoutés</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {latestTools.map(tool => (
+            <div key={tool.id} className="bg-white rounded-md shadow-md p-4">
+              <div className="flex items-center mb-2">
+                {tool.logo_url && <img src={tool.logo_url} alt={`${tool.name} logo`} className="w-8 h-8 mr-2" />}
+                <h3 className="text-xl font-semibold"><a href={`/tools/${tool.slug}`} className="text-blue-500 hover:underline">{tool.name}</a></h3>
+              </div>
+              {tool.description_short && <p className="text-gray-600 text-sm">{tool.description_short}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="text-center">
+        <a href="/outils" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full">
+          Découvrez tous les outils IA
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
