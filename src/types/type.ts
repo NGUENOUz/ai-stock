@@ -17,7 +17,7 @@ export interface AiTool {
   logo_url?: string;
   website_url?: string; // URL du site de l'IA
   is_featured?: boolean;
-  category_id?: string | null;
+  categories?: string[] | null;
   description_long?: string;
   // ... potentiellement d'autres champs
 }

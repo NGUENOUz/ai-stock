@@ -31,7 +31,18 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
     }
   };
 
+   const truncateDescription = (text: string | null, maxLength: number) => {
+    if (!text) return "Aucune description courte disponible.";
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
+  // Définis l'URL de la page de détails
+  const detailPageUrl = `/liste/${tool.slug}`;
+
   return (
+
+    <Link href={detailPageUrl} className="block cursor-pointer">
     <CardContainer className="inter-var">
       <CardBody
         className="
@@ -41,7 +52,7 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
           dark:bg-black
           dark:border-white/[0.2]
           border-black/[0.1]
-          w-auto sm:w-[24rem] h-auto
+          w-auto sm:w-[18rem] h-auto 
           rounded-xl p-6 border
           flex flex-col
           justify-between
@@ -72,7 +83,7 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
           <div className="flex-grow"> {/* Permet au texte de prendre l'espace */}
             <CardItem
               translateZ="50"
-              className="text-2xl font-bold text-neutral-200 dark:text-white flex items-center" // flex pour aligner titre et badge
+              className="text-1xl font-bold text-neutral-200 dark:text-white flex items-center" // flex pour aligner titre et badge
             >
               {tool.name}
               {/* Badge "Verified" - Visible uniquement si l'IA est "featured" (premium) */}
@@ -99,24 +110,25 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
         </div>
          {/* Bannière de l'ia */}
 
-         <CardItem translateZ="100" className="w-full mt-4">
+         <CardItem translateZ="100" className="w-full mt-4 h-30">
          <Image
            src={tool.ban_url}
-            height={100}
-            width={100}
-            className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+            height={200}
+            width={200}
+            className="h-30 w-full object-cover rounded-xl group-hover/card:shadow-xl"
             alt="thumbnail"
           />
         </CardItem>
 
         {/* Mini-Description */}
-        <CardItem
-          as="p"
-          translateZ="60"
-          className="text-neutral-300 text-sm mt-4 dark:text-neutral-300 flex-grow"
-        >
-          {tool.description_short || "Aucune description courte disponible."}
-        </CardItem>
+        
+       <CardItem
+            as="p"
+            translateZ="60"
+            className="text-neutral-300 text-sm mt-4 dark:text-neutral-300 flex-grow"
+          >
+            {truncateDescription(tool.description_short, 40)} {/* Augmenté à 60 pour un peu plus de contexte, tu peux ajuster */}
+          </CardItem>
 
         {/* Boutons "En savoir plus" et "Visiter" */}
         <div className="flex justify-between items-center mt-6">
@@ -144,5 +156,6 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
         </div>
       </CardBody>
     </CardContainer>
+    </Link>
   );
 };
