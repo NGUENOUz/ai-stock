@@ -1,4 +1,4 @@
-// src/app/liste/page.tsx
+// src/app/liste/[categorySlug]/page.tsx
 import React from 'react';
 
 import { AiToolCategory } from '@/types/type';
@@ -13,12 +13,13 @@ import { getUniquePricingModels } from '@/lib/supabase/services/getpricing';
 import { getFeaturedTools } from '@/lib/supabase/services/service';
 import { getAllCategories, getFilteredTools, getActiveAds, getFeaturedCourses } from '@/lib/supabase/services/serviceList';
 import { PaginationControls } from '@/components/paginationControl';
-// import "../style.scss";
 
-interface ListePageProps {
+interface CategoryPageProps {
+  params: {
+    categorySlug: string;
+  };
   searchParams: {
     q?: string;
-    categories?: string;
     pricing?: string;
     page?: string;
   };
@@ -26,15 +27,12 @@ interface ListePageProps {
 
 const ITEMS_PER_PAGE = 20;
 
-export default async function ListePage({ searchParams }: ListePageProps) {
+export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
+  const { categorySlug } = params;
   const query = searchParams.q || '';
-  const selectedCategorySlug = searchParams.categories || 'all'; // Une seule catégorie sélectionnée à la fois
   const selectedPricingModels = searchParams.pricing?.split(',') || [];
   const currentPage = parseInt(searchParams.page || '1', 10);
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
-  // Prépare le tableau de catégories à passer à getFilteredTools
-  const categoriesToFilter = selectedCategorySlug !== 'all' ? [selectedCategorySlug] : undefined;
 
   // Récupération parallèle des données
   const [
@@ -49,7 +47,7 @@ export default async function ListePage({ searchParams }: ListePageProps) {
     getUniquePricingModels(), // Appelle la nouvelle fonction
     getFilteredTools({
       query: query,
-      categories: categoriesToFilter, // Passe la catégorie sélectionnée (ou undefined si 'all')
+      categories: [categorySlug], // La catégorie de l'URL est le filtre initial
       pricing: selectedPricingModels,
       limit: ITEMS_PER_PAGE,
       offset: offset,
@@ -62,28 +60,30 @@ export default async function ListePage({ searchParams }: ListePageProps) {
 
   if (categoriesError) console.error("Erreur lors du chargement des catégories:", categoriesError);
   if (pricingModelsError) console.error("Erreur lors du chargement des modèles de prix:", pricingModelsError);
-  if (toolsError) return <div className="text-center text-red-400 py-10">Erreur lors du chargement des outils IA.</div>;
+  if (toolsError) return <div className="text-center text-red-400 py-10">Erreur lors du chargement des outils IA pour cette catégorie.</div>;
   if (adsError) console.error("Erreur lors du chargement des publicités:", adsError);
   if (featuredToolsError) console.error("Erreur lors du chargement des outils en vogue:", featuredToolsError);
   if (coursesError) console.error("Erreur lors du chargement des formations:", coursesError);
 
+  const currentCategory = allCategories?.find(cat => cat.slug === categorySlug);
+  const title = currentCategory ? `IA dans la catégorie "${currentCategory.name}"` : `IA par catégorie`;
+
   const totalPages = Math.ceil((totalToolsCount || 0) / ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white ">
+    <div className="min-h-screen bg-gray-900 text-white">
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">
-          Découvrez les Meilleures Intelligences Artificielles
-        </h1>
-
+        <h1 className="text-4xl font-bold text-white mb-8 text-center">{title}</h1>
+        
         <AdBannerSlider ads={activeAds || []} />
 
-        {/* Passer allPricingModels à SearchAndFilterBar */}
+        {/* Passer allPricingModels et la catégorie initiale à SearchAndFilterBar */}
         <SearchAndFilterBar
           allCategories={allCategories || []}
           allPricingModels={allPricingModels || []}
+          initialSelectedCategorySlug={categorySlug} // Pré-sélectionne la catégorie de l'URL
         />
-
+        
         <section className="mb-12">
           <AiToolList tools={tools || []} />
 
@@ -104,4 +104,11 @@ export default async function ListePage({ searchParams }: ListePageProps) {
       </main>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const { data: categories } = await getAllCategories();
+  return categories?.map((category) => ({
+    categorySlug: category.slug,
+  })) || [];
 }

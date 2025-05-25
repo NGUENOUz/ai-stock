@@ -1,3 +1,4 @@
+
 // src/services/supabase.ts
 import { AiTool, AiToolCategory } from "@/types/type";
 import { supabase } from "../supabaseClient";

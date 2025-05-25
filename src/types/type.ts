@@ -21,3 +21,31 @@ export interface AiTool {
   description_long?: string;
   // ... potentiellement d'autres champs
 }
+
+export interface Ads {
+  id: string;
+  title: string;
+  description: string | null;
+  image_url: string;
+  target_url: string;
+  is_active: boolean;
+  order: number; // Pour définir l'ordre d'affichage dans le slider
+}
+export interface Formations {
+  id: string;
+  title: string;
+  description: string;
+  level:string;
+  format:string;
+  image_url: string;
+  details_url: string; // URL vers la page de détails de la formation
+  is_featured: boolean;
+}
+
+export interface PaginatedTools {
+   tools: AiTool[];
+  totalCount: number;
+   currentPage: number;
+   totalPages: number;
+ }
+

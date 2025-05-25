@@ -5,7 +5,7 @@ export default function HeaderComponent() {
     const navItems = [
     {
       name: "Liste des AI",
-      link: "#features",
+      link: "/liste",
     },
     {
       name: "prompts populaires",

@@ -9,7 +9,7 @@ import {
 } from "motion/react";
 
 import React, { useRef, useState } from "react";
-
+import { usePathname } from "next/navigation"; // Importe usePathname pour obtenir le chemin actuel
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -115,6 +115,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const pathname = usePathname(); // <-- Récupère le chemin de l'URL actuelle
 
   return (
     <motion.div
@@ -124,23 +125,51 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         className,
       )}
     >
-      {items.map((item, idx) => (
-        <a
-          onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          className="relative px-4 py-1 text-neutral-600 dark:text-neutral-300"
-          key={`link-${idx}`}
-          href={item.link}
-        >
-          {hovered === idx && (
-            <motion.div
-              layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"
-            />
-          )}
-          <span className="relative z-20">{item.name}</span>
-        </a>
-      ))}
+      {items.map((item, idx) => {
+        // Détermine si l'élément actuel est la page active
+        const isActive = item.link === pathname;
+        // Gère les cas spéciaux pour la page d'accueil si nécessaire
+        // Exemple: si item.link est '/' et pathname est '/liste', tu pourrais vouloir que 'Accueil' ne soit pas actif
+        // ou si '/liste' est actif, mais pathname est '/liste/category-slug', tu pourrais vouloir que '/liste' reste actif.
+        // Pour une correspondance exacte, 'item.link === pathname' est suffisant.
+        // Si tu veux une correspondance partielle (ex: /liste doit être actif pour /liste/category-slug),
+        // tu peux utiliser `pathname.startsWith(item.link)` pour des chemins racines.
+        // Pour cet exemple, on va utiliser une correspondance exacte ou une correspondance de base pour '/'.
+        const isHomePage = item.link === '/';
+        const isCurrentPage = isActive || (isHomePage && pathname === '/');
+
+        return (
+          <a
+            onMouseEnter={() => setHovered(idx)}
+            onClick={onItemClick}
+            className={cn(
+              "relative px-4 py-1 text-neutral-600 dark:text-neutral-300",
+              // Applique le style de focus si c'est la page active
+              isCurrentPage && "font-bold text-black dark:text-white" // Rendre le texte plus visible
+            )}
+            key={`link-${idx}`}
+            href={item.link}
+          >
+            {/* Le background de focus pour le hover */}
+            {hovered === idx && (
+              <motion.div
+                layoutId="hovered"
+                className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"
+              />
+            )}
+            {/* Le background de focus pour la page active */}
+            {isCurrentPage && (
+                <motion.div
+                    layoutId="active-nav-item" // Un layoutId différent pour éviter les conflits avec le hover
+                    className="absolute inset-0 h-full w-full rounded-full bg-gray-200 dark:bg-gray-700" // Couleur de fond pour l'élément actif
+                    initial={false} // Empêche l'animation initiale si tu veux qu'il soit directement là
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                />
+            )}
+            <span className="relative z-20">{item.name}</span>
+          </a>
+        );
+      })}
     </motion.div>
   );
 };
@@ -197,6 +226,8 @@ export const MobileNavMenu = ({
   isOpen,
   onClose,
 }: MobileNavMenuProps) => {
+  const pathname = usePathname(); // <-- Récupère le chemin actuel pour le mobile
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -209,7 +240,19 @@ export const MobileNavMenu = ({
             className,
           )}
         >
-          {children}
+          {React.Children.map(children, (child) => {
+            if (React.isValidElement(child) && child.type === 'a') { // Assumons que les items sont des <a>
+              const isCurrentPage = (child.props.href === pathname) || (child.props.href === '/' && pathname === '/');
+              return React.cloneElement(child, {
+                className: cn(
+                  child.props.className,
+                  isCurrentPage ? "bg-orange-200 dark:bg-ornge-700 rounded-lg" : "", // Applique le bg gris pour le mobile
+                  "w-full px-4 py-2" // Pour que le fond remplisse bien l'item
+                )
+              });
+            }
+            return child;
+          })}
         </motion.div>
       )}
     </AnimatePresence>
@@ -231,13 +274,15 @@ export const MobileNavToggle = ({
 };
 
 export const NavbarLogo = () => {
+  const pathname = usePathname(); // Pour s'assurer que le logo est toujours cliquable vers la page d'accueil
+
   return (
     <a
-      href="#"
+      href="/" // Change le lien en '/' pour la page d'accueil
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
     >
       <img
-        src="https://assets.aceternity.com/logo-dark.png"
+        src="https://assets.aceternity.com/logo-dark.png" // Utilise ton propre logo si tu en as un
         alt="logo"
         width={30}
         height={30}
@@ -271,7 +316,7 @@ export const NavbarButton = ({
     primary:
       "shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
     secondary: "bg-transparent shadow-none dark:text-white",
-    dark: "bg-black text-white shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
+    dark: "bg-black text-white shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0_04),_0_0_4px_rgba(34,_42,_53,_0_08),_0_16px_68px_rgba(47,_48,_55,_0_05),_0_1px_0_rgba(255,_255,_255,_0_1)_inset]",
     gradient:
       "bg-gradient-to-b from-yellow-500 to-orange-700 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset]",
   };

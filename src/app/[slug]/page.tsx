@@ -8,8 +8,8 @@ import { AiTool } from '@/types/type';
 import { AiToolCard } from '@/components/AiToolCard';
 import { ThreeDMarquee } from "@/components/maquette"; // Pour le carrousel des suggestions
 import { getAiToolBySlug, getFeaturedTools, getRelatedAiToolsByCategory } from '@/lib/supabase/services/service';
-import HeaderComponent from '../../../components/header';
-import "../../liste/style.scss"
+import HeaderComponent from '../../components/header';
+import "../style.scss"
 import { AiToolCarousel } from '@/components/aiToolsCaroussel';
 
 

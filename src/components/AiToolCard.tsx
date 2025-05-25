@@ -16,6 +16,7 @@ interface AiToolCardProps {
 export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
   // Optionnel: chemin vers un logo par défaut si tool.logo_url est nul ou vide
   const defaultLogo = '/path/to/default-ai-logo.svg'; // REMPLACE CECI avec ton chemin réel
+  const flameGifUrl = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWdrZDFyaW82cnJyazYwN3Znb24wc3Y1bjhldHdhNWhldXZ4aWZkdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/UqUHuT6y9mK5HfsYFm/giphy.gif";
   const getPricingTagClasses = (model: string | null) => {
     switch (model) {
       case 'Gratuit':
@@ -38,7 +39,7 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
   };
 
   // Définis l'URL de la page de détails
-  const detailPageUrl = `/liste/${tool.slug}`;
+  const detailPageUrl = `/${tool.slug}`;
 
   return (
 
@@ -80,8 +81,8 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
           </CardItem>
 
           {/* Nom de l'IA et Badge Vérifié */}
-          <div className="flex-grow"> {/* Permet au texte de prendre l'espace */}
-            <CardItem
+          <div className=""> {/* Permet au texte de prendre l'espace */}
+             <div><CardItem
               translateZ="50"
               className="text-1xl font-bold text-neutral-200 dark:text-white flex items-center" // flex pour aligner titre et badge
             >
@@ -92,9 +93,10 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
                    <VerifiedIcon/>
                 </span>
               )}
-            </CardItem>
-             {/* Étiquette de Tarification */}
-             <CardItem
+            </CardItem></div>
+
+            <div className='flex row'>
+              <CardItem
               as="span"
               translateZ="20"
               className={`
@@ -104,8 +106,23 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
                 ${getPricingTagClasses(tool.pricing)}
               `}
             >
-              {tool.pricing || 'Non spécifié'}
+             {tool.pricing || 'N/A'} {/* Affiche le prix ou "N/A" si non défini */}
             </CardItem>
+
+              {tool.is_featured && ( // Condition pour afficher la flamme
+            <Image
+              src={flameGifUrl}
+              alt="En vogue"
+              width={15}  // Taille de la flamme
+              height={15} // Taille de la flamme
+              className="ml-1"
+              unoptimized={true} // Important pour les GIFs, Next.js ne peut pas les optimiser par défaut
+            />
+          )}
+            </div>
+             {/* Étiquette de Tarification */}
+             
+           
           </div>
         </div>
          {/* Bannière de l'ia */}
@@ -135,7 +152,7 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
           <CardItem
             translateZ={20}
             as={Link}
-            href={`/liste/${tool.slug}`}
+            href={`/${tool.slug}`}
             className="px-4 py-2 rounded-xl text-xs font-normal text-blue-400 hover:text-blue-500 transition-colors duration-200"
           >
             En savoir plus →
