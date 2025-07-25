@@ -6,7 +6,7 @@ import { supabase } from "../supabaseClient";
 
 export async function getPopularCategories(limit: number = 5): Promise<{ data: AiToolCategory[] | null; error: any }> {
   const { data, error } = await supabase
-    .from<AiToolCategory>('ai_tool_categorie') // Assuming 'ai_tool_categorie' is a separate table for categories
+    .from('ai_tool_categorie') // Assuming 'ai_tool_categorie' is a separate table for categories
     .select('id, name, slug')
     .limit(limit);
 
@@ -15,8 +15,8 @@ export async function getPopularCategories(limit: number = 5): Promise<{ data: A
 
 export async function getLatestTools(limit: number = 8): Promise<{ data: AiTool[] | null; error: any }> {
   const { data, error } = await supabase
-    .from<AiTool>('ai_tools')
-    .select('id, name, slug, description_short, logo_url')
+    .from('ai_tools')
+    .select('id, name, slug, description_short, logo_url, pricing')
     .order('created_at', { ascending: false })
     .limit(limit);
 
@@ -25,14 +25,14 @@ export async function getLatestTools(limit: number = 8): Promise<{ data: AiTool[
 
 export async function getAllTools(): Promise<{ data: AiTool[] | null; error: any }> {
   const { data, error } = await supabase
-    .from<AiTool>('ai_tools')
+    .from('ai_tools')
     .select('id, name, slug, description_short, logo_url, website_url, ban_url, pricing, is_featured, categories'); // Inclure 'categories' ici aussi
   return { data, error };
 }
 
 export async function getFeaturedTools(limit: number = 4): Promise<{ data: AiTool[] | null; error: any }> {
   const { data, error } = await supabase
-    .from<AiTool>('ai_tools')
+    .from('ai_tools')
     .select('id, name, slug, description_short, logo_url, website_url, ban_url, pricing, is_featured, categories') // Assurez-vous d'inclure 'categories' si c'est pertinent
     .eq('is_featured', true)
     .order('created_at', { ascending: false })
@@ -44,7 +44,7 @@ export async function getFeaturedTools(limit: number = 4): Promise<{ data: AiToo
 // NOUVELLE FONCTION: Récupérer un outil par son slug
 export async function getAiToolBySlug(slug: string): Promise<{ data: AiTool | null; error: any }> {
   const { data, error } = await supabase
-    .from<AiTool>('ai_tools')
+    .from('ai_tools')
     .select('id, name, slug, description_short, logo_url, description_long, website_url, ban_url, pricing, is_featured, categories') // Utilisation de 'pricing' et inclusion de 'categories'
     .eq('slug', slug)
     .single();
@@ -76,7 +76,7 @@ export async function getRelatedAiToolsByCategory(currentToolCategories: string[
   }
 
   const { data, error } = await supabase
-    .from<AiTool>('ai_tools')
+    .from('ai_tools')
     // S'assurer que la chaîne de sélection est compacte et sans saut de ligne inutile
     .select('id, name, slug, description_short, logo_url, website_url, is_featured, pricing, ban_url, categories')
     .overlaps('categories', currentToolCategories)

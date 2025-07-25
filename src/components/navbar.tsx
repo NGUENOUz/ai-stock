@@ -1,12 +1,12 @@
-"use client";
+"use client"; // Cette directive est cruciale et déjà présente, c'est bien.
 import { cn } from "@/lib/utils";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import {
-  motion,
-  AnimatePresence,
+  motion, // <--- Change l'importation ici
+  AnimatePresence, // <--- Change l'importation ici
   useScroll,
   useMotionValueEvent,
-} from "motion/react";
+} from "framer-motion"; // <--- IMPORTE DEPUIS 'framer-motion'
 
 import React, { useRef, useState } from "react";
 import { usePathname } from "next/navigation"; // Importe usePathname pour obtenir le chemin actuel
@@ -236,23 +236,23 @@ export const MobileNavMenu = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-white px-4 py-8 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] dark:bg-neutral-950",
+            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-white px-4 py-8 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0_04),_0_0_4px_rgba(34,_42,_53,_0_08),_0_16px_68px_rgba(47,_48,_55,_0_05),_0_1px_0_rgba(255,_255,_255,_0_1)_inset] dark:bg-neutral-950",
             className,
           )}
         >
-          {React.Children.map(children, (child) => {
+          {/* {React.Children.map(children, (child) => {
             if (React.isValidElement(child) && child.type === 'a') { // Assumons que les items sont des <a>
               const isCurrentPage = (child.props.href === pathname) || (child.props.href === '/' && pathname === '/');
               return React.cloneElement(child, {
                 className: cn(
                   child.props.className,
-                  isCurrentPage ? "bg-orange-200 dark:bg-ornge-700 rounded-lg" : "", // Applique le bg gris pour le mobile
+                  isCurrentPage ? "bg-orange-200 dark:bg-orange-700 rounded-lg" : "", // Applique le bg gris pour le mobile
                   "w-full px-4 py-2" // Pour que le fond remplisse bien l'item
                 )
               });
             }
             return child;
-          })}
+          })} */}
         </motion.div>
       )}
     </AnimatePresence>

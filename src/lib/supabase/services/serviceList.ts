@@ -5,7 +5,7 @@ import { AiTool, AiToolCategory, Ads, Formations } from '@/types/type'; // Assur
 // ... (vos fonctions existantes : getAllCategories, getFilteredTools, getFeaturedTools, getRelatedAiToolsByCategory)
 export async function getAllCategories(): Promise<{ data: AiToolCategory[] | null; error: any }> {
   const { data, error } = await supabase
-    .from<AiToolCategory>('ai_tool_categorie') // <<< TRÈS IMPORTANT : Assurez-vous que 'ai_tool_categorie' est le nom exact de votre table de catégories dans Supabase.
+    .from('ai_tool_categorie') // <<< TRÈS IMPORTANT : Assurez-vous que 'ai_tool_categorie' est le nom exact de votre table de catégories dans Supabase.
     .select('id, name, slug'); // Sélectionne les colonnes nécessaires pour les catégories
 
   if (error) {
@@ -17,17 +17,31 @@ export async function getAllCategories(): Promise<{ data: AiToolCategory[] | nul
 // NOUVEAU : Fonction pour récupérer les publicités actives
 export async function getActiveAds(): Promise<{ data: Ads[] | null; error: any }> {
   const { data, error } = await supabase
-    .from<Ads>('ads') // Assurez-vous que le nom de votre table est 'ads'
-    .select('titre, image_url, target_url, is_active')
-    .eq('is_active', true) // Ne récupérer que les publicités actives
-    .order('order', { ascending: true }); // Trier par un champ 'order' si tu veux contrôler l'ordre
-  return { data, error };
+    .from('ads')
+    .select('id, titre, description, image_url, target_url, is_active, order')
+    .eq('is_active', true)
+    .order('order', { ascending: true });
+
+  // Map French property names to English as expected by Ads type
+  const mappedData = data
+    ? data.map((ad: any) => ({
+        id: ad.id,
+        title: ad.titre,
+        description: ad.description,
+        image_url: ad.image_url,
+        target_url: ad.target_url,
+        is_active: ad.is_active,
+        order: ad.order
+      }))
+    : null;
+
+  return { data: mappedData, error };
 }
 
 // NOUVEAU : Fonction pour récupérer les formations (par exemple, les formations "en vedette")
 export async function getFeaturedCourses(limit: number = 3): Promise<{ data: Formations[] | null; error: any }> {
   const { data, error } = await supabase
-    .from<Formations>('formations') // Assurez-vous que le nom de votre table est 'courses'
+    .from('formations') // Assurez-vous que le nom de votre table est 'courses'
     .select('*')
     .eq('is_featured', true) // Ou un autre critère pour les "meilleures" formations
     .limit(limit);
@@ -50,9 +64,9 @@ export async function getFilteredTools({
   offset?: number;
   includeCount?: boolean; // Nouveau type
 }): Promise<{ data: AiTool[] | null; count: number | null; error: any }> { // Le type de retour a changé
-  let dbQuery = supabase.from<AiTool>('ai_tools').select(
+  let dbQuery = supabase.from('ai_tools').select(
    'id, name, slug, description_short, logo_url, website_url, is_featured, pricing, ban_url, categories',
-    { count: includeCount ? 'exact' : null } // Permet de demander le count conditionnellement
+    { count: includeCount ? 'exact' : undefined } // Permet de demander le count conditionnellement
   );
 
   if (query) {
