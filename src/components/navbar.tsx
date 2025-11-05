@@ -1,15 +1,16 @@
-"use client"; // Cette directive est cruciale et déjà présente, c'est bien.
+"use client";
 import { cn } from "@/lib/utils";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import {
-  motion, // <--- Change l'importation ici
-  AnimatePresence, // <--- Change l'importation ici
+  motion,
+  AnimatePresence,
   useScroll,
   useMotionValueEvent,
-} from "framer-motion"; // <--- IMPORTE DEPUIS 'framer-motion'
+} from "framer-motion";
 
 import React, { useRef, useState } from "react";
-import { usePathname } from "next/navigation"; // Importe usePathname pour obtenir le chemin actuel
+import { usePathname } from "next/navigation";
+import Link from "next/link"; // <-- IMPORTANT: Utilisation de Link de Next.js
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -43,12 +44,19 @@ interface MobileNavHeaderProps {
 }
 
 interface MobileNavMenuProps {
-  children: React.ReactNode;
+  children?: React.ReactNode; // Rendu de contenu supplémentaire optionnel
   className?: string;
   isOpen: boolean;
   onClose: () => void;
+  // Nouvelle prop requise pour les liens de navigation
+  items: { name: string; link: string }[];
+  // Nouvelle prop requise pour les boutons d'action (login/logout/signup)
+  mobileActions: React.ReactNode; 
 }
 
+// ---------------------------
+// 1. NAVBAR (FIXE)
+// ---------------------------
 export const Navbar = ({ children, className }: NavbarProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll({
@@ -68,8 +76,8 @@ export const Navbar = ({ children, className }: NavbarProps) => {
   return (
     <motion.div
       ref={ref}
-      // IMPORTANT: Change this to class of `fixed` if you want the navbar to be fixed
-      className={cn("sticky inset-x-0 top-20 z-40 w-full", className)}
+      // Changement: 'sticky top-10' -> 'fixed top-0 pt-10' pour la position fixe
+      className={cn("fixed inset-x-0 top-0 z-40 w-full ", className)}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
@@ -83,6 +91,11 @@ export const Navbar = ({ children, className }: NavbarProps) => {
   );
 };
 
+// ---------------------------
+// 2. NAVBODY (DESKTOP - GLASSMORHPISM)
+// ---------------------------
+// navbar.tsx (composant NavBody)
+
 export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   return (
     <motion.div
@@ -92,7 +105,8 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
           ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
           : "none",
         width: visible ? "70%" : "100%",
-        y: visible ? 20 : 0,
+        // AVANT: y: visible ? 20 : 0, - ON LE GARDE POUR LA RETRACTION DU HEADER AU SCROLL
+        y: visible ? 20 : 0, 
       }}
       transition={{
         type: "spring",
@@ -104,7 +118,9 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
       }}
       className={cn(
         "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex dark:bg-transparent",
-        visible && "bg-white/80 dark:bg-neutral-950/80",
+        visible && "bg-white/50 dark:bg-neutral-950/50 backdrop-blur-sm",
+        // AJOUTER une marge supérieure conditionnelle si la navbar n'est PAS visible (pour la vue initiale)
+        !visible && "mt-5", // Ajoute la marge de 10 unités seulement au départ (quand visible est false)
         className,
       )}
     >
@@ -113,9 +129,12 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   );
 };
 
+// ---------------------------
+// 3. NAVITEMS (LIENS DESKTOP)
+// ---------------------------
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
-  const pathname = usePathname(); // <-- Récupère le chemin de l'URL actuelle
+  const pathname = usePathname();
 
   return (
     <motion.div
@@ -126,26 +145,16 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       )}
     >
       {items.map((item, idx) => {
-        // Détermine si l'élément actuel est la page active
-        const isActive = item.link === pathname;
-        // Gère les cas spéciaux pour la page d'accueil si nécessaire
-        // Exemple: si item.link est '/' et pathname est '/liste', tu pourrais vouloir que 'Accueil' ne soit pas actif
-        // ou si '/liste' est actif, mais pathname est '/liste/category-slug', tu pourrais vouloir que '/liste' reste actif.
-        // Pour une correspondance exacte, 'item.link === pathname' est suffisant.
-        // Si tu veux une correspondance partielle (ex: /liste doit être actif pour /liste/category-slug),
-        // tu peux utiliser `pathname.startsWith(item.link)` pour des chemins racines.
-        // Pour cet exemple, on va utiliser une correspondance exacte ou une correspondance de base pour '/'.
-        const isHomePage = item.link === '/';
-        const isCurrentPage = isActive || (isHomePage && pathname === '/');
+        // Correspondance partielle pour les chemins (ex: /blog actif pour /blog/article-1)
+        const isCurrentPage = item.link === pathname || (item.link !== '/' && pathname.startsWith(item.link));
 
         return (
-          <a
+          <Link
             onMouseEnter={() => setHovered(idx)}
             onClick={onItemClick}
             className={cn(
               "relative px-4 py-1 text-neutral-600 dark:text-neutral-300",
-              // Applique le style de focus si c'est la page active
-              isCurrentPage && "font-bold text-black dark:text-white" // Rendre le texte plus visible
+              isCurrentPage && "font-bold text-black dark:text-white"
             )}
             key={`link-${idx}`}
             href={item.link}
@@ -159,25 +168,29 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
             )}
             {/* Le background de focus pour la page active */}
             {isCurrentPage && (
-                <motion.div
-                    layoutId="active-nav-item" // Un layoutId différent pour éviter les conflits avec le hover
-                    className="absolute inset-0 h-full w-full rounded-full bg-gray-200 dark:bg-gray-700" // Couleur de fond pour l'élément actif
-                    initial={false} // Empêche l'animation initiale si tu veux qu'il soit directement là
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                />
+              <motion.div
+                layoutId="active-nav-item"
+                className="absolute inset-0 h-full w-full rounded-full bg-gray-200 dark:bg-gray-700"
+                initial={false}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              />
             )}
             <span className="relative z-20">{item.name}</span>
-          </a>
+          </Link>
         );
       })}
     </motion.div>
   );
 };
 
+// ---------------------------
+// 4. MOBILENAV (CONTENEUR MOBILE - GLASSMORHPISM)
+// ---------------------------
 export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
   return (
     <motion.div
       animate={{
+        // Glassmorphism (blur)
         backdropFilter: visible ? "blur(10px)" : "none",
         boxShadow: visible
           ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
@@ -195,7 +208,8 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
       }}
       className={cn(
         "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-transparent px-0 py-2 lg:hidden",
-        visible && "bg-white/80 dark:bg-neutral-950/80",
+        // Application du glassmorphism avec fond transparent et flou
+        visible && "bg-white/50 dark:bg-neutral-950/50 backdrop-blur-sm !visible && mt-10",
         className,
       )}
     >
@@ -220,39 +234,57 @@ export const MobileNavHeader = ({
   );
 };
 
+// ---------------------------
+// 5. MOBILENAVMENU (MENU OUVERT)
+// ---------------------------
 export const MobileNavMenu = ({
   children,
   className,
   isOpen,
   onClose,
+  items, // <-- Récupération des liens passés par le HeaderComponent
+  mobileActions, // <-- Récupération des boutons d'action passés
 }: MobileNavMenuProps) => {
-  const pathname = usePathname(); // <-- Récupère le chemin actuel pour le mobile
+  const pathname = usePathname();
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 0, y: -20 }} // Ajout d'une petite translation pour l'animation
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.2 }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-white px-4 py-8 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0_04),_0_0_4px_rgba(34,_42,_53,_0_08),_0_16px_68px_rgba(47,_48,_55,_0_05),_0_1px_0_rgba(255,_255,_255,_0_1)_inset] dark:bg-neutral-950",
+            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-white px-4 py-8 shadow-xl dark:bg-neutral-950",
             className,
           )}
         >
-          {/* {React.Children.map(children, (child) => {
-            if (React.isValidElement(child) && child.type === 'a') { // Assumons que les items sont des <a>
-              const isCurrentPage = (child.props.href === pathname) || (child.props.href === '/' && pathname === '/');
-              return React.cloneElement(child, {
-                className: cn(
-                  child.props.className,
-                  isCurrentPage ? "bg-orange-200 dark:bg-orange-700 rounded-lg" : "", // Applique le bg gris pour le mobile
-                  "w-full px-4 py-2" // Pour que le fond remplisse bien l'item
-                )
-              });
-            }
-            return child;
-          })} */}
+          {/* Liens de navigation */}
+          {items.map((item, idx) => {
+            const isCurrentPage = item.link === pathname || (item.link !== '/' && pathname.startsWith(item.link));
+
+            return (
+              <Link
+                key={`mobile-link-${idx}`}
+                href={item.link}
+                onClick={onClose} // Ferme le menu après un clic
+                className={cn(
+                  "relative text-neutral-600 dark:text-neutral-300 w-full px-4 py-2 rounded-lg transition duration-150",
+                  isCurrentPage ? "font-bold text-black dark:text-white bg-gray-200 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-neutral-800"
+                )}
+              >
+                <span className="block">{item.name}</span>
+              </Link>
+            );
+          })}
+
+          <div className="flex w-full flex-col gap-4 pt-4 border-t border-gray-200 dark:border-neutral-800">
+            {/* Boutons d'action conditionnels (Login/Logout) */}
+            {mobileActions}
+          </div>
+          
+          {children} {/* Reste du contenu optionnel */}
         </motion.div>
       )}
     </AnimatePresence>
@@ -274,21 +306,19 @@ export const MobileNavToggle = ({
 };
 
 export const NavbarLogo = () => {
-  const pathname = usePathname(); // Pour s'assurer que le logo est toujours cliquable vers la page d'accueil
-
   return (
-    <a
-      href="/" // Change le lien en '/' pour la page d'accueil
+    <Link
+      href="/"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
     >
       <img
-        src="https://assets.aceternity.com/logo-dark.png" // Utilise ton propre logo si tu en as un
+        src="https://assets.aceternity.com/logo-dark.png"
         alt="logo"
         width={30}
         height={30}
       />
       <span className="font-medium text-black dark:text-white">AI-Stock</span>
-    </a>
+    </Link>
   );
 };
 
@@ -309,6 +339,9 @@ export const NavbarButton = ({
   | React.ComponentPropsWithoutRef<"a">
   | React.ComponentPropsWithoutRef<"button">
 )) => {
+  // Utilise <Link> si 'href' est fourni pour la navigation Next.js
+  const Component = href ? Link : Tag; 
+
   const baseStyles =
     "px-4 py-2 rounded-md bg-white button bg-white text-black text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
 
@@ -316,18 +349,18 @@ export const NavbarButton = ({
     primary:
       "shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
     secondary: "bg-transparent shadow-none dark:text-white",
-    dark: "bg-black text-white shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0_04),_0_0_4px_rgba(34,_42,_53,_0_08),_0_16px_68px_rgba(47,_48,_55,_0_05),_0_1px_0_rgba(255,_255,_255,_0_1)_inset]",
+    dark: "bg-black text-white shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
     gradient:
-      "bg-gradient-to-b from-yellow-500 to-orange-700 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset]",
+      "bg-[#FFD007] text-black shadow-md hover:bg-opacity-90", // Remplacement du dégradé générique par une couleur vive
   };
 
   return (
-    <Tag
+    <Component
       href={href || undefined}
       className={cn(baseStyles, variantStyles[variant], className)}
-      {...props}
+      {...(props as any)} // Utiliser 'as any' pour gérer les props complexes de Link/a/button
     >
       {children}
-    </Tag>
+    </Component>
   );
 };

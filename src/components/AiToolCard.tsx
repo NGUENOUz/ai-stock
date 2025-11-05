@@ -43,8 +43,7 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
   const detailPageUrl = `/${tool.slug}`;
 
   return (
-    <Link href={detailPageUrl} className="block cursor-pointer">
-      <CardContainer className="inter-var">
+      <CardContainer className="inter-var py-0">
         <CardBody
           className="
           bg-gray-900
@@ -59,6 +58,8 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
           justify-between
         "
         >
+
+         <Link href={detailPageUrl} className="block cursor-pointer">
           {/* Section Supérieure: Logo, Nom, Badge Vérifié */}
           <div className="flex items-center gap-4 mb-4">
             {" "}
@@ -178,8 +179,8 @@ export const AiToolCard: React.FC<AiToolCardProps> = ({ tool }) => {
               </CardItem>
             )}
           </div>
+          </Link>
         </CardBody>
       </CardContainer>
-    </Link>
   );
 };

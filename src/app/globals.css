@@ -17,22 +17,33 @@
 
 /* Animation de la bordure "clash" */
 @keyframes border-pulse {
-  0%, 100% {
-    border-color: #FFA500; /* Orange vif */
-    box-shadow: 0 0 5px #FFA500, 0 0 10px #FFA500; /* Ombre lumineuse */
+  0%,
+  100% {
+    border-color: #ffa500; /* Orange vif */
+    box-shadow: 0 0 5px #ffa500, 0 0 10px #ffa500; /* Ombre lumineuse */
   }
   50% {
-    border-color: #FFD700; /* Jaune doré légèrement différent */
-    box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700; /* Ombre plus intense */
+    border-color: #ffd700; /* Jaune doré légèrement différent */
+    box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700; /* Ombre plus intense */
   }
 }
 
 /* Animation de la flèche clignotante */
 @keyframes arrow-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
 }
 
 body {
   background: #000;
+  overflow-x: hidden;
+}
+
+.py-20 {
+  padding: 2 !important;
 }

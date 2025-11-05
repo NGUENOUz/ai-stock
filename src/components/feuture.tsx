@@ -5,13 +5,11 @@ import { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 
-
 export function FeaturesSectionDemo() {
   const features = [
     {
-      title: "Le top 10 de la semaine",
-      description:
-        "Track and manage your project issues with ease using our intuitive interface.",
+      title: "Infos à la une ",
+      description: "Découvrez les dernières actualités du jour ",
       skeleton: <SkeletonOne />,
       className:
         "col-span-1 lg:col-span-4 border-b lg:border-r dark:border-neutral-800",
@@ -19,7 +17,7 @@ export function FeaturesSectionDemo() {
     {
       title: "Vous etes votre seul limite",
       description:
-        "Quelsques caputures de scénarios fou que vous puvez realiser avec des outils d'IA",
+        "Explorez des prompts populaires , des combiniasons gratuites que vous pouvez vious en servir pour etoffer vos créations .",
       skeleton: <SkeletonTwo />,
       className: "border-b col-span-1 lg:col-span-2 dark:border-neutral-800",
     },
@@ -43,7 +41,7 @@ export function FeaturesSectionDemo() {
     <div className="relative z-20 py-10 lg:py-40 max-w-7xl mx-auto">
       <div className="px-8">
         <h4 className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium text-black dark:text-white">
-          Packed with thousands of features
+          Au delà des outils nous vous rapprochons du futur
         </h4>
 
         <p className="text-sm lg:text-base  max-w-2xl  my-4 mx-auto text-neutral-500 text-center font-normal dark:text-neutral-300">
@@ -105,22 +103,34 @@ const FeatureDescription = ({ children }: { children?: React.ReactNode }) => {
 
 export const SkeletonOne = () => {
   return (
-    <div className="relative flex py-8 px-2 gap-10 h-full">
-      <div className="w-full  p-5  mx-auto bg-white dark:bg-neutral-900 shadow-2xl group h-full">
-        <div className="flex flex-1 w-full h-full flex-col space-y-2  ">
-          {/* TODO */}
-          <img
-            src="/linear.webp"
-            alt="header"
-            width={800}
-            height={800}
-            className="h-full w-full aspect-square object-cover object-left-top rounded-sm"
-          />
+    <div className="relative flex py-8 px-2 gap-10  topNews">
+      <div className="w-full  p-1  mx-auto bg-white dark:bg-neutral-900 shadow-2xl group">
+        <div className=" ">
+          <div className="newsContainer">
+            <span className="etiquet">#Actu</span>
+            <span className="bann">
+              <img
+                src="https://images.unsplash.com/photo-1517322048670-4fba75cbbb62?q=80&w=3000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="header"
+                className=" banniere"
+              />
+            </span>
+
+            <div className="infoContainer">
+              <h1 className="newsTitre">
+                Facebook decide de bloquer les accès à meta aux Africains
+              </h1>
+              <span className="newsDescription">
+                description de ihuy uiuhiu huihiui uhiuhu huhiuhuihuh hhiuhih
+                hhiuhu huihiuh hiuhiu uhuihi ihui hiuhiu hiuhui ... <><a href="#" className="orange">En savoir plus </a></>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="absolute bottom-0 z-40 inset-x-0 h-60 bg-gradient-to-t from-white dark:from-black via-white dark:via-black to-transparent w-full pointer-events-none" />
-      <div className="absolute top-0 z-40 inset-x-0 h-60 bg-gradient-to-b from-white dark:from-black via-transparent to-transparent w-full pointer-events-none" />
+      <div className="absolute top-0 z-10 inset-x-0 h-60 bg-gradient-to-b from-white dark:from-black via-transparent to-transparent w-full pointer-events-none" />
     </div>
   );
 };
@@ -258,7 +268,7 @@ export const Globe = ({ className }: { className?: string }) => {
         { location: [37.7595, -122.4367], size: 0.03 },
         { location: [40.7128, -74.006], size: 0.1 },
       ],
-      onRender: (state:any) => {
+      onRender: (state: any) => {
         // Called on every animation frame.
         // `state` will be an empty object, return updated params.
         state.phi = phi;

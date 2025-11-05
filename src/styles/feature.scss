@@ -1,0 +1,48 @@
+//skeletonOne
+
+.topNews {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.etiquet {
+  display: flex;
+  position: absolute;
+  background: linear-gradient(rgb(255, 136, 0),rgb(255, 255, 0));
+  padding: 2%;
+  z-index: 20;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  box-shadow: 2px -2px 9px rgba(255, 255, 255, 0.247);
+}
+
+.newsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .bann {
+  }
+}
+.infoContainer {
+  background: linear-gradient(to top, rgb(2, 2, 2), rgba(255, 255, 255, 0));
+  backdrop-filter: blur(10px);
+  z-index: 20;
+  padding: 5% 1%;
+  padding-bottom: 7%;
+  position: absolute;
+  top: 53%;
+  color: white;
+
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  a{
+    color: orange;
+    text-decoration: dotted;
+   
+  }
+}

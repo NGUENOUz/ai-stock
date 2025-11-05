@@ -114,7 +114,7 @@ export default async function ListePage({ searchParams }: ListePageProps) {
   const totalPages = Math.ceil((totalToolsCount || 0) / ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white ">
+    <div className="min-h-screen  text-white ">
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">
           Découvrez les Meilleures Intelligences Artificielles

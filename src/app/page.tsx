@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
-import type { NextPage } from 'next';
+import type { NextPage } from "next";
 import { cn } from "@/lib/utils";
 import { FondCareler } from "../components/fondCareler";
-import "./style.scss";
-
+import "../styles/style.scss";
+import "../styles/feature.scss";
 
 import { useState } from "react";
 import { imagesAI } from "@/bd/imageAI";
@@ -17,27 +17,31 @@ import { AiTool } from "@/types/type";
 import { AiToolCard } from "@/components/AiToolCard";
 
 export default function SpotlightPreview() {
-
   const [featuredTools, setFeaturedTools] = useState<AiTool[]>([]);
   const [loadingFeatured, setLoadingFeatured] = useState(true);
   const [errorFeatured, setErrorFeatured] = useState<string | null>(null);
-
 
   useEffect(() => {
     async function fetchFeaturedTools() {
       setLoadingFeatured(true);
       setErrorFeatured(null);
       try {
-        const { data, error } = await getFeaturedTools(4); // Limite à 4 IA en vogue
+        const { data, error } = await getFeaturedTools(8); // Limite à 4 IA en vogue
         if (error) {
-          console.error('Erreur lors de la récupération des IA en vogue :', error);
-          setErrorFeatured('Impossible de charger les IA en vogue.');
+          console.error(
+            "Erreur lors de la récupération des IA en vogue :",
+            error
+          );
+          setErrorFeatured("Impossible de charger les IA en vogue.");
         } else {
           setFeaturedTools(data || []);
         }
       } catch (err) {
-        console.error('Erreur inattendue lors de la récupération des IA en vogue :', err);
-        setErrorFeatured('Erreur inattendue.');
+        console.error(
+          "Erreur inattendue lors de la récupération des IA en vogue :",
+          err
+        );
+        setErrorFeatured("Erreur inattendue.");
       } finally {
         setLoadingFeatured(false);
       }
@@ -45,15 +49,8 @@ export default function SpotlightPreview() {
     fetchFeaturedTools();
   }, []);
 
-
- 
-
-
-
-
   return (
     <div className="mainContainer">
-      
       <div className="relative flex h-[40rem] w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
         <div
           className={cn(
@@ -72,18 +69,20 @@ export default function SpotlightPreview() {
             d'IA au monde.
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-center text-left font-normal text-neutral-300">
-          Découvrez les outils d'intelligence artificielle les plus innovants qui vont transformer votre travail et booster votre productivité." ou "Votre porte d'entrée vers l'univers infini de l'IA. Explorez, apprenez, innovez
+            Découvrez les outils d'intelligence artificielle les plus innovants
+            qui vont transformer votre travail et booster votre productivité."
+            ou "Votre porte d'entrée vers l'univers infini de l'IA. Explorez,
+            apprenez, innovez
           </p>
 
           <div className="btn scoop">
-          <AnimatedButton
-          text="Découvrir"
-          onClick={() => console.log("Bouton cliqué!")} />
+            <AnimatedButton
+              text="Découvrir"
+              onClick={() => console.log("Bouton cliqué!")}
+            />
           </div>
         </div>
       </div>
-
-
 
       {/* <section  className="mx-0 my-10 max-w-10xl rounded-3xl  p-2 ring-1 ring-neutral-700/10  fontImage">
      <ContainerScroll>
@@ -91,20 +90,30 @@ export default function SpotlightPreview() {
       </ContainerScroll>
     </section> */}
 
-       <section className="py-16 bg-gray-950 dark:bg-gray-950 z-10 p-40"> {/* Fond un peu plus sombre que le Hero */}
+      <section className="sectionVog text-center">
+        {" "}
+        {/* Fond un peu plus sombre que le Hero */}
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-white">
+          <h2 className="text-4xl font-bold text-center mb-2 text-white">
             IA en Vogue de la Semaine
           </h2>
+          <span className="sousTitle text-center align-center">
+            Découvez les outils qui font forte impression actuellement{" "}
+          </span>
 
           {loadingFeatured ? (
-            <div className="text-center text-gray-400">Chargement des IA en vedette...</div>
+            <div className="text-center text-gray-400">
+              Chargement des IA en vedette...
+            </div>
           ) : errorFeatured ? (
             <div className="text-center text-red-400">{errorFeatured}</div>
           ) : featuredTools.length === 0 ? (
-            <div className="text-center text-gray-400">Aucune IA en vogue pour le moment.</div>
+            <div className="text-center text-gray-400">
+              Aucune IA en vogue pour le moment.
+            </div>
           ) : (
-            <div className="flex spacebetween gap-10 wrap"> {/* Grille responsive */}
+            <div className="vogAcceuil">
+              {/* Grille responsive */}
               {featuredTools.map((tool) => (
                 <AiToolCard key={tool.id} tool={tool} />
               ))}
@@ -113,7 +122,104 @@ export default function SpotlightPreview() {
         </div>
       </section>
 
-      <section className="topCategories">
+      <section className="categorieName">
+        <h1>Liste des categories</h1>
+        <span className="sousTitle">
+          Découvez les AI de la planete classe par categiories
+        </span>
+        <div className="categoriesList">
+          <div className="cat">
+            <div className="catTitle">
+              <span className="Icon"></span>
+              <span className="Name">New</span>
+            </div>
+            <div className="catContainer">
+              <div className="catItem">
+                <span className="itemLogo">
+                  <img src="../bd/images.png" alt="logo" />
+                  <span className="itemName">chatGpt</span>
+                </span>
+
+                <span className="catLink">&#8594;</span>
+              </div>
+
+              <div className="catItem">
+                <span className="itemLogo">
+                  <img src="../bd/images.png" alt="logo" />
+                  <span className="itemName">chatGpt</span>
+                </span>
+
+                <span className="catLink">&#8594;</span>
+              </div>
+
+              <div className="catItem">
+                <span className="itemLogo">
+                  <img src="../bd/images.png" alt="logo" />
+                  <span className="itemName">chatGpt</span>
+                </span>
+
+                <span className="catLink">&#8594;</span>
+              </div>
+
+              <div className="catItem">
+                <span className="itemLogo">
+                  <img src="../bd/images.png" alt="logo" />
+                  <span className="itemName">chatGpt</span>
+                </span>
+
+                <span className="catLink">&#8594;</span>
+              </div>
+
+              <div className="catItem">
+                <span className="itemLogo">
+                  <img src="../bd/images.png" alt="logo" />
+                  <span className="itemName">chatGpt</span>
+                </span>
+
+                <span className="catLink">&#8594;</span>
+              </div>
+
+              <div className="catItem">
+                <span className="itemLogo">
+                  <img src="../bd/images.png" alt="logo" />
+                  <span className="itemName">chatGpt</span>
+                </span>
+
+                <span className="catLink">&#8594;</span>
+              </div>
+
+              <div className="catItem">
+                <span className="itemLogo">
+                  <img src="../bd/images.png" alt="logo" />
+                  <span className="itemName">chatGpt</span>
+                </span>
+
+                <span className="catLink">&#8594;</span>
+              </div>
+
+              <div className="catItem">
+                <span className="itemLogo">
+                  <img src="../bd/images.png" alt="logo" />
+                  <span className="itemName">chatGpt</span>
+                </span>
+
+                <span className="catLink">&#8594;</span>
+              </div>
+            </div>
+            <span className="allList"> voir toute la liste(899)</span>
+          </div>
+          <div className="cat"></div>
+          <div className="cat"></div>
+        </div>
+        <div className="btn">
+          <AnimatedButton
+            text="Voir toute la liste D'IA"
+            onClick={() => console.log("Bouton cliqué!")}
+          />
+        </div>{" "}
+      </section>
+
+      <section className="topCategories bg-gray">
         <FeaturesSectionDemo />
       </section>
     </div>

@@ -13,7 +13,7 @@ import {
   getRelatedAiToolsByCategory,
 } from "@/lib/supabase/services/service";
 import HeaderComponent from "../../components/header";
-import "../style.scss";
+import "../../styles/style.scss";
 import { AiToolCarousel } from "@/components/aiToolsCaroussel";
 
 // Composant pour l'icône de vérification (si tu ne l'as pas déjà dans un fichier séparé)
@@ -60,7 +60,6 @@ const AiToolDetailsPage = async ({ params }: AiToolDetailsPageProps) => {
 
   return (
     <>
-      <HeaderComponent />
       <div className="container mx-auto px-4 py-8 text-neutral-200 mt-20">
         {/* Chemin de raccourci (Breadcrumbs) */}
         <nav className="mb-8 text-sm md:text-base">
