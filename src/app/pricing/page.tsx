@@ -5,11 +5,33 @@ import React from 'react';
 import { useAppStore, SubscriptionTier } from '@/store/useAppStore'; // Import du store et du type
 import { IconCheck, IconX, IconLock, IconAward } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
-// Définition des caractéristiques de chaque plan
-const plans = [
+// --- 1. Définition des Interfaces pour TypeScript ---
+
+// Interface pour les objets de Plan (Plans Data)
+interface PlanData {
+    tier: SubscriptionTier;
+    price: string;
+    period: string;
+    description: string;
+    features: { text: string; included: boolean }[];
+    buttonText: string;
+    variant: 'current' | 'primary' | 'pro' | 'secondary';
+}
+
+// Interface pour les Props du Composant PricingCard (Résout l'erreur de type)
+interface PricingCardProps {
+    plan: PlanData;
+    currentTier: SubscriptionTier;
+    onSelectPlan: (newTier: SubscriptionTier) => void;
+}
+
+// --- 2. Définition des Données des Plans ---
+
+const plans: PlanData[] = [ // Utilisation de l'interface PlanData
     {
-        tier: 'Gratuit' as SubscriptionTier,
+        tier: 'Gratuit',
         price: '0€',
         period: 'Pour toujours',
         description: 'Idéal pour découvrir nos outils d\'IA.',
@@ -24,7 +46,7 @@ const plans = [
         variant: 'current',
     },
     {
-        tier: 'Premium' as SubscriptionTier,
+        tier: 'Premium',
         price: '19€',
         period: '/mois',
         description: 'Passez à la vitesse supérieure dans l\'analyse IA.',
@@ -39,7 +61,7 @@ const plans = [
         variant: 'primary',
     },
     {
-        tier: 'Pro' as SubscriptionTier,
+        tier: 'Pro',
         price: '49€',
         period: '/mois',
         description: 'La puissance maximale pour les investisseurs avancés.',
@@ -55,8 +77,9 @@ const plans = [
     },
 ];
 
-// --- Composant Carte de Tarification ---
-const PricingCard = ({ plan, currentTier, onSelectPlan }) => {
+// --- 3. Composant Carte de Tarification (avec Props typées) ---
+
+const PricingCard = ({ plan, currentTier, onSelectPlan }: PricingCardProps) => {
     const isCurrent = plan.tier === currentTier;
 
     // Styles conditionnels
@@ -127,14 +150,10 @@ const PricingCard = ({ plan, currentTier, onSelectPlan }) => {
     );
 };
 
+// --- 4. Composant Principal de la Page ---
+
 const PricingPage = () => {
     const { subscription, isLoggedIn, updateSubscription } = useAppStore();
-
-    // Redirection si l'utilisateur essaie de gérer l'abonnement sans être connecté
-    // (Non strict comme le Dashboard, car la page pricing peut être publique)
-    // if (!isLoggedIn) {
-    //    return <p className="p-10 text-white">Veuillez vous connecter pour gérer votre abonnement.</p>;
-    // }
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white p-4 sm:p-8 lg:p-12">
@@ -163,6 +182,9 @@ const PricingPage = () => {
 
             <footer className="text-center mt-16 text-gray-500">
                 <p>* Simulation : Cette action met à jour votre statut dans l'application locale.</p>
+                {!isLoggedIn && (
+                    <p className="mt-2 text-yellow-500">Veuillez <Link href="/login" className="underline">vous connecter</Link> pour sélectionner un plan.</p>
+                )}
             </footer>
         </div>
     );
