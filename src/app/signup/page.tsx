@@ -48,7 +48,7 @@ const SignupPage = () => {
             // --- FIN DE SIMULATION ---
 
             // Si l'inscription réussit, on connecte l'utilisateur
-            await simulateLogin(userName || 'Nouvel Utilisateur'); 
+            await simulateLogin(userName || 'Nouvel Utilisateur',email); 
 
             setMessage({ text: "Compte créé avec succès et connexion automatique ! Redirection...", type: 'success' });
             

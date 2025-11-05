@@ -18,7 +18,7 @@ import {
 
 export default function HeaderComponent() {
   // 1. Récupération de l'état d'authentification et des actions depuis Zustand
-  const { isLoggedIn, user, simulateLogout } = useAppStore();
+  const { isLoggedIn, userName, handleLogout } = useAppStore();
   const router = useRouter();
 
   const navItems = [
@@ -32,11 +32,11 @@ export default function HeaderComponent() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    simulateLogout(); // Action Zustand de déconnexion
-    router.push("/"); // Redirige vers la page d'accueil après la déconnexion
-    setIsMobileMenuOpen(false); // Ferme le menu mobile
-  };
+  const handleGlobalLogout = () => { // Renommé pour éviter la confusion avec l'action du store
+    handleLogout(); // Action Zustand de déconnexion (nom corrigé)
+    router.push("/"); // Redirige vers la page d'accueil après la déconnexion
+    setIsMobileMenuOpen(false); // Ferme le menu mobile
+  }
 
   const handleNavClick = () => {
     // Fonction utilitaire pour fermer le menu mobile après un clic
@@ -64,7 +64,7 @@ export default function HeaderComponent() {
     <>
       {/* Bouton Dashboard/Mon Compte */}
       <NavbarButton href="/dashboard" variant="secondary" className="hidden sm:inline-block">
-        {user || "Mon Compte"} {/* Affiche le nom de l'utilisateur s'il existe */}
+        {userName || "Mon Compte"} {/* Affiche le nom de l'utilisateur s'il existe */}
       </NavbarButton>
       {/* Bouton Déconnexion */}
       <NavbarButton onClick={handleLogout} variant="primary">
