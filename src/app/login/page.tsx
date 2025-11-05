@@ -48,7 +48,7 @@ const LoginPage = () => {
       // Simulation d'une vérification simple (ici, seul l'email compte)
       if (email === "test@ai-stock.com" && password === "123456") {
         // Appel de l'action Zustand
-        await simulateLogin("Alice Dupont");
+        await simulateLogin("Alice Dupont", email);
 
         setMessage({
           text: "Connexion réussie ! Redirection...",
