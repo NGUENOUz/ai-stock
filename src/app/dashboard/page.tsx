@@ -49,7 +49,7 @@ const DashboardPage = () => {
     );
 
     return (
-        <div className="min-h-screen bg-neutral-900 text-white p-4 sm:p-8 lg:p-12">
+        <div className="min-h-screen bg-neutral-900 text-white p-4 sm:p-8 lg:p-12 pt-10">
             <h1 className="text-4xl font-bold mb-2">Espace Client</h1>
             <p className="text-gray-400 mb-8">Gérez votre compte et vos abonnements, **{userName}**.</p>
 
