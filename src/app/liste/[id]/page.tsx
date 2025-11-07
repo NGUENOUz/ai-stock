@@ -16,8 +16,13 @@ import {
   IconArrowUp,
 } from "@tabler/icons-react";
 
-// --- Définitions des types et données (Laisser cette section telle quelle) ---
-// ... (omission des types et de la liste allAiTools pour la concision)
+// ⚠️ AJUSTEZ LE CHEMIN SELON VOTRE STRUCTURE
+// Si vous avez séparé les données dans src/data/ai-tools.ts, utilisez :
+// import { allAiTools, AiTool } from '@/data/ai-tools'; 
+// Sinon, gardez la définition AiTool et le tableau ici.
+// Pour l'exemple, je vais considérer que vous avez gardé les données dans ce fichier.
+
+// --- DÉFINITIONS DE TYPES ET DONNÉES (Si non séparées) ---
 interface AiTool {
   id: number;
   name: string;
@@ -52,7 +57,7 @@ const allAiTools: AiTool[] = [
 ];
 
 
-// --- Composant Carrousel/Slide d'Outils Similaires (Laisser tel quel) ---
+// --- Composant Carrousel d'Outils Similaires ---
 
 const SimilarToolsCarousel = ({
   currentToolCategory,
@@ -75,7 +80,7 @@ const SimilarToolsCarousel = ({
 
   return (
     <div className="mt-8">
-      <h3 className="text-2xl font-bold text-white mb-4 border-b border-neutral-700 pb-2">
+      <h3 className="text-2xl font-bold text-black dark:text-white mb-4 border-b border-gray-200 dark:border-neutral-700 pb-2">
         Outils similaires
       </h3>
       <div className="flex space-x-4 overflow-x-auto pb-4 custom-scrollbar">
@@ -83,7 +88,7 @@ const SimilarToolsCarousel = ({
           <Link
             href={`/liste/${tool.id}`}
             key={tool.id}
-            className="flex-shrink-0 w-72 p-4 bg-neutral-800 rounded-lg border border-neutral-700 hover:bg-neutral-700/80 transition duration-200"
+            className="flex-shrink-0 w-72 p-4 bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700/80 transition duration-200"
           >
             <div className="flex items-center mb-3">
               <Image
@@ -93,9 +98,9 @@ const SimilarToolsCarousel = ({
                 height={24}
                 className="rounded-full"
               />
-              <span className="text-lg font-semibold ml-3">{tool.name}</span>
+              <span className="text-lg font-semibold ml-3 text-black dark:text-white">{tool.name}</span>
             </div>
-            <p className="text-sm text-gray-400 line-clamp-2">
+            <p className="text-sm text-gray-700 dark:text-gray-400 line-clamp-2">
               {tool.shortDesc}
             </p>
             <span className="text-xs mt-2 inline-block text-yellow-500">
@@ -109,9 +114,15 @@ const SimilarToolsCarousel = ({
 };
 
 
-// --- Composant Principal de la Page de Détail (MODIFIÉ) ---
+// --- Composant Principal de la Page de Détail (CORRIGÉ ET SIMPLIFIÉ) ---
 
-const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
+/**
+ * Cette définition de composant est la plus compatible pour les pages
+ * Next.js dynamiques tout en utilisant "use client".
+ * On utilise le type Utility 'Readonly' et on définit le type de params
+ * directement SANS interface externe, ce qui évite le conflit 'Promise<any>'.
+ */
+const AiToolDetailPage = ({ params }: any) => {
   const toolId = parseInt(params.id, 10);
 
   if (isNaN(toolId)) {
@@ -125,8 +136,8 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-900 text-white p-4 sm:p-8 lg:p-12">
-      {/* Retour à la liste (Laisser tel quel) */}
+    <div className="min-h-screen bg-white dark:bg-neutral-900 text-black dark:text-white p-4 sm:p-8 lg:p-12">
+      {/* Retour à la liste */}
       <Link
         href="/liste"
         className="text-yellow-500 hover:text-yellow-400 transition mb-6 inline-flex items-center"
@@ -135,8 +146,8 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
         Retour à la liste
       </Link>
 
-      <header className="mb-8 bg-neutral-800 p-6 rounded-xl shadow-xl">
-        {/* Entête : Utilisation de flex-col et md:flex-row pour le responsive */}
+      <header className="mb-8 bg-gray-100 dark:bg-neutral-800 p-6 rounded-xl shadow-xl">
+        {/* Entête */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 space-y-4 md:space-y-0">
           <div className="flex flex-col sm:flex-row items-start sm:items-center">
             <Image
@@ -147,12 +158,11 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
               className="rounded-xl border border-yellow-500/50"
             />
             <div className="ml-0 sm:ml-4 mt-2 sm:mt-0">
-              <h1 className="text-3xl sm:text-4xl font-extrabold">{tool.name}</h1> {/* Taille de titre ajustée */}
-              <p className="text-lg sm:text-xl text-gray-400 mt-1">{tool.shortDesc}</p>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-black dark:text-white">{tool.name}</h1>
+              <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mt-1">{tool.shortDesc}</p>
             </div>
           </div>
           <button
-            // Bouton de vote (flex-shrink-0 assure qu'il ne se rétrécit pas)
             className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200 font-medium flex items-center flex-shrink-0"
             aria-label={`Voter pour ${tool.name}`}
           >
@@ -161,16 +171,16 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
           </button>
         </div>
 
-        {/* Tags : Le flex-wrap gère déjà bien le responsive ici */}
+        {/* Tags */}
         <div className="flex flex-wrap gap-4 mt-6 text-sm">
-          <span className="flex items-center bg-neutral-700 px-3 py-1 rounded-full">
+          <span className="flex items-center bg-gray-200 dark:bg-neutral-700 px-3 py-1 rounded-full text-black dark:text-white">
             <IconCategory className="w-4 h-4 mr-1 text-yellow-500" />{" "}
             {tool.category}
           </span>
-          <span className="flex items-center bg-neutral-700 px-3 py-1 rounded-full">
+          <span className="flex items-center bg-gray-200 dark:bg-neutral-700 px-3 py-1 rounded-full text-black dark:text-white">
             <IconCoin className="w-4 h-4 mr-1 text-green-400" /> {tool.price}
           </span>
-          <span className="flex items-center bg-neutral-700 px-3 py-1 rounded-full">
+          <span className="flex items-center bg-gray-200 dark:bg-neutral-700 px-3 py-1 rounded-full text-black dark:text-white">
             <IconAward className="w-4 h-4 mr-1 text-blue-400" /> Rank #
             {tool.currentRank}
           </span>
@@ -182,22 +192,21 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
         </div>
       </header>
 
-      {/* Section Détails et CTA (Disposition responsive) */}
-      {/* grid-cols-1 est la valeur par défaut. lg:grid-cols-3 active la grille à 3 colonnes sur grand écran. */}
+      {/* Section Détails et CTA */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           {/* Section de contenu principal (Description/Fonctionnalités) */}
-          <h2 className="text-3xl font-bold mb-4 border-b border-neutral-700 pb-2">
+          <h2 className="text-3xl font-bold mb-4 border-b border-gray-200 dark:border-neutral-700 pb-2">
             Description Complète
           </h2>
-          <p className="text-gray-300 leading-relaxed mb-6">{tool.fullDesc}</p>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">{tool.fullDesc}</p>
 
-          <h2 className="text-3xl font-bold mb-4 border-b border-neutral-700 pb-2 mt-8">
+          <h2 className="text-3xl font-bold mb-4 border-b border-gray-200 dark:border-neutral-700 pb-2 mt-8">
             Fonctionnalités Clés
           </h2>
           <ul className="space-y-3">
             {tool.features.map((feature, index) => (
-              <li key={index} className="flex items-start text-gray-300">
+              <li key={index} className="flex items-start text-gray-700 dark:text-gray-300">
                 <IconCheck className="w-5 h-5 text-green-500 flex-shrink-0 mt-1 mr-3" />
                 <span>{feature}</span>
               </li>
@@ -206,9 +215,8 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* Sidebar (Image et CTA) */}
-        {/* Retrait de 'sticky top-4' pour les petits écrans, réactivé seulement sur lg (grand écran) */}
-        <aside className="lg:col-span-1 bg-neutral-800 p-6 rounded-xl shadow-lg h-fit lg:sticky lg:top-4">
-          <div className="relative h-48 w-full mb-6 rounded-lg overflow-hidden border border-neutral-700">
+        <aside className="lg:col-span-1 bg-gray-100 dark:bg-neutral-800 p-6 rounded-xl shadow-lg h-fit lg:sticky lg:top-4">
+          <div className="relative h-48 w-full mb-6 rounded-lg overflow-hidden border border-gray-200 dark:border-neutral-700">
             <Image
               src={tool.bannerImage}
               alt={`Interface de ${tool.name}`}
@@ -218,7 +226,7 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
             />
           </div>
 
-          <h3 className="text-xl font-bold mb-4">Prêt à l'essayer ?</h3>
+          <h3 className="text-xl font-bold mb-4 text-black dark:text-white">Prêt à l'essayer ?</h3>
           <a
             href={tool.officialSiteUrl}
             target="_blank"
@@ -231,7 +239,7 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
           <div className="mt-4 text-center">
             <Link
               href="/pricing"
-              className="text-sm text-gray-400 hover:text-yellow-500 underline"
+              className="text-sm text-gray-500 dark:text-gray-400 hover:text-yellow-500 underline"
             >
               Comparer les prix des abonnements
             </Link>
@@ -239,7 +247,7 @@ const AiToolDetailPage = ({ params }: { params: { id: string } }) => {
         </aside>
       </div>
 
-      {/* Carrousel des Outils Similaires (Laisser tel quel) */}
+      {/* Carrousel des Outils Similaires */}
       <SimilarToolsCarousel
         currentToolCategory={tool.category}
         currentToolId={tool.id}

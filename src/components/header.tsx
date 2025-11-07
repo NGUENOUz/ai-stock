@@ -2,6 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { useAppStore } from "@/store/useAppStore"; // <-- Importation du store Zustand
 
 import {
@@ -103,8 +104,10 @@ export default function HeaderComponent() {
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
+         
           {/* Les NavItems utilisent maintenant la fonction onItemClick pour gérer la fermeture du menu si on le veut (bien que non nécessaire en desktop) */}
           <NavItems items={navItems} onItemClick={handleNavClick} />
+          
           <div className="flex items-center gap-4">
             
            

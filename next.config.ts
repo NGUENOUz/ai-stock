@@ -16,13 +16,7 @@ const nextConfig = {
     ],
   },
   
-  // Si vous utilisez une ancienne version de Next.js (avant la v13.2)
-  // vous auriez utilisé la syntaxe suivante (qui est moins recommandée maintenant):
-  /*
-  images: {
-    domains: ['picsum.photos'],
-  },
-  */
+
 };
 
 module.exports = nextConfig;

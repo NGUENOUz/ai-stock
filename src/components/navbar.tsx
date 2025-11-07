@@ -79,7 +79,8 @@ export const Navbar = ({ children, className }: NavbarProps) => {
       // Changement: 'sticky top-10' -> 'fixed top-0 pt-10' pour la position fixe
       className={cn("fixed inset-x-0 top-0 z-40 w-full ", className)}
     >
-      {React.Children.map(children, (child) =>
+      <div>
+         {React.Children.map(children, (child) =>
         React.isValidElement(child)
           ? React.cloneElement(
               child as React.ReactElement<{ visible?: boolean }>,
@@ -87,6 +88,10 @@ export const Navbar = ({ children, className }: NavbarProps) => {
             )
           : child,
       )}
+     
+
+      </div>
+     
     </motion.div>
   );
 };

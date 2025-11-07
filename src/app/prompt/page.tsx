@@ -6,17 +6,17 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   IconLock, IconSparkles, IconCrown, IconArrowRight, IconBellRinging,
-  IconUser, IconSearch, IconAdjustmentsHorizontal, IconHeart,
-  IconShare2, IconCopy, IconPalette, IconLayoutGrid,
+  IconSearch, IconAdjustmentsHorizontal, IconHeart,
+  IconShare2, IconCopy, IconPalette, IconLayoutGrid, IconChevronDown,
 } from "@tabler/icons-react";
 
 // --- CONFIGURATION & SIMULATION ---
 
 // Simulation du Contexte Utilisateur (à remplacer par votre véritable store)
 const useAuthStore = () => {
-  const isAuthenticated = true; // Mettez à 'true' pour tester le mode Premium
-  const isPremiumUser = true;   // Mettez à 'true' pour tester le mode Premium
-  const userName = "Alice Dupont"; // Nom personnalisé
+  const isAuthenticated = true;
+  const isPremiumUser = true;
+  const userName = "Alice Dupont";
   return { isAuthenticated, isPremiumUser, userName };
 };
 
@@ -39,6 +39,8 @@ const initialPrompts = {
     { id: 101, title: "Portrait Cyberpunk Urbain", style: "Style Artistique", tool: "Midjourney", likes: 450, imageUrl: "https://picsum.photos/400/300?random=1", prompt: "Un portrait d'une femme cybernétique dans une ruelle de Tokyo sous la pluie, éclairage néon bleu et rose, détails extrêmes, cinematic lighting, 8k, --ar 3:4" },
     { id: 102, title: "Nature Morte pour Branding Café", style: "Commercial", tool: "DALL-E 3", likes: 210, imageUrl: "https://picsum.photos/400/300?random=2", prompt: "Nature morte de grains de café torréfiés sur une table en bois rustique, lumière douce, style photographique, focus net, pour publicité de marque." },
     { id: 103, title: "Rendu 3D d'une Chaise Moderne", style: "3D Rendu", tool: "Blender AI", likes: 180, imageUrl: "https://picsum.photos/400/300?random=3", prompt: "Rendu 3D isométrique d'une chaise de bureau ergonomique, couleur vert olive, fond blanc minimaliste, studio lighting, haute résolution." },
+    { id: 104, title: "Paysage Photographique Détaillé", style: "Photographique", tool: "Stable Diffusion", likes: 500, imageUrl: "https://picsum.photos/400/300?random=4", prompt: "Un paysage montagneux épique au lever du soleil, brume légère, style Ansel Adams, haute résolution photographique." },
+    { id: 105, title: "Logo Moderne Style Anime", style: "Anime", tool: "Niji Journey", likes: 120, imageUrl: "https://picsum.photos/400/300?random=5", prompt: "Illustration de style anime pour un logo d'eSport, couleurs vives, éclairage dramatique, personnage de type ninja, fond minimaliste." },
   ],
   marketing: [
     { id: 201, title: "Prompt SEO pour Article de Blog", prompt: "Rédige une structure H1/H2/H3 et les 5 points clés d'un article de blog sur 'L'impact des taux d'intérêt sur le marché Crypto'. Utilise un ton expert et optimise pour le mot-clé 'taux crypto'." },
@@ -54,9 +56,8 @@ const initialPrompts = {
 
 // --------------------------------------------------------
 
-// --- Composants Modulaires ---
+// --- Composants Modulaires (NotificationBell, ImagePromptCard, TextPromptCard, AccessRestricted) ---
 
-// 1. Cloche de Notification (Simulée)
 const NotificationBell: React.FC = () => {
     const [hasNew, setHasNew] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
@@ -72,6 +73,7 @@ const NotificationBell: React.FC = () => {
             <button
                 className="p-3 rounded-full bg-neutral-700 hover:bg-neutral-600 transition relative"
                 onClick={() => { setIsOpen(!isOpen); setHasNew(false); }}
+                aria-label="Notifications"
             >
                 <IconBellRinging className="w-6 h-6 text-yellow-500" />
                 {hasNew && (
@@ -99,7 +101,6 @@ const NotificationBell: React.FC = () => {
     );
 };
 
-// 2. Carte de Prompt (Adaptée pour les Prompts Images)
 interface ImagePromptCardProps {
     prompt: typeof initialPrompts.image[0];
 }
@@ -156,7 +157,6 @@ const ImagePromptCard: React.FC<ImagePromptCardProps> = ({ prompt }) => {
     );
 };
 
-// 3. Carte de Prompt (Générique pour les autres catégories)
 interface TextPromptCardProps {
     prompt: typeof initialPrompts.marketing[0];
 }
@@ -181,7 +181,7 @@ const TextPromptCard: React.FC<TextPromptCardProps> = ({ prompt }) => {
             <div className="mt-4 flex justify-between items-center">
                 <div className="flex items-center space-x-4">
                     <button className="flex items-center text-red-400 hover:text-red-500 transition">
-                        <IconHeart className="w-5 h-5 mr-1 fill-current" /> {/* Simuler le like */} 150
+                        <IconHeart className="w-5 h-5 mr-1 fill-current" /> 150
                     </button>
                     <button className="text-gray-400 hover:text-white transition">
                         <IconShare2 className="w-5 h-5" />
@@ -195,9 +195,6 @@ const TextPromptCard: React.FC<TextPromptCardProps> = ({ prompt }) => {
     );
 };
 
-
-// --- Composant d'Accès Restreint (Réutilisé) ---
-// ... (Ne change pas, mais s'assure d'être présent)
 interface AccessRestrictedProps {
     title: string;
     description: string;
@@ -254,7 +251,7 @@ const PromptsPage = () => {
         // --- Contenu Premium (Tableau de Bord) ---
         return (
             <div className="flex">
-                {/* Colonne de gauche : Catégories (Sidebar) */}
+                {/* Colonne de gauche : Catégories (Sidebar) - Cachée sur mobile */}
                 <aside className="w-64 min-w-[250px] mr-8 hidden lg:block h-fit sticky top-4">
                     <h3 className="text-xl font-bold text-white mb-4">Catégories</h3>
                     <nav className="space-y-2">
@@ -293,26 +290,51 @@ const PromptsPage = () => {
                         <NotificationBell />
                     </div>
 
-                    {/* Filtres spécifiques à la catégorie Image */}
+                    {/* NOUVEAU : Sélection des Catégories sur Mobile/Tablette */}
+                    <div className="mb-6 lg:hidden">
+                        <label htmlFor="category-select" className="block text-sm font-medium text-gray-300 mb-2">
+                            Sélectionner la Catégorie
+                        </label>
+                        <div className="relative">
+                            <select
+                                id="category-select"
+                                value={activeCategory}
+                                onChange={(e) => {
+                                    setActiveCategory(e.target.value);
+                                    setActiveImageStyle(imageStyles[0]);
+                                }}
+                                className="w-full appearance-none bg-neutral-800 text-white p-3 pr-10 rounded-lg border border-neutral-700 focus:border-yellow-500 cursor-pointer"
+                            >
+                                {promptCategories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <IconChevronDown className="w-5 h-5 absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        </div>
+                    </div>
+
+
+                    {/* Filtres spécifiques à la catégorie Image (Liste déroulante) */}
                     {activeCategory === 'image' && (
                         <div className="mb-6">
                             <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
                                 <IconAdjustmentsHorizontal className="w-6 h-6 mr-2" /> Filtrer par Style Artistique
                             </h2>
-                            <div className="flex flex-wrap gap-2">
-                                {imageStyles.map(style => (
-                                    <button
-                                        key={style}
-                                        onClick={() => setActiveImageStyle(style)}
-                                        className={`px-4 py-2 rounded-full text-sm font-medium transition duration-200 ${
-                                            activeImageStyle === style
-                                                ? 'bg-blue-600 text-white'
-                                                : 'bg-neutral-700 text-gray-300 hover:bg-neutral-600'
-                                        }`}
-                                    >
-                                        {style}
-                                    </button>
-                                ))}
+                            <div className="relative max-w-xs"> {/* Limiter la largeur de la liste déroulante */}
+                                <select
+                                    value={activeImageStyle}
+                                    onChange={(e) => setActiveImageStyle(e.target.value)}
+                                    className="w-full appearance-none bg-neutral-800 text-white p-3 pr-10 rounded-lg border border-neutral-700 focus:border-yellow-500 cursor-pointer"
+                                >
+                                    {imageStyles.map(style => (
+                                        <option key={style} value={style}>
+                                            {style}
+                                        </option>
+                                    ))}
+                                </select>
+                                <IconChevronDown className="w-5 h-5 absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
                             </div>
                             <div className="mt-4 text-gray-500 text-sm">
                                 {filteredPrompts.length} prompts trouvés dans cette sélection.
@@ -320,7 +342,7 @@ const PromptsPage = () => {
                         </div>
                     )}
                     
-                    {/* Zone de recherche (simple) */}
+                    {/* Zone de recherche */}
                     <div className="mb-8">
                         <div className="relative">
                             <IconSearch className="w-5 h-5 absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
@@ -334,7 +356,7 @@ const PromptsPage = () => {
 
 
                     {/* Grille des Prompts */}
-                    <div className={`grid ${activeCategory === 'image' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-6`}>
+                    <div className={`grid ${activeCategory === 'image' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-6`}>
                         {filteredPrompts.length > 0 ? (
                             filteredPrompts.map((prompt: any) => 
                                 activeCategory === 'image' ? (

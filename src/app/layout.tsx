@@ -1,9 +1,12 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Footer } from "@/components/footer";
 import HeaderComponent from "@/components/header";
+// 1. Importez le ThemeProvider
+import { ThemeProvider } from '@/context/theme-provider'; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,16 +29,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // 2. Ajoutez suppressHydrationWarning et retirez les classes de thème ici
+    <html lang="fr" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <HeaderComponent />
-
-        {children}
+        {/* 3. ENVELOPPEZ tout le contenu visible avec le ThemeProvider */}
+        <ThemeProvider>
+          <HeaderComponent />
+          {children}
+          <Footer />
+        </ThemeProvider>
+        
+        {/* Laissez Analytics en dehors du ThemeProvider si vous le souhaitez, mais il est souvent mieux de le laisser ici */}
+        <Analytics />
       </body>
-
-      <Footer />
     </html>
   );
 }
