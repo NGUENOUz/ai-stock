@@ -18,14 +18,15 @@
     "@vercel/analytics": "^1.5.0",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
-    "motion": "^12.12.1",
+    "lucide-react": "^0.553.0",
+    "motion": "^12.23.24",
     "next": "15.3.2",
     "node": "^20.19.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sass": "^1.89.0",
     "scss": "^0.2.4",
-    "tailwind-merge": "^3.3.0",
+    "tailwind-merge": "^3.3.1",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

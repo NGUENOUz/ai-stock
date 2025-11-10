@@ -6,7 +6,7 @@ import "./globals.css";
 import { Footer } from "@/components/footer";
 import HeaderComponent from "@/components/header";
 // 1. Importez le ThemeProvider
-import { ThemeProvider } from '@/context/theme-provider'; 
+import { ThemeProvider } from "@/context/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,10 +37,10 @@ export default function RootLayout({
         {/* 3. ENVELOPPEZ tout le contenu visible avec le ThemeProvider */}
         <ThemeProvider>
           <HeaderComponent />
-          {children}
+          <main className="pt-20 min-h-[calc(100vh-80px)]">{children}</main>
           <Footer />
         </ThemeProvider>
-        
+
         {/* Laissez Analytics en dehors du ThemeProvider si vous le souhaitez, mais il est souvent mieux de le laisser ici */}
         <Analytics />
       </body>

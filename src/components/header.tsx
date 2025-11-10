@@ -1,9 +1,10 @@
-// src/components/HeaderComponent.tsx (ou là où il se trouve)
+// src/components/header.tsx
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useAppStore } from "@/store/useAppStore"; // <-- Importation du store Zustand
+// ⚠️ Assurez-vous que le chemin vers votre store Zustand est correct
+import { useAppStore } from "@/store/useAppStore"; 
 
 import {
   Navbar,
@@ -15,10 +16,11 @@ import {
   MobileNavHeader,
   MobileNavToggle,
   MobileNavMenu,
-} from "./navbar"; // Assurez-vous que le chemin est correct
+} from "./navbar"; // ⚠️ Assurez-vous que le chemin est correct
 
 export default function HeaderComponent() {
   // 1. Récupération de l'état d'authentification et des actions depuis Zustand
+  // ⚠️ NOTE: Si vous avez une erreur sur 'user' ou 'simulateLogout', vérifiez l'interface de useAppStore
   const { isLoggedIn, userName, handleLogout } = useAppStore();
   const router = useRouter();
 
@@ -26,49 +28,44 @@ export default function HeaderComponent() {
     { name: "Liste des AI", link: "/liste" },
     { name: "Prompts Populaires", link: "/prompt" },
     { name: "Formations", link: "/formations" },
-    { name: "Blog", link: "/blog" },
-    { name: "Events", link: "/events" },
-    { name: "Contact", link: "/contact" },
+    // { name: "Blog", link: "/blog" },
+    // { name: "Events", link: "/events" },
+    // { name: "Contact", link: "/contact" },
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleGlobalLogout = () => { // Renommé pour éviter la confusion avec l'action du store
-    handleLogout(); // Action Zustand de déconnexion (nom corrigé)
-    router.push("/"); // Redirige vers la page d'accueil après la déconnexion
-    setIsMobileMenuOpen(false); // Ferme le menu mobile
-  }
+  const handleGlobalLogout = () => { 
+    handleLogout(); 
+    router.push("/"); 
+    setIsMobileMenuOpen(false); 
+  }
 
   const handleNavClick = () => {
-    // Fonction utilitaire pour fermer le menu mobile après un clic
+    // Ferme le menu mobile après un clic
     setIsMobileMenuOpen(false);
   };
 
   // --- Contenu conditionnel pour l'authentification (Desktop) ---
 
-  // Liens pour utilisateur DÉCONNECTÉ (Desktop)
   const unauthenticatedButtons = (
     <>
-      {/* Bouton Connexion (caché sur les petits écrans) */}
       <NavbarButton href="/login" variant="secondary" className="hidden sm:inline-block">
         Connexion
       </NavbarButton>
-      {/* Bouton S'inscrire */}
       <NavbarButton href="/signup" variant="primary">
         S'inscrire
       </NavbarButton>
     </>
   );
 
-  // Liens pour utilisateur CONNECTÉ (Desktop)
   const authenticatedButtons = (
     <>
-      {/* Bouton Dashboard/Mon Compte */}
       <NavbarButton href="/dashboard" variant="secondary" className="hidden sm:inline-block">
-        {userName || "Mon Compte"} {/* Affiche le nom de l'utilisateur s'il existe */}
+        {userName || "Mon Compte"} 
       </NavbarButton>
-      {/* Bouton Déconnexion */}
-      <NavbarButton onClick={handleLogout} variant="primary">
+      {/* Utilisation de handleGlobalLogout pour gérer la redirection après déconnexion */}
+      <NavbarButton as="button" onClick={handleGlobalLogout} variant="primary">
         Déconnexion
       </NavbarButton>
     </>
@@ -76,13 +73,12 @@ export default function HeaderComponent() {
 
   // --- Contenu conditionnel pour l'authentification (Mobile) ---
 
-  // Liens d'action MOBILE (passés au MobileNavMenu)
   const mobileActionButtons = isLoggedIn ? (
     <>
       <NavbarButton href="/dashboard" onClick={handleNavClick} variant="primary" className="w-full">
         Dashboard
       </NavbarButton>
-      <NavbarButton onClick={handleLogout} variant="secondary" className="w-full">
+      <NavbarButton as="button" onClick={handleGlobalLogout} variant="secondary" className="w-full">
         Déconnexion
       </NavbarButton>
     </>
@@ -99,20 +95,17 @@ export default function HeaderComponent() {
 
 
   return (
-    <header className="relative w-full header">
-      <Navbar className="header">
+    // 🎯 HEADER CONTENEUR : Maintient le header visible.
+    <header className="relative w-full fixed" >
+      <Navbar className="header  fixed">
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
-         
-          {/* Les NavItems utilisent maintenant la fonction onItemClick pour gérer la fermeture du menu si on le veut (bien que non nécessaire en desktop) */}
+          
           <NavItems items={navItems} onItemClick={handleNavClick} />
           
           <div className="flex items-center gap-4">
-            
-           
-
-            {/* Affichage des boutons d'authentification basés sur l'état Zustand */}
+            {/* 🎯 AFFICHAGE DES BOUTONS */}
             {isLoggedIn ? authenticatedButtons : unauthenticatedButtons}
           </div>
         </NavBody>
@@ -130,19 +123,17 @@ export default function HeaderComponent() {
           <MobileNavMenu
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
-            items={navItems} // <-- Passage des liens de navigation
-            mobileActions={mobileActionButtons} // <-- Passage des actions (Login/Logout)
+            items={navItems} 
+            mobileActions={mobileActionButtons} 
           >
-            {/* Si vous aviez d'autres éléments enfants spécifiques au menu mobile non listés ci-dessus, ils iraient ici */}
-            {/* Par exemple, si vous voulez toujours Book a call */}
-            <NavbarButton
+            {/* <NavbarButton
               onClick={() => setIsMobileMenuOpen(false)}
               variant="dark"
               href="/book-a-call"
-              className="w-full mt-4" // Ajout d'une marge pour séparer
+              className="w-full mt-4" 
             >
               Book a call
-            </NavbarButton>
+            </NavbarButton> */}
           </MobileNavMenu>
         </MobileNav>
       </Navbar>

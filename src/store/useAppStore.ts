@@ -11,8 +11,8 @@ interface AppState {
     // Authentification
     isLoggedIn: boolean;
     userName: string;
-    email: string; // <-- Ajout de l'email
-    subscription: SubscriptionTier; // <-- Remplace isPremium par la tierce d'abonnement
+    email: string; 
+    subscription: SubscriptionTier; 
     
     // Thème
     isDarkMode: boolean;
@@ -21,44 +21,50 @@ interface AppState {
 interface AppActions {
     // Actions
     toggleDarkMode: () => void;
-    // Mise à jour de simulateLogin pour accepter l'email
-    simulateLogin: (username: string, email: string) => Promise<boolean>; 
+    simulateLogin: (username: string, email: string, tier?: SubscriptionTier) => Promise<boolean>; // 🌟 Ajout de 'tier' optionnel
     handleLogout: () => void;
-    // Nouvelle action pour mettre à jour l'abonnement
     updateSubscription: (newTier: SubscriptionTier) => void;
-    // Action pour mettre à jour les infos du profil
     updateProfile: (userName: string, email: string) => void; 
 }
 
 // Type combiné pour le store
 export type AppStore = AppState & AppActions;
 
-// --- 2. Création du Store Zustand ---
+// --- 2. Fonctions Utilitaires pour l'Initialisation/Hydratation ---
 
-// Fonction pour initialiser l'état du thème à partir de localStorage (pour l'hydratation)
+// Fonction pour gérer la classe 'dark' sur <html>
+const manageDarkModeClass = (isDark: boolean) => {
+    if (typeof document !== 'undefined') {
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
+};
+
+// Fonction pour initialiser l'état du thème à partir de localStorage
 const getInitialDarkMode = (): boolean => {
     if (typeof window === 'undefined') return false; 
     
     const savedMode = localStorage.getItem('theme');
-    // Appliquer immédiatement la classe 'dark' à la balise <html> lors de l'initialisation côté client
-    if (savedMode === 'dark') {
-        document.documentElement.classList.add('dark');
-        return true;
-    } else {
-        document.documentElement.classList.remove('dark');
-        return false;
-    }
+    const isDark = savedMode === 'dark';
+    manageDarkModeClass(isDark); // Appliquer immédiatement
+    return isDark;
 };
 
+
+// --- 3. Création du Store Zustand ---
+
 export const useAppStore = create<AppStore>()(
-    // Utilisation du middleware 'persist' pour stocker l'état (ici seulement le thème)
     persist(
         (set, get) => ({
             // --- État Initial ---
-            isLoggedIn: false,
+            // 🌟 Mise à jour : isLoggedIn est false par défaut (sera mis à jour par l'hydratation si besoin)
+            isLoggedIn: false, 
             userName: 'Visiteur',
-            email: 'visiteur@ai-stock.com', // <-- Valeur par défaut
-            subscription: 'Gratuit', // <-- État initial de l'abonnement
+            email: 'visiteur@ai-stock.com', 
+            subscription: 'Gratuit', 
             isDarkMode: getInitialDarkMode(), 
 
             // --- Actions ---
@@ -66,27 +72,20 @@ export const useAppStore = create<AppStore>()(
             toggleDarkMode: () => {
                 set((state) => {
                     const newMode = !state.isDarkMode;
-                    
-                    // Gestion de la classe 'dark' sur l'élément <html>
-                    if (newMode) {
-                        document.documentElement.classList.add('dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                    }
-                    
+                    manageDarkModeClass(newMode);
                     return { isDarkMode: newMode };
                 });
             },
 
-            // Mise à jour : Accepte l'email, définit l'abonnement à 'Gratuit'
-            simulateLogin: (username = 'Alice Dupont', email = 'alice@ai-stock.com') => {
+            // Mise à jour : Accepte la tierce d'abonnement optionnelle
+            simulateLogin: (username = 'Alice Dupont', email = 'alice@ai-stock.com', tier: SubscriptionTier = 'Gratuit') => {
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         set({
                             isLoggedIn: true,
                             userName: username,
-                            email: email, // <-- Enregistrement de l'email
-                            subscription: 'Gratuit', // <-- Toujours 'Gratuit' au login
+                            email: email, 
+                            subscription: tier, // <-- Utilise la tierce fournie ou 'Gratuit'
                         });
                         resolve(true);
                     }, 1500);
@@ -94,6 +93,7 @@ export const useAppStore = create<AppStore>()(
             },
 
             handleLogout: () => {
+                // 🌟 S'assurer que les valeurs par défaut sont claires
                 set({
                     isLoggedIn: false,
                     userName: 'Visiteur',
@@ -102,12 +102,10 @@ export const useAppStore = create<AppStore>()(
                 });
             },
 
-            // Nouvelle action pour mettre à jour l'abonnement
             updateSubscription: (newTier: SubscriptionTier) => {
                 set({ subscription: newTier });
             },
 
-            // Nouvelle action pour mettre à jour le profil (pour /account/settings)
             updateProfile: (newUserName: string, newEmail: string) => {
                 set({ userName: newUserName, email: newEmail });
             }
@@ -115,21 +113,38 @@ export const useAppStore = create<AppStore>()(
         {
             name: 'ai-stock-storage', 
             storage: createJSONStorage(() => localStorage), 
-            // Ne persister que le thème et les infos utilisateur (pour l'auto-login)
-            // Note: Dans une app réelle, l'isLoggedIn ne serait pas persisté directement
+            
+            // 🌟 Modification : Persister isLoggedIn si l'utilisateur est connecté
             partialize: (state) => ({ 
                 isDarkMode: state.isDarkMode,
                 userName: state.userName,
                 email: state.email,
                 subscription: state.subscription,
+                // On persiste isLoggedIn s'il est vrai, pour gérer l'auto-login.
+                isLoggedIn: state.isLoggedIn, 
             }), 
-            onRehydrateStorage: (state) => {
-                // S'assurer que le mode sombre est appliqué lors du rechargement
-                if (state?.isDarkMode) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
+            
+            // 🌟 Modification : Logique d'Hydratation
+            onRehydrateStorage: () => (state) => {
+                if (!state) return;
+                
+                // 1. Gérer le thème
+                manageDarkModeClass(state.isDarkMode);
+
+                // 2. Tenter l'auto-connexion si les infos de session sont présentes
+                // On considère que l'utilisateur est connecté si son nom est différent de 'Visiteur' OU si isLoggedIn a été persisté comme vrai
+                // if (state.isLoggedIn) {
+                //     // Rétablir les données utilisateur et forcer isLoggedIn à true
+                //     set({
+                //         isLoggedIn: true,
+                //         userName: state.userName,
+                //         email: state.email,
+                //         subscription: state.subscription,
+                //     });
+                // } else {
+                //     // S'assurer qu'il est déconnecté si rien n'indique le contraire
+                //     set({ isLoggedIn: false });
+                // }
             },
         },
     ),

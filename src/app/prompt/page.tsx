@@ -14,8 +14,8 @@ import {
 
 // Simulation du Contexte Utilisateur (à remplacer par votre véritable store)
 const useAuthStore = () => {
-  const isAuthenticated = true;
-  const isPremiumUser = true;
+  const isAuthenticated = false;
+  const isPremiumUser = false;
   const userName = "Alice Dupont";
   return { isAuthenticated, isPremiumUser, userName };
 };
@@ -252,7 +252,7 @@ const PromptsPage = () => {
         return (
             <div className="flex">
                 {/* Colonne de gauche : Catégories (Sidebar) - Cachée sur mobile */}
-                <aside className="w-64 min-w-[250px] mr-8 hidden lg:block h-fit sticky top-4">
+                <aside className="w-64 min-w-[250px] mr-8 hidden lg:block h-fit sticky top-24">
                     <h3 className="text-xl font-bold text-white mb-4">Catégories</h3>
                     <nav className="space-y-2">
                         {promptCategories.map(cat => (

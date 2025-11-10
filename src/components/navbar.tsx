@@ -1,16 +1,18 @@
+// src/components/navbar.tsx
 "use client";
 import { cn } from "@/lib/utils";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import {
   motion,
   AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
+  // ⚠️ SUPPRESSION: useScroll, useMotionValueEvent
 } from "framer-motion";
 
 import React, { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import Link from "next/link"; // <-- IMPORTANT: Utilisation de Link de Next.js
+import Link from "next/link"; 
+
+// --- Interfaces ---
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -20,8 +22,10 @@ interface NavbarProps {
 interface NavBodyProps {
   children: React.ReactNode;
   className?: string;
-  visible?: boolean;
+  // Nous maintenons 'visible' pour le clonage, mais il sera toujours 'true'
+  visible?: boolean; 
 }
+// ... (Autres interfaces restent les mêmes)
 
 interface NavItemsProps {
   items: {
@@ -44,54 +48,39 @@ interface MobileNavHeaderProps {
 }
 
 interface MobileNavMenuProps {
-  children?: React.ReactNode; // Rendu de contenu supplémentaire optionnel
+  children?: React.ReactNode; 
   className?: string;
   isOpen: boolean;
   onClose: () => void;
-  // Nouvelle prop requise pour les liens de navigation
   items: { name: string; link: string }[];
-  // Nouvelle prop requise pour les boutons d'action (login/logout/signup)
   mobileActions: React.ReactNode; 
 }
 
+
 // ---------------------------
-// 1. NAVBAR (FIXE)
+// 1. NAVBAR (STABLE & STICKY)
 // ---------------------------
 export const Navbar = ({ children, className }: NavbarProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-  const [visible, setVisible] = useState<boolean>(false);
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 100) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  });
+  // 🎯 CORRECTION : Suppression de toute logique de scroll. Le header est toujours "visible".
+  const visible = true; 
 
   return (
     <motion.div
-      ref={ref}
-      // Changement: 'sticky top-10' -> 'fixed top-0 pt-10' pour la position fixe
-      className={cn("fixed inset-x-0 top-0 z-40 w-full ", className)}
+      // 🎯 CORRECTION : Position sticky au lieu de fixed/animated pour la stabilité
+      // La classe sticky top-0 garantit qu'il reste en haut pendant le défilement.
+      className={cn("sticky top-0 z-40 w-full", className)}
     >
       <div>
-         {React.Children.map(children, (child) =>
-        React.isValidElement(child)
-          ? React.cloneElement(
-              child as React.ReactElement<{ visible?: boolean }>,
-              { visible },
-            )
-          : child,
-      )}
-     
-
+        {/* Clonage pour passer la prop 'visible' (qui est toujours true maintenant) */}
+        {React.Children.map(children, (child) =>
+          React.isValidElement(child)
+            ? React.cloneElement(
+                child as React.ReactElement<{ visible?: boolean }>,
+                { visible },
+              )
+            : child,
+        )}
       </div>
-     
     </motion.div>
   );
 };
@@ -99,19 +88,15 @@ export const Navbar = ({ children, className }: NavbarProps) => {
 // ---------------------------
 // 2. NAVBODY (DESKTOP - GLASSMORHPISM)
 // ---------------------------
-// navbar.tsx (composant NavBody)
-
 export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   return (
     <motion.div
+      // 🎯 CORRECTION : Animate fixe (pas de changement de valeur) pour garder Glassmorphism
       animate={{
-        backdropFilter: visible ? "blur(10px)" : "none",
-        boxShadow: visible
-          ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
-          : "none",
-        width: visible ? "70%" : "100%",
-        // AVANT: y: visible ? 20 : 0, - ON LE GARDE POUR LA RETRACTION DU HEADER AU SCROLL
-        y: visible ? 20 : 0, 
+        backdropFilter: "blur(10px)", 
+        boxShadow: "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset",
+        width: "95%", 
+        y: 0, // 🎯 SUPPRESSION de l'animation de mouvement
       }}
       transition={{
         type: "spring",
@@ -122,10 +107,10 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         minWidth: "1200px",
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex dark:bg-transparent",
-        visible && "bg-white/50 dark:bg-neutral-950/50 backdrop-blur-sm",
-        // AJOUTER une marge supérieure conditionnelle si la navbar n'est PAS visible (pour la vue initiale)
-        !visible && "mt-5", // Ajoute la marge de 10 unités seulement au départ (quand visible est false)
+        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full px-4 py-2 lg:flex",
+        // 🎯 Application des styles de fond permanent
+        "bg-white/50 dark:bg-neutral-950/50 backdrop-blur-sm",
+        "mt-5", // Marge supérieure pour centrer visuellement
         className,
       )}
     >
@@ -150,7 +135,6 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       )}
     >
       {items.map((item, idx) => {
-        // Correspondance partielle pour les chemins (ex: /blog actif pour /blog/article-1)
         const isCurrentPage = item.link === pathname || (item.link !== '/' && pathname.startsWith(item.link));
 
         return (
@@ -194,17 +178,15 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
 export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
   return (
     <motion.div
+      // 🎯 CORRECTION : Animate fixe pour garder Glassmorphism
       animate={{
-        // Glassmorphism (blur)
-        backdropFilter: visible ? "blur(10px)" : "none",
-        boxShadow: visible
-          ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
-          : "none",
-        width: visible ? "90%" : "100%",
-        paddingRight: visible ? "12px" : "0px",
-        paddingLeft: visible ? "12px" : "0px",
-        borderRadius: visible ? "4px" : "2rem",
-        y: visible ? 20 : 0,
+        backdropFilter: "blur(10px)",
+        boxShadow: "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset",
+        width: "95%",
+        paddingRight: "12px",
+        paddingLeft: "12px",
+        borderRadius: "4px",
+        y: 0, // 🎯 SUPPRESSION de l'animation de mouvement
       }}
       transition={{
         type: "spring",
@@ -212,9 +194,9 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         damping: 50,
       }}
       className={cn(
-        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-transparent px-0 py-2 lg:hidden",
-        // Application du glassmorphism avec fond transparent et flou
-        visible && "bg-white/50 dark:bg-neutral-950/50 backdrop-blur-sm !visible && mt-10",
+        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between px-0 py-2 lg:hidden",
+        // 🎯 Application des styles de fond permanent
+        "bg-white/50 dark:bg-neutral-950/50 backdrop-blur-sm mt-5", 
         className,
       )}
     >
@@ -247,8 +229,8 @@ export const MobileNavMenu = ({
   className,
   isOpen,
   onClose,
-  items, // <-- Récupération des liens passés par le HeaderComponent
-  mobileActions, // <-- Récupération des boutons d'action passés
+  items, 
+  mobileActions, 
 }: MobileNavMenuProps) => {
   const pathname = usePathname();
 
@@ -256,7 +238,7 @@ export const MobileNavMenu = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }} // Ajout d'une petite translation pour l'animation
+          initial={{ opacity: 0, y: -20 }} 
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.2 }}
@@ -273,7 +255,7 @@ export const MobileNavMenu = ({
               <Link
                 key={`mobile-link-${idx}`}
                 href={item.link}
-                onClick={onClose} // Ferme le menu après un clic
+                onClick={onClose} 
                 className={cn(
                   "relative text-neutral-600 dark:text-neutral-300 w-full px-4 py-2 rounded-lg transition duration-150",
                   isCurrentPage ? "font-bold text-black dark:text-white bg-gray-200 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-neutral-800"
@@ -285,11 +267,10 @@ export const MobileNavMenu = ({
           })}
 
           <div className="flex w-full flex-col gap-4 pt-4 border-t border-gray-200 dark:border-neutral-800">
-            {/* Boutons d'action conditionnels (Login/Logout) */}
             {mobileActions}
           </div>
           
-          {children} {/* Reste du contenu optionnel */}
+          {children} 
         </motion.div>
       )}
     </AnimatePresence>
@@ -344,7 +325,6 @@ export const NavbarButton = ({
   | React.ComponentPropsWithoutRef<"a">
   | React.ComponentPropsWithoutRef<"button">
 )) => {
-  // Utilise <Link> si 'href' est fourni pour la navigation Next.js
   const Component = href ? Link : Tag; 
 
   const baseStyles =
@@ -356,14 +336,14 @@ export const NavbarButton = ({
     secondary: "bg-transparent shadow-none dark:text-white",
     dark: "bg-black text-white shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
     gradient:
-      "bg-[#FFD007] text-black shadow-md hover:bg-opacity-90", // Remplacement du dégradé générique par une couleur vive
+      "bg-[#FFD007] text-black shadow-md hover:bg-opacity-90",
   };
 
   return (
     <Component
       href={href || undefined}
       className={cn(baseStyles, variantStyles[variant], className)}
-      {...(props as any)} // Utiliser 'as any' pour gérer les props complexes de Link/a/button
+      {...(props as any)} 
     >
       {children}
     </Component>
