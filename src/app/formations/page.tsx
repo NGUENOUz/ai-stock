@@ -1,258 +1,235 @@
+// src/app/formations/page.tsx
 "use client";
-import React, { useState, useMemo } from 'react';
-import { Training, Instructor, Lesson } from '@/types/training'; // Assurez-vous que ce chemin est correct
-import { TrainingCard } from '../../components/trainingCard'; // Ajustez le chemin si nécessaire
-import { TrainingFilters } from '../../components/trainingFilter'; // Ajustez le chemin si nécessaire
-import { Pagination } from '../../components/pagination'; // Ajustez le chemin si nécessaire
+import React, { useState, useMemo, useEffect } from "react";
+import { Training, Instructor, Lesson } from "@/types/training";
+import { TrainingCard } from "../../components/trainingCard";
+import { TrainingFilters } from "../../components/trainingFilter";
+import { Pagination } from "../../components/pagination";
+import OnboardingTour, { SlideData } from "../../components/OnboardingTour";
+import { Search, Filter, X } from "lucide-react";
 
-// Import des icônes pour le mobile
-import { Search, Filter, X } from 'lucide-react'; 
-
-// --- DONNÉES DE DÉMONSTRATION (Gardées pour la cohérence) ---
-
-// Formateur unique pour l'exemple
+// ------------- DEMO DATA -----------------
 const DUMMY_INSTRUCTOR: Instructor = {
-    id: 'instr1',
-    name: 'Alex Dupont',
-    avatarUrl: 'https://i.pravatar.cc/150?img=1', // Placeholder avatar
-    bio:""
+  id: "instr1",
+  name: "Alex Dupont",
+  avatarUrl: "https://i.pravatar.cc/150?img=1",
+  bio: "",
 };
-
-// Fonction utilitaire pour générer des URL d'images aléatoires
-const getImageUrl = (seed: number) => `https://picsum.photos/seed/${seed}/800/450`; 
-
-// Leçons de démo pour une seule formation
+const getImageUrl = (seed: number) => `https://picsum.photos/seed/${seed}/800/450`;
 const LESSONS_PROMPT: Lesson[] = [
-    { id: 'l1', title: 'Introduction au Prompt Engineering', duration: '05:30', isFreePreview: true, videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0' },
-    { id: 'l2', title: 'Comprendre le Rôle et l\'Audience', duration: '12:00', isFreePreview: false, videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_2?rel=0' },
-    { id: 'l3', title: 'Les 5 Techniques Avancées de Cadrage', duration: '20:15', isFreePreview: false, videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_3?rel=0' },
-    { id: 'l4', title: 'Workshop: Création de 10 Prompts Ciblés', duration: '45:00', isFreePreview: false, videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_4?rel=0' },
+  { id: "l1", title: "Introduction au Prompt Engineering", duration: "05:30", isFreePreview: true, videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" },
+  { id: "l2", title: "Comprendre l’Audience & le Cadre", duration: "12:00", isFreePreview: false, videoUrl: "#" },
+  { id: "l3", title: "5 Techniques Avancées de Structuration", duration: "20:15", isFreePreview: false, videoUrl: "#" },
+  { id: "l4", title: "Atelier : Créer 10 Prompts Précis", duration: "45:00", isFreePreview: false, videoUrl: "#" },
 ];
-
-// Leçons de démo pour une autre formation
 const LESSONS_SEO: Lesson[] = [
-    { id: 'l5', title: 'Analyse sémantique (Module 1)', duration: '15:00', isFreePreview: true, videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0' },
-    { id: 'l6', title: 'Optimisation On-Page pour Google', duration: '18:30', isFreePreview: false, videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_6?rel=0' },
+  { id: "l5", title: "Analyse Sémantique — Module 1", duration: "15:00", isFreePreview: true, videoUrl: "#" },
+  { id: "l6", title: "Optimisation On-Page 2025", duration: "18:30", isFreePreview: false, videoUrl: "#" },
 ];
-
-
 const ALL_TRAININGS: Training[] = [
-    { id: 't1', title: 'Maîtriser le Prompt Engineering (Niveau Expert)', imageUrl: getImageUrl(10), category: 'IA & Prompt', language: 'Français', price: 0, durationMinutes: 180, numberOfVideos: 15, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Apprenez les techniques de prompt les plus avancées pour des résultats IA parfaits.', longDescription: 'Description longue et détaillée de la formation Prompt Engineering...', lessons: LESSONS_PROMPT,isPremium:false },
-    { id: 't2', title: 'SEO 2025: Les Secrets de Google RankBrain', imageUrl: getImageUrl(20), category: 'Marketing', language: 'Français', price: 0, durationMinutes: 120, numberOfVideos: 10, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Découvrez comment optimiser votre site pour les algorithmes de recherche modernes.', longDescription: 'Description longue et détaillée de la formation SEO...', lessons: LESSONS_SEO ,isPremium:false},
-    { id: 't3', title: 'Next.js & Tailwind CSS pour Développeurs', imageUrl: getImageUrl(30), category: 'Développement Web', language: 'Anglais', price: 0, durationMinutes: 300, numberOfVideos: 25, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Construisez des applications web rapides et modernes avec le stack de développement du moment.', longDescription: 'Description longue et détaillée de la formation Next.js...', lessons: LESSONS_PROMPT,isPremium:false },
-    { id: 't4', title: 'Stratégie de Contenu avec ChatGPT', imageUrl: getImageUrl(40), category: 'IA & Prompt', language: 'Français', price: 0, durationMinutes: 90, numberOfVideos: 8, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Utilisez ChatGPT comme un véritable coéquipier pour générer du contenu percutant.', longDescription: 'Description longue et détaillée de la formation ChatGPT...', lessons: LESSONS_SEO ,isPremium:false},
-    { id: 't5', title: 'Photographie Aérienne par Drone', imageUrl: getImageUrl(50), category: 'Création Vidéo', language: 'Français', price: 0, durationMinutes: 240, numberOfVideos: 18, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Maîtrisez le pilotage de drone et la post-production pour des images époustouflantes.', longDescription: 'Description longue et détaillée de la formation Drone...', lessons: LESSONS_PROMPT,isPremium:true },
-    { id: 't6', title: 'Création de Business E-commerce', imageUrl: getImageUrl(60), category: 'E-commerce', language: 'Français', price: 0, durationMinutes: 360, numberOfVideos: 30, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Lancez, automatisez et scalez votre propre boutique en ligne rentable.', longDescription: 'Description longue et détaillée de la formation E-commerce...', lessons: LESSONS_SEO ,isPremium:false},
-    { id: 't7', title: 'Fundamentaux de l\'Analyse de Données', imageUrl: getImageUrl(70), category: 'Analyse', language: 'Anglais', price:0, durationMinutes: 100, numberOfVideos: 9, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Introduction aux outils et méthodes d\'analyse pour prendre des décisions éclairées.', longDescription: 'Description longue et détaillée de la formation Analyse de Données...', lessons: LESSONS_PROMPT,isPremium:false },
-    { id: 't8', title: 'Optimisation de la Productivité', imageUrl: getImageUrl(80), category: 'Productivité', language: 'Français', price: 0, durationMinutes: 60, numberOfVideos: 5, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Des techniques éprouvées pour tripler votre efficacité quotidienne.', longDescription: 'Description longue et détaillée de la formation Productivité...', lessons: LESSONS_SEO,isPremium:false },
-    // ... ajoutez d'autres formations ici pour les tests de pagination
-    { id: 't9', title: 'Figma pour les Designers UI/UX', imageUrl: getImageUrl(90), category: 'Développement Web', language: 'Anglais', price: 0, durationMinutes: 140, numberOfVideos: 12, instructor: DUMMY_INSTRUCTOR, shortDescription: 'Description courte.', longDescription: 'Description longue.', lessons: LESSONS_SEO ,isPremium:false },
+  { id: "t1", title: "Maîtriser le Prompt Engineering — Niveau Expert", imageUrl: getImageUrl(10), category: "IA & Prompt", language: "Français", price: 0, durationMinutes: 180, numberOfVideos: 15, instructor: DUMMY_INSTRUCTOR, shortDescription: "Devenez autonome dans la conception de prompts puissants et efficaces.", longDescription: "", lessons: LESSONS_PROMPT, isPremium: false },
+  { id: "t2", title: "SEO 2025 — Secrets de RankBrain", imageUrl: getImageUrl(20), category: "Marketing", language: "Français", price: 0, durationMinutes: 120, numberOfVideos: 10, instructor: DUMMY_INSTRUCTOR, shortDescription: "Comprenez les nouveaux signaux de Google pour dominer les SERP.", longDescription: "", lessons: LESSONS_SEO, isPremium: false },
+  { id: "t3", title: "Next.js + Tailwind — Web Moderne", imageUrl: getImageUrl(30), category: "Développement Web", language: "Anglais", price: 0, durationMinutes: 300, numberOfVideos: 25, instructor: DUMMY_INSTRUCTOR, shortDescription: "Construisez des applications rapides et scalables.", longDescription: "", lessons: LESSONS_PROMPT, isPremium: false },
+  { id: "t4", title: "Stratégie de Contenu avec ChatGPT", imageUrl: getImageUrl(40), category: "IA & Prompt", language: "Français", price: 0, durationMinutes: 90, numberOfVideos: 8, instructor: DUMMY_INSTRUCTOR, shortDescription: "Faites de l’IA votre coéquipier créatif.", longDescription: "", lessons: LESSONS_SEO, isPremium: false },
+  { id: "t5", title: "Photographie Aérienne — Drone Pro", imageUrl: getImageUrl(50), category: "Création Vidéo", language: "Français", price: 0, durationMinutes: 240, numberOfVideos: 18, instructor: DUMMY_INSTRUCTOR, shortDescription: "Maîtrisez le pilotage et la post-production aérienne.", longDescription: "", lessons: LESSONS_PROMPT, isPremium: true },
+  { id: "t6", title: "Créer un Business E-commerce Rentable", imageUrl: getImageUrl(60), category: "E-commerce", language: "Français", price: 0, durationMinutes: 360, numberOfVideos: 30, instructor: DUMMY_INSTRUCTOR, shortDescription: "Lancez, automatisez et scalez avec méthode.", longDescription: "", lessons: LESSONS_SEO, isPremium: false },
+  { id: "t7", title: "Fundamentaux de l’Analyse de Données", imageUrl: getImageUrl(70), category: "Analyse", language: "Anglais", price: 0, durationMinutes: 100, numberOfVideos: 9, instructor: DUMMY_INSTRUCTOR, shortDescription: "Analysez, interprétez, décidez.", longDescription: "", lessons: LESSONS_PROMPT, isPremium: false },
+  { id: "t8", title: "Optimisation de la Productivité", imageUrl: getImageUrl(80), category: "Productivité", language: "Français", price: 0, durationMinutes: 60, numberOfVideos: 5, instructor: DUMMY_INSTRUCTOR, shortDescription: "Doublez votre efficacité en 30 jours.", longDescription: "", lessons: LESSONS_SEO, isPremium: false },
+  { id: "t9", title: "Figma pour Designers UI/UX", imageUrl: getImageUrl(90), category: "Développement Web", language: "Anglais", price: 0, durationMinutes: 140, numberOfVideos: 12, instructor: DUMMY_INSTRUCTOR, shortDescription: "Concevez des interfaces modernes et cohérentes.", longDescription: "", lessons: LESSONS_SEO, isPremium: false },
 ];
-// --- FIN DES DONNÉES DE DÉMONSTRATION ---
 
+// --------- Onboarding Slides ----------
+const onboardingSlides: SlideData[] = [
+  {
+    title: "Formations Gold Edition",
+    description:
+      "Accédez à des parcours d'apprentissage immersifs, pensés pour la nouvelle ère de l'IA et du digital. Filtres premium, expériences visuelles riches, contenus actualisés – tout l'univers Gold VisionOS pour booster vos compétences.",
+    icon: ({ className }: { className: string }) => (
+      <svg className={className} width="42" height="42" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#FFD900"/><path d="M12 7v5l3 2" stroke="#FFF4C9" strokeWidth="2" strokeLinecap="round" /></svg>
+    ),
+  },
+  {
+    title: "Naviguez, filtrez… sur-mesure",
+    description:
+      "Trouvez rapidement vos prochaines formations grâce aux filtres dorés, la recherche instantanée, et une interface intuitive. Naviguez en toute fluidité, côté desktop comme mobile.",
+    icon: ({ className }: { className: string }) => (
+      <svg className={className} width="42" height="42" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2" fill="#FFDB7A" stroke="#C89C36" strokeWidth="2"/></svg>
+    ),
+  },
+  {
+    title: "Premium & Badge Or",
+    description:
+      "Distinguez les contenus premium Gold d’un simple coup d’œil grâce au badge Or, un effet glass, et des avantages réservés aux membres.",
+    icon: ({ className }: { className: string }) => (
+      <svg className={className} width="37" height="37" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 13.97L18.18 20.02L12 16.77L5.82 20.02L7 13.97L2 9.27L8.91 8.26L12 2Z" fill="#F8D98A"/></svg>
+    ),
+  },
+];
 
-// Fonction utilitaire pour extraire les options uniques
-const getAllUniqueOptions = (trainings: Training[], key: keyof Training): string[] => {
-    return Array.from(new Set(trainings.map(t => t[key] as string)));
-};
-
-const ALL_CATEGORIES = getAllUniqueOptions(ALL_TRAININGS, 'category');
-const ALL_LANGUAGES = getAllUniqueOptions(ALL_TRAININGS, 'language');
+// --------- UTILS -----------
+const getAllUniqueOptions = (trainings: Training[], key: keyof Training) =>
+  Array.from(new Set(trainings.map((t) => t[key] as string)));
+const ALL_CATEGORIES = getAllUniqueOptions(ALL_TRAININGS, "category");
+const ALL_LANGUAGES = getAllUniqueOptions(ALL_TRAININGS, "language");
 const ITEMS_PER_PAGE = 8;
 
+// --------- Mobile Filter ---------
+const MobileFilterHeader = ({
+  searchTerm,
+  setSearchTerm,
+  isFiltersOpen,
+  toggleFilters,
+}: any) => (
+  <div className="lg:hidden p-4 bg-white/15 dark:bg-neutral-900/20 border border-white/20 dark:border-white/10 backdrop-blur-xl shadow-[0_4px_25px_rgba(255,215,120,0.19)] rounded-2xl mb-6 sticky top-4 z-20">
+    <div className="flex items-center gap-4">
+      <div className="flex-grow relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-yellow-400" />
+        <input
+          type="text"
+          placeholder="Rechercher une formation…"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 rounded-full bg-white/10 dark:bg-neutral-800/20 border border-white/20 dark:border-white/10 text-gray-900 dark:text-yellow-100 placeholder-yellow-200 outline-none focus:ring-2 focus:ring-yellow-400/70"
+        />
+      </div>
+      <button
+        onClick={toggleFilters}
+        className="p-3 bg-gradient-to-br from-[#FFF4C9] via-[#F5D98A] to-[#C89C36] text-black rounded-full shadow-lg hover:scale-105 transition-transform border border-white/20"
+      >
+        {isFiltersOpen ? <X className="w-5 h-5" /> : <Filter className="w-5 h-5" />}
+      </button>
+    </div>
+  </div>
+);
 
-// --- NOUVEAU COMPOSANT : EN-TÊTE DE FILTRE MOBILE ---
-interface MobileFilterHeaderProps {
-    searchTerm: string;
-    setSearchTerm: (term: string) => void;
-    isFiltersOpen: boolean;
-    toggleFilters: () => void;
-}
-
-const MobileFilterHeader: React.FC<MobileFilterHeaderProps> = ({ 
-    searchTerm, 
-    setSearchTerm, 
-    isFiltersOpen, 
-    toggleFilters 
-}) => {
-    return (
-        // Rendu uniquement sur les écrans mobiles (masqué sur lg et au-dessus)
-        <div className="lg:hidden p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg mb-6 sticky top-2 z-10 mx-4 md:mx-0">
-            <div className="flex items-center space-x-3">
-                
-                {/* Champ de Recherche */}
-                <div className="flex-grow relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input 
-                        type="text" 
-                        placeholder="Rechercher une formation..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border rounded-full dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-yellow-500 focus:border-yellow-500"
-                    />
-                </div>
-                
-                {/* Icône/Bouton de Filtre */}
-                <button 
-                    onClick={toggleFilters}
-                    className="p-3 bg-yellow-500 text-black rounded-full shadow-lg hover:bg-yellow-600 transition-colors flex items-center justify-center"
-                    aria-label={isFiltersOpen ? "Fermer les filtres" : "Ouvrir les filtres"}
-                >
-                    {isFiltersOpen ? <X className="w-5 h-5" /> : <Filter className="w-5 h-5" />}
-                </button>
-            </div>
-        </div>
-    );
-};
-
-
+// --------- Main Page -------------
 export default function FormationsPage() {
-    const [filters, setFilters] = useState({
-        category: '',
-        language: '',
-        price: 'all', 
-        duration: 'all', 
+  const [filters, setFilters] = useState({
+    category: "",
+    language: "",
+    price: "all",
+    duration: "all",
+  });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(true); // Affichage du tour au chargement
+
+  // Fermer onboarding lors d'une action (idéalement tracker ici le statut pour chaque utilisateur)
+  const handleOnboardingFinish = () => setShowOnboarding(false);
+
+  const toggleFilters = () => setIsMobileFiltersOpen(!isMobileFiltersOpen);
+
+  // --------------- FILTRAGE ---------------
+  const filteredTrainings = useMemo(() => {
+    let list = ALL_TRAININGS;
+    if (searchTerm) {
+      list = list.filter(
+        (t) =>
+          t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          t.instructor.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    list = list.filter((t) => {
+      const matchCategory = !filters.category || t.category === filters.category;
+      const matchLanguage = !filters.language || t.language === filters.language;
+      let matchDuration = true;
+      if (filters.duration !== "all") {
+        const [min, max] = filters.duration.split("-").map(Number);
+        matchDuration = max
+          ? t.durationMinutes >= min && t.durationMinutes <= max
+          : t.durationMinutes >= min;
+      }
+      let matchPrice = true;
+      if (filters.price !== "all") {
+        if (filters.price === "premium") matchPrice = t.isPremium === true;
+        else if (filters.price === "0") matchPrice = t.price === 0 && !t.isPremium;
+        else {
+          const [min, max] = filters.price.split("-").map(Number);
+          matchPrice = max ? t.price >= min && t.price <= max : t.price >= min;
+        }
+      }
+      return matchCategory && matchLanguage && matchPrice && matchDuration;
     });
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false); // 👈 ÉTAT DU MOBILE
+    return list;
+  }, [filters, searchTerm]);
 
-    const toggleFilters = () => setIsMobileFiltersOpen(!isMobileFiltersOpen);
+  // -------- PAGINATION --------
+  const totalPages = Math.ceil(filteredTrainings.length / ITEMS_PER_PAGE);
+  const currentTrainings = filteredTrainings.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+  );
+  useEffect(() => setCurrentPage(1), [filters, searchTerm]);
 
-    const filteredTrainings = useMemo(() => {
-        let list = ALL_TRAININGS;
+  return (
+    <div className="min-h-screen bg-gradient-to-tr from-[#232420] via-neutral-900 to-[#22211d] text-white py-16 px-4 sm:px-8 lg:px-12">
+      {/* -------- Onboarding Modal --------- */}
+      {showOnboarding && (
+        <OnboardingTour
+          slides={onboardingSlides}
+          pageTitle="la Librairie des Formations"
+          pageId="formations"
+        />
+      )}
 
-        // 1. Recherche par terme
-        if (searchTerm) {
-            list = list.filter(t => 
-                t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                t.instructor.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
-        // 2. Filtrage par critères
-        list = list.filter(t => {
-            const matchCategory = !filters.category || t.category === filters.category;
-            const matchLanguage = !filters.language || t.language === filters.language;
-            
-           
-            // Logique de filtrage par durée
-            let matchDuration = true;
-            if (filters.duration !== 'all') {
-                const [min, max] = filters.duration.split('-').map(Number);
-                if (max) {
-                    matchDuration = t.durationMinutes >= min && t.durationMinutes <= max;
-                } else { // '180+'
-                    matchDuration = t.durationMinutes >= min;
-                }
-            }let matchPrice = true;
-            if (filters.price !== 'all') {
-                
-                if (filters.price === 'premium') {
-                    // Si 'premium' est sélectionné, on vérifie la propriété isPremium du cours
-                    matchPrice = t.isPremium === true; 
-
-                } else if (filters.price === '0') {
-                    // Si 'gratuit' est sélectionné, on vérifie que le prix est 0 ET que ce n'est PAS un Premium
-                    // Nous supposons que les cours Premium (même si price=0) ne sont pas inclus dans le filtre 'Gratuit' simple.
-                    matchPrice = t.price === 0 && t.isPremium !== true; 
-                    
-                } else { 
-                    // Logique des tranches de prix numériques (ex: '1-99', '200+')
-                    const [min, max] = filters.price.split('-').map(Number);
-                    
-                    if (max) {
-                        matchPrice = t.price >= min && t.price <= max;
-                    } else { // '200+'
-                        matchPrice = t.price >= min;
-                    }
-                    // S'assurer que les cours Premium ne sont pas inclus dans les tranches de prix standard si t.price > 0
-                    // (ceci dépend de votre logique métier, ici on les exclut implicitement)
-                }
-            }
-            
-            return matchCategory && matchLanguage && matchPrice && matchDuration;
-        });
-
-        return list;
-    }, [searchTerm, filters]);
-
-    // Gestion des changements de page
-    const totalPages = Math.ceil(filteredTrainings.length / ITEMS_PER_PAGE);
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const currentTrainings = filteredTrainings.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-    const handlePageChange = (page: number) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
-        }
-    };
-
-    // Réinitialise la pagination si les filtres ou la recherche changent
-    React.useEffect(() => {
-        setCurrentPage(1);
-    }, [searchTerm, filters]);
-
-
-    return (
-        <div className="min-h-screen bg-gray-50 dark:bg-neutral-900 py-12">
-            <div className="container mx-auto px-4 max-w-7xl">
-                
-                <h1 className="text-4xl md:text-5xl font-extrabold text-center text-gray-900 dark:text-white mb-10">
-                    Toutes nos Formations
-                </h1>
-
-                {/* 🌟 Intégration de l'en-tête de filtre mobile (s'affiche uniquement sur mobile) */}
-                <MobileFilterHeader
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                    isFiltersOpen={isMobileFiltersOpen}
-                    toggleFilters={toggleFilters}
-                />
-                
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    
-                    {/* Colonne des Filtres (Gérée par visibilité) */}
-                    <aside className={`lg:col-span-1 ${isMobileFiltersOpen ? 'block fixed top-20 left-4 right-4 z-20' : 'hidden'} lg:block`}>
-                        <TrainingFilters 
-                            filters={filters}
-                            setFilters={setFilters as any} 
-                            searchTerm={searchTerm} // La barre de recherche est dans l'en-tête mobile, mais TrainingFilters gère les filtres
-                            setSearchTerm={setSearchTerm}
-                            allCategories={ALL_CATEGORIES}
-                            allLanguages={ALL_LANGUAGES}
-                        />
-                    </aside>
-
-                    {/* Colonne des Formations (3/4) */}
-                    <main className="lg:col-span-3">
-                        <p className="mb-6 text-lg text-gray-600 dark:text-gray-400">
-                            **{filteredTrainings.length}** formation(s) trouvée(s).
-                        </p>
-                        
-                        {/* Grille des Cartes */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            {currentTrainings.map(training => (
-                                <TrainingCard key={training.id} training={training} />
-                            ))}
-                            {currentTrainings.length === 0 && (
-                                <p className="col-span-3 text-center text-xl text-gray-500 dark:text-gray-400 p-10 bg-white dark:bg-gray-800 rounded-lg">
-                                    ❌ Aucune formation ne correspond à vos critères de recherche.
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Pagination */}
-                        <Pagination 
-                            currentPage={currentPage} 
-                            totalPages={totalPages} 
-                            onPageChange={handlePageChange} 
-                        />
-
-                    </main>
-                </div>
+      <div className="container mx-auto px-6 max-w-7xl">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-center text-yellow-100 mb-14 tracking-tight drop-shadow-[0_0_24px_rgba(255,215,120,0.15)]">
+          Explorez Nos Formations
+        </h1>
+        <MobileFilterHeader
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          isFiltersOpen={isMobileFiltersOpen}
+          toggleFilters={toggleFilters}
+        />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
+          {/* Sidebar Filters Premium Glass */}
+          <aside
+            className={`
+              lg:col-span-1
+              ${isMobileFiltersOpen ? "block fixed top-24 left-4 right-4 z-30" : "hidden"}
+              lg:block
+              transition-all duration-500
+            `}
+          >
+            <div className="rounded-3xl bg-white/10 dark:bg-neutral-900/25 border border-white/20 dark:border-white/10 backdrop-blur-2xl shadow-[0_4px_45px_rgba(255,215,120,0.19)] px-2 py-5">
+              <TrainingFilters
+                filters={filters}
+                setFilters={setFilters}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                allCategories={ALL_CATEGORIES}
+                allLanguages={ALL_LANGUAGES}
+              />
             </div>
+          </aside>
+          {/* Trainings List */}
+          <main className="lg:col-span-3">
+            <p className="mb-6 text-lg text-yellow-400">
+              <span className="font-bold text-[#FFE79A]">{filteredTrainings.length}</span> formation(s) disponible(s)
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
+              {currentTrainings.map((training) => (
+                <TrainingCard key={training.id} training={training} />
+              ))}
+              {currentTrainings.length === 0 && (
+                <p className="col-span-3 text-center text-xl text-yellow-200 py-16 bg-white/10 dark:bg-neutral-900/40 backdrop-blur-xl rounded-3xl border border-yellow-100/20 font-semibold shadow-[0_0_40px_rgba(255,215,120,0.11)]">
+                  ❌ Aucun résultat ne correspond à votre recherche.
+                </p>
+              )}
+            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => {
+                setCurrentPage(page);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          </main>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

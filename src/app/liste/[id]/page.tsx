@@ -47,9 +47,9 @@ const BANNER_BASE_URL = "https://picsum.photos/800/400?random=";
 const allAiTools: AiTool[] = [
     // ... (Votre liste complète de 8 outils, assurez-vous qu'elle est bien là)
     { id: 1, name: "StockPredict AI", shortDesc: "Prédit les tendances boursières à court terme avec une précision de 90%", fullDesc: "Une solution complète basée sur l'apprentissage profond pour anticiper les mouvements du marché. Idéal pour les investisseurs actifs et les gestionnaires de portefeuille. Il analyse des millions de points de données chaque jour pour fournir des signaux d'achat/vente précis.", features: ["Analyse technique avancée", "Prévisions journalières et hebdomadaires", "API Intégration", "Alertes personnalisées", "Module de backtesting"], category: "Analyse", price: "Gratuit", isPremium: false, currentRank: 1, upvotes: 950, isTrending: true, isNew: false, logo: LOGO_BASE_URL + 1, bannerImage: BANNER_BASE_URL + 11, officialSiteUrl: "https://stockpredict.com" },
-    { id: 2, name: "AlgoTrade Pro", shortDesc: "Exécute des stratégies de trading automatisé sans intervention humaine", fullDesc: "Créez, testez et déployez vos robots de trading en quelques clics. Plateforme de backtesting et de paper trading intégrée. Conçu pour minimiser les erreurs humaines et maximiser la vitesse d'exécution.", features: ["Trading 24/7 sur plusieurs marchés", "Backtesting rapide et fiable", "Gestion du risque personnalisée", "Editeur de stratégie par glisser-déposer"], category: "Trading", price: "29€/mois", isPremium: true, currentRank: 15, upvotes: 450, isTrending: true, isNew: true, logo: LOGO_BASE_URL + 2, bannerImage: BANNER_BASE_URL + 22, officialSiteUrl: "https://algotradepro.com" },
+    { id: 2, name: "AlgoTrade Pro", shortDesc: "Exécute des stratégies de trading automatisé sans intervention humaine", fullDesc: "Créez, testez et déployez vos robots de trading en quelques clics. Plateforme de backtesting et de paper trading intégrée. Conçu pour minimiser les erreurs humaines et maximiser la vitesse d'exécution.", features: ["Trading 24/7 sur plusieurs marchés", "Backtesting rapide et fiable", "Gestion du risque personnalisée", "Editeur de stratégie par glisser-déposer"], category: "Trading", price: "29€/mois", isPremium: true, currentRank: 4, upvotes: 450, isTrending: true, isNew: true, logo: LOGO_BASE_URL + 2, bannerImage: BANNER_BASE_URL + 22, officialSiteUrl: "https://algotradepro.com" },
     { id: 3, name: "Portfolio Optimizer", shortDesc: "Optimise la diversification de votre portefeuille en fonction de votre profil de risque", fullDesc: "Utilise des algorithmes de Markowitz pour maximiser le rendement ajusté au risque. Suivez les performances en temps réel. Plateforme idéale pour la gestion passive et active.", features: ["Rééquilibrage automatique", "Modélisation Monte Carlo", "Analyse fiscale et sectorielle", "Rapports de performance détaillés"], category: "Gestion", price: "59€/mois", isPremium: true, currentRank: 2, upvotes: 890, isTrending: false, isNew: false, logo: LOGO_BASE_URL + 3, bannerImage: BANNER_BASE_URL + 33, officialSiteUrl: "https://portfolioopt.com" },
-    { id: 4, name: "Data Miner", shortDesc: "Collecte et structure des données de marché alternatives et financières", fullDesc: "Une plateforme d'agrégation de données pour les traders quantitatifs. Fournit des signaux alternatifs basés sur les médias sociaux et les rapports économiques.", features: ["Web scraping avancé", "API en temps réel", "Visualisation des données historiques"], category: "Analyse", price: "49€/mois", isPremium: false, currentRank: 7, upvotes: 700, isTrending: false, isNew: true, logo: LOGO_BASE_URL + 4, bannerImage: BANNER_BASE_URL + 44, officialSiteUrl: "https://dataminer.com" },
+    { id: 4, name: "Data Miner", shortDesc: "Collecte et structure des données de marché alternatives et financières", fullDesc: "Une plateforme d'agrégation de données pour les traders quantitatifs. Fournit des signaux alternatifs basés sur les médias sociaux et les rapports économiques.", features: ["Web scraping avancé", "API en temps réel", "Visualisation des données historiques"], category: "Analyse", price: "49€/mois", isPremium: false, currentRank: 3, upvotes: 700, isTrending: false, isNew: true, logo: LOGO_BASE_URL + 4, bannerImage: BANNER_BASE_URL + 44, officialSiteUrl: "https://dataminer.com" },
     { id: 5, name: "News Sentiment AI", shortDesc: "Analyse le sentiment des actualités financières en temps réel", fullDesc: "...", features: ["NLP (Natural Language Processing)", "Score de sentiment agrégé", "Alertes de volatilité"], category: "Actualités", price: "Gratuit", isPremium: false, currentRank: 5, upvotes: 650, isTrending: true, isNew: false, logo: LOGO_BASE_URL + 5, bannerImage: BANNER_BASE_URL + 55, officialSiteUrl: "https://newssentiment.com" },
     { id: 6, name: "Risk Bot", shortDesc: "Évaluation rapide et complète du risque d'un titre", fullDesc: "...", features: ["Notation de risque instantanée", "Historique de risque ajusté"], category: "Gestion", price: "12€/mois", isPremium: false, currentRank: 18, upvotes: 300, isTrending: false, isNew: false, logo: LOGO_BASE_URL + 6, bannerImage: BANNER_BASE_URL + 66, officialSiteUrl: "https://riskbot.com" },
     { id: 7, name: "Tax Planner", shortDesc: "Optimisation fiscale pour les investissements boursiers", fullDesc: "...", features: ["Déclaration simplifiée", "Conseils fiscaux automatisés"], category: "Gestion", price: "Gratuit", isPremium: false, currentRank: 22, upvotes: 250, isTrending: false, isNew: false, logo: LOGO_BASE_URL + 7, bannerImage: BANNER_BASE_URL + 77, officialSiteUrl: "https://taxplanner.com" },
@@ -231,19 +231,23 @@ const AiToolDetailPage = ({ params }: any) => {
             href={tool.officialSiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-center bg-yellow-500 text-black px-6 py-3 rounded-lg font-bold text-lg hover:bg-yellow-400 transition duration-200"
+            className="full-with px-8 py-3 rounded-xl font-bold text-lg
+                    bg-gradient-to-br from-[#FFF4C9] via-[#F5D98A] to-[#C89C36]
+                    text-black shadow-[0_4px_20px_rgba(255,215,120,0.45)]
+                    hover:shadow-[0_6px_25px_rgba(255,225,150,0.7)]
+                    transition-all duration-500 transform hover:scale-[1.03]"
           >
-            <IconExternalLink className="w-6 h-6 mr-2" /> Visiter le Site Officiel
+            <IconExternalLink className="w-5 h-5 inline mr-2 -mt-0.5" /> Visiter le Site Officiel
           </a>
 
-          <div className="mt-4 text-center">
+          {/* <div className="mt-4 text-center">
             <Link
               href="/pricing"
               className="text-sm text-gray-500 dark:text-gray-400 hover:text-yellow-500 underline"
             >
               Comparer les prix des abonnements
             </Link>
-          </div>
+          </div> */}
         </aside>
       </div>
 
