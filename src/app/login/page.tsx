@@ -1,19 +1,18 @@
-// src/app/login/page.tsx
 "use client";
 
-import React, { useState, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { useAppStore } from "@/store/useAppStore"; // Importation du store Zustand
-import { cn } from "@/lib/utils"; // Assurez-vous d'avoir une fonction cn (pour tailwind-merge)
+import { useAppStore } from "@/store/useAppStore";
+import { supabase } from "@/lib/supabase/supabaseClient";
+import { cn } from "@/lib/utils";
 
-// Composant pour l'affichage des messages d'erreur/succès
-const AlertMessage = ({
-  message,
-  type,
-}: {
+// Typage clair des alertes
+interface AlertMessageProps {
   message: string;
   type: "error" | "success";
-}) => (
+}
+
+const AlertMessage: React.FC<AlertMessageProps> = ({ message, type }) => (
   <div
     className={cn(
       "p-3 rounded-lg text-sm mb-4 border",
@@ -26,18 +25,24 @@ const AlertMessage = ({
   </div>
 );
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<{
-    text: string;
-    type: "error" | "success";
-  } | null>(null);
+type MessageState = { text: string; type: "error" | "success" } | null;
 
-  // Utilisation des actions du store Zustand
-  const simulateLogin = useAppStore((state) => state.simulateLogin);
+const LoginPage: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<MessageState>(null);
+
+  const loginFromDb = useAppStore((state) => state.loginFromDb);
+  const subscription = useAppStore((state) => state.subscription);
   const router = useRouter();
+
+  // Redirection immédiate si déjà connecté (guard robuste)
+  useEffect(() => {
+    if (subscription === "Premium" || subscription === "Pro") {
+      router.replace("/dashboard");
+    }
+  }, [subscription, router]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -45,32 +50,59 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      // Simulation d'une vérification simple (ici, seul l'email compte)
-      if (email === "test@ai-stock.com" && password === "123456") {
-        // Appel de l'action Zustand
-        await simulateLogin("Alice Dupont", email);
+      // Authentification Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
+      if (error || !data.user) {
         setMessage({
-          text: "Connexion réussie ! Redirection...",
-          type: "success",
-        });
-
-        // Redirection après un court délai
-        setTimeout(() => {
-          router.push("/dashboard"); // Rediriger vers un tableau de bord ou la page d'accueil
-        }, 1000);
-      } else {
-        setMessage({
-          text: "Erreur de connexion. Veuillez vérifier votre email et mot de passe.",
+          text: "Erreur de connexion. Vérifiez votre email et mot de passe.",
           type: "error",
         });
+        setIsLoading(false);
+        return;
       }
-    } catch (error) {
+
+      // Récupérer le profil utilisateur depuis la table users
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", data.user.id)
+        .single();
+
+      if (userError || !userData) {
+        setMessage({
+          text: "Connexion impossible au profil utilisateur.",
+          type: "error",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Synchroniser TOUT l'état global
+      loginFromDb({
+        userName: userData.user_name || userData.email,
+        email: userData.email,
+        subscription: userData.subscription || "Gratuit",
+      });
+
       setMessage({
-        text: "Une erreur inattendue est survenue.",
+        text: "Connexion réussie ! Redirection…",
+        type: "success",
+      });
+
+      // Redirection
+      setTimeout(() => {
+        router.replace("/dashboard");
+      }, 650);
+    } catch (err) {
+      setMessage({
+        text: "Erreur technique pendant la connexion.",
         type: "error",
       });
-      console.error(error);
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +120,7 @@ const LoginPage = () => {
 
         {message && <AlertMessage message={message.text} type={message.type} />}
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit} autoComplete="off">
           <div>
             <label
               htmlFor="email"
@@ -105,6 +137,7 @@ const LoginPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
+              autoComplete="username"
             />
           </div>
 
@@ -124,6 +157,7 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
+              autoComplete="current-password"
             />
           </div>
 
@@ -133,8 +167,7 @@ const LoginPage = () => {
               disabled={isLoading}
               className={cn(
                 "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black transition-colors",
-                // Style du bouton Jaune Vif (comme dans la Navbar)
-                "bg-[#FFD007] hover:bg-opacity-90",
+                "bg-gradient-to-r from-[#FFD700] to-[#C89C36] hover:bg-yellow-400",
                 isLoading && "opacity-50 cursor-not-allowed"
               )}
             >
@@ -146,7 +179,7 @@ const LoginPage = () => {
         <div className="text-sm text-center">
           <a
             href="/signup"
-            className="font-medium text-yellow-600 hover:text-yellow-500 dark:text-[#FFD007] dark:hover:text-[#FFD007]/80"
+            className="font-medium text-yellow-700 hover:text-yellow-500 dark:text-[#FFD007] dark:hover:text-[#FFD007]/80"
           >
             Pas encore de compte ? S'inscrire
           </a>

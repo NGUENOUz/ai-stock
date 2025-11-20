@@ -1,219 +1,111 @@
-// src/app/pricing/page.tsx
 "use client";
-
-import React from "react";
-import { useAppStore, SubscriptionTier } from "@/store/useAppStore"; // Import du store et du type
-import { IconCheck, IconX, IconLock, IconAward } from "@tabler/icons-react";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { IconCrown, IconSparkles, IconUser, IconCheck, IconArrowRight, IconBook, IconUsers, IconStars } from "@tabler/icons-react";
+import { useAppStore } from "@/store/useAppStore";
 
-// --- 1. Définition des Interfaces pour TypeScript ---
-
-// Interface pour les objets de Plan (Plans Data)
-interface PlanData {
-  tier: SubscriptionTier;
-  price: string;
-  period: string;
-  description: string;
-  features: { text: string; included: boolean }[];
-  buttonText: string;
-  variant: "current" | "primary" | "pro" | "secondary";
-}
-
-// Interface pour les Props du Composant PricingCard (Résout l'erreur de type)
-interface PricingCardProps {
-  plan: PlanData;
-  currentTier: SubscriptionTier;
-  onSelectPlan: (newTier: SubscriptionTier) => void;
-}
-
-// --- 2. Définition des Données des Plans ---
-
-const plans: PlanData[] = [
-  // Utilisation de l'interface PlanData
+const benefits = [
   {
-    tier: "Gratuit",
-    price: "0€",
-    period: "Pour toujours",
-    description: "Idéal pour découvrir nos outils d'IA.",
-    features: [
-      { text: "Accès limité aux Prompts Populaires (5/20)", included: true },
-      { text: "Une formation déverrouillée", included: true },
-      { text: "Analyse boursière IA en temps différé (24h)", included: true },
-      { text: "Suivi de portefeuille limité (2 actions)", included: false },
-      { text: "Alertes personnalisées en temps réel", included: false },
-    ],
-    buttonText: "Plan Actuel",
-    variant: "current",
+    title: "Prompts illimités",
+    description: "Accédez à toute la bibliothèque de prompts Gold, sans aucune limite ni quota.",
+    icon: IconSparkles,
   },
   {
-    tier: "Premium",
-    price: "19€",
-    period: "/mois",
-    description: "Passez à la vitesse supérieure dans l'analyse IA.",
-    features: [
-      { text: "Accès illimité aux Prompts Populaires", included: true },
-      { text: "Toutes les formations déverrouillées", included: true },
-      { text: "Analyse boursière IA en temps réel", included: true },
-      { text: "Suivi de portefeuille complet (20 actions)", included: true },
-      { text: "Alertes personnalisées en temps réel", included: false },
-    ],
-    buttonText: "Choisir Premium",
-    variant: "primary",
+    title: "Formations exclusives",
+    description: "Sujets IA, automatisation, productivité, SEO, développement... catalogue complet inclus.",
+    icon: IconBook,
   },
   {
-    tier: "Pro",
-    price: "49€",
-    period: "/mois",
-    description: "La puissance maximale pour les investisseurs avancés.",
-    features: [
-      { text: "Accès illimité aux Prompts Populaires", included: true },
-      { text: "Toutes les formations déverrouillées", included: true },
-      { text: "Analyse boursière IA en temps réel", included: true },
-      { text: "Suivi de portefeuille illimité", included: true },
-      { text: "Alertes personnalisées en temps réel", included: true },
-    ],
-    buttonText: "Choisir Pro",
-    variant: "pro",
+    title: "Communauté privée",
+    description: "Rejoignez le Discord Gold, webinars mensuels, support expert, entraide et échanges.",
+    icon: IconUsers,
   },
+  {
+    title: "Nouveaux ajouts priorisés",
+    description: "Prompts, modules et formations ajoutés chaque mois – suggestions prioritaires pour les membres gold.",
+    icon: IconStars,
+  },
+  {
+    title: "Badge Gold",
+    description: "Valorisez votre profil, accédez à des fonctionnalités avancées et événements privés.",
+    icon: IconCrown,
+  }
 ];
 
-// --- 3. Composant Carte de Tarification (avec Props typées) ---
-
-const PricingCard = ({ plan, currentTier, onSelectPlan }: PricingCardProps) => {
-  const isCurrent = plan.tier === currentTier;
-
-  // Styles conditionnels
-  const cardClass = cn(
-    "flex flex-col p-8 rounded-xl shadow-2xl transition duration-300 transform hover:scale-[1.03] border",
-    plan.tier === "Pro"
-      ? "bg-neutral-800 border-yellow-500"
-      : "bg-neutral-800 border-neutral-700",
-    isCurrent ? "ring-4 ring-yellow-500/50" : "hover:shadow-yellow-500/20"
-  );
-
-  const buttonClass = cn(
-    "mt-auto w-full py-3 rounded-lg font-bold transition duration-200",
-    isCurrent
-      ? "bg-gray-600 text-gray-400 cursor-not-allowed" // Actuel
-      : plan.variant === "primary"
-      ? "bg-yellow-500 text-black hover:bg-yellow-400" // Premium
-      : plan.variant === "pro"
-      ? "bg-black text-white border-2 border-yellow-500 hover:bg-neutral-900" // Pro
-      : "bg-neutral-600 text-white hover:bg-neutral-500" // Gratuit
-  );
-
-  // Fonctionnalité du bouton
-  const handleButtonClick = () => {
-    if (!isCurrent) {
-      onSelectPlan(plan.tier);
-      // Ici, dans une vraie app, on lancerait le processus de paiement
-      alert(
-        `Simulation d'abonnement au plan ${plan.tier}. Redirection vers le paiement...`
-      );
-    }
-  };
+export default function PricingGoldPage() {
+  const { subscription } = useAppStore();
+  const isPremium = subscription === "Premium" || subscription === "Pro";
 
   return (
-    <div className={cardClass}>
-      <div className="flex justify-between items-start mb-4">
-        <h3 className="text-2xl font-bold">{plan.tier}</h3>
-        {isCurrent && (
-          <span className="text-xs bg-yellow-500 text-black font-semibold px-3 py-1 rounded-full flex items-center">
-            <IconAward className="w-4 h-4 mr-1" /> Plan Actif
-          </span>
-        )}
+    <div className="min-h-screen bg-gradient-to-br from-[#232420] via-[#191710] to-[#181402] px-2 pb-14 pt-6 text-white">
+      <div className="max-w-4xl mx-auto pt-10 text-center flex flex-col items-center">
+        <span className="inline-block px-4 py-1 bg-gradient-to-r from-[#FFD700BB] to-[#C89C36CC] text-black text-xs tracking-widest rounded-full font-bold shadow-lg uppercase mb-4">
+          Edition Gold Premium
+        </span>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-5 text-gold-200 drop-shadow-[0_2px_16px_rgba(255,215,70,0.17)]">
+          Passez à l’abonnement <span className="bg-clip-text text-transparent bg-gradient-to-br from-[#FFD700] via-[#FFBF00] to-[#AB8507]">Gold</span>
+        </h1>
+        <p className="text-lg mb-7 text-gold-100/90 max-w-2xl">
+          Boostez votre productivité sur l’IA, l’auto, le no-code, le dev, le marketing, et ouvrez-vous les portes de la communauté privée Gold VisionOS. 
+        </p>
       </div>
 
-      <p className="text-4xl font-extrabold mb-1">
-        {plan.price}
-        {plan.period !== "Pour toujours" && (
-          <span className="text-base font-normal text-gray-400">
-            {plan.period}
-          </span>
-        )}
-      </p>
-      <p className="text-sm text-gray-400 mb-6">{plan.description}</p>
-
-      <ul className="space-y-3 mb-8 flex-grow">
-        {plan.features.map((feature, index) => (
-          <li key={index} className="flex items-start text-sm">
-            {feature.included ? (
-              <IconCheck className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-            ) : (
-              <IconLock className="w-5 h-5 mr-3 text-red-400 flex-shrink-0" />
-            )}
-            <span
-              className={cn(
-                feature.included
-                  ? "text-gray-300"
-                  : "text-gray-500 line-through"
-              )}
+      <div className="flex flex-col md:flex-row gap-10 justify-center my-10">
+        {/* CARD PRICING - GRATUIT */}
+        <div className="flex-1 bg-gradient-to-br from-[#23221888] to-[#111015] border border-white/15 rounded-3xl shadow-lg p-7 min-w-[260px] max-w-[370px] flex flex-col items-center relative overflow-hidden">
+          <span className="absolute top-7 right-5 px-4 py-1 bg-gold-700/40 text-gold-100 text-xs rounded-full font-bold tracking-widest shadow-md opacity-90">Gratuit</span>
+          <div className="text-4xl font-bold mb-1 text-gold-100">0€</div>
+          <div className="mb-5 text-xs text-gray-300">A vie • Accès limité</div>
+          <ul className="text-left space-y-2 my-5 text-sm text-gold-50">
+            <li><IconCheck className="inline mb-1 mr-2 text-gold-600 w-5 h-5" /> 5 prompts image/mois</li>
+            <li><IconCheck className="inline mb-1 mr-2 text-gold-600 w-5 h-5" /> Aperçu de formations Gold</li>
+            <li><IconCheck className="inline mb-1 mr-2 text-gold-600 w-5 h-5" /> Aucun CB requise</li>
+            <li className="line-through text-gold-200/65">Communauté privée</li>
+            <li className="line-through text-gold-200/65">Mises à jour prioritaires</li>
+            <li className="line-through text-gold-200/65">Formations complètes</li>
+          </ul>
+          {!isPremium && (
+            <Link
+              href="/signup"
+              className="mt-8 px-7 py-2 rounded-2xl bg-gradient-to-br from-white/80 to-gold-100/40 text-black font-bold hover:scale-[1.035] shadow transition"
             >
-              {feature.text}
-            </span>
-          </li>
-        ))}
-      </ul>
+              Essayer gratuitement
+            </Link>
+          )}
+        </div>
 
-      <button
-        className={buttonClass}
-        onClick={handleButtonClick}
-        disabled={isCurrent}
-      >
-        {isCurrent ? plan.buttonText : `Sélectionner ${plan.tier}`}
-      </button>
-    </div>
-  );
-};
-
-// --- 4. Composant Principal de la Page ---
-
-const PricingPage = () => {
-  const { subscription, isLoggedIn, updateSubscription } = useAppStore();
-
-  return (
-    <div className="min-h-screen bg-neutral-900 text-white p-4 sm:p-8 lg:p-12">
-      <header className="text-center mb-12">
-        <h1 className="text-5xl font-extrabold mb-3">Choisissez votre Plan</h1>
-        <p className="text-xl text-gray-400">
-          Débloquez la puissance de l'IA pour vos décisions d'investissement.
-        </p>
-        {isLoggedIn && (
-          <p className="mt-4 text-lg font-medium text-yellow-500">
-            Votre plan actuel : **{subscription}**.
-          </p>
-        )}
-      </header>
-
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        {plans.map((plan) => (
-          <PricingCard
-            key={plan.tier}
-            plan={plan}
-            currentTier={subscription}
-            onSelectPlan={updateSubscription}
-          />
-        ))}
+        {/* CARD PRICING - GOLD */}
+        <div className="flex-1 bg-gradient-to-br from-[#FFD70022] via-[#EEC35533] to-[#181402DD] border-2 border-[#FFD93C88] rounded-3xl shadow-2xl p-8 min-w-[280px] max-w-[390px] flex flex-col items-center scale-105 relative overflow-hidden">
+          <span className="absolute top-7 right-5 flex items-center gap-2 bg-gradient-to-r from-[#FFD700] to-[#C89C36] px-4 py-1 rounded-full font-bold shadow-md uppercase text-black tracking-widest text-xs">
+            <IconCrown className="w-4 h-4 mr-1 text-[#B6910A]" /> Gold
+          </span>
+          <div className="flex justify-center mt-1 mb-5">
+            <span className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#FFD700] via-[#FFBF00] to-[#AB8507] drop-shadow">15 €/mois</span>
+          </div>
+          <div className="mb-7 text-xs text-gold-300 font-bold">Sans engagement – résiliable à tout moment</div>
+          <ul className="text-left space-y-2 my-3 text-sm text-gold-100 font-medium">
+            {benefits.map((b, idx) => (
+              <li key={b.title} className="flex items-center">
+                <b.icon className="w-5 h-5 mr-2 text-[#FFD700]" /> {b.title}
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="https://chariow.com/puls/mon-pulse-id" // Remplace par ton vrai lien chariow pulse
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-10 px-8 py-3 rounded-2xl bg-gradient-to-br from-[#FFD700] via-[#FFBF00] to-[#B6910A] text-black font-extrabold text-lg flex items-center shadow-[0_4px_30px_rgba(220,197,70,0.16)] hover:scale-[1.045] transition-all"
+          >
+            <IconCrown className="w-6 h-6 mr-2" /> Passer au Gold <IconArrowRight className="ml-2 w-4 h-4" />
+          </Link>
+        </div>
       </div>
 
-      <footer className="text-center mt-16 text-gray-500">
-        <p>
-          * Simulation : Cette action met à jour votre statut dans l'application
-          locale.
+      <div className="mt-20 max-w-3xl mx-auto text-center text-gold-100/85">
+        <h2 className="text-2xl font-bold mb-3 text-[#FFD93C]">Un nouveau standard IA, productivité et communauté</h2>
+        <p className="text-gold-100/85 text-lg">
+          Misez sur une expérience premium : accès sans limite, échanges directs avec des experts, nouveautés chaque mois, et un espace où partager, apprendre et progresser avec la crème de la communauté IA francophone.
         </p>
-        {!isLoggedIn && (
-          <p className="mt-2 text-yellow-500">
-            Veuillez{" "}
-            <Link href="/login" className="underline">
-              vous connecter
-            </Link>{" "}
-            pour sélectionner un plan.
-          </p>
-        )}
-      </footer>
+      </div>
     </div>
   );
-};
-
-export default PricingPage;
+}
