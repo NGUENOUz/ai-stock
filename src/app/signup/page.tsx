@@ -85,7 +85,7 @@ const SignupPage = () => {
       // Mise à jour du store (optionnel, car il faut attendre la validation email en réalité)
       if (data.user) {
         updateProfile(userName, email);
-        updateSubscription("Gratuit");
+        // updateSubscription("Gratuit");
       }
 
       setMessage({ text: "Compte créé avec succès ! Vérifiez votre boîte mail pour activer votre compte.", type: 'success' });
