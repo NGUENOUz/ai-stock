@@ -11,6 +11,7 @@ interface AppState {
   userName: string;
   email: string;
   subscription: SubscriptionTier;
+  subscriptionEndDate: string | null; // <-- NOUVEAU: Date de fin d'abonnement (format string 'YYYY-MM-DD')
   hasSeenTour: { prompts: boolean; formations: boolean };
   isDarkMode: boolean;
 }
@@ -22,10 +23,11 @@ interface AppActions {
       userName: string;
       email: string;
       subscription?: SubscriptionTier;
+      subscriptionEndDate?: string | null; // <-- NOUVEAU: Ajout dans le login
     }
   ) => void;
   handleLogout: () => void;
-  updateSubscription: (newTier: SubscriptionTier) => void;
+  updateSubscription: (newTier: SubscriptionTier, endDate: string | null) => void; // <-- MODIFIÉ
   updateProfile: (userName: string, email: string) => void;
   setHasSeenTour: (page: "prompts" | "formations", seen: boolean) => void;
 }
@@ -46,10 +48,17 @@ const manageDarkModeClass = (isDark: boolean) => {
 
 const getInitialDarkMode = (): boolean => {
   if (typeof window === "undefined") return false;
-  const savedMode = localStorage.getItem("theme") || "";
-  const isDark = savedMode === "dark";
-  manageDarkModeClass(isDark);
-  return isDark;
+  // Utilisation de la logique existante avec vérification si le storage est disponible
+  try {
+    const savedMode = localStorage.getItem("theme") || "";
+    const isDark = savedMode === "dark";
+    manageDarkModeClass(isDark);
+    return isDark;
+  } catch (error) {
+    // Fallback si localStorage n'est pas disponible (ex: SSR)
+    manageDarkModeClass(false);
+    return false; 
+  }
 };
 
 // --- STORE ZUSTAND ---
@@ -61,6 +70,7 @@ export const useAppStore = create<AppStore>()(
       userName: "Visiteur",
       email: "visiteur@ai-stock.com",
       subscription: "Gratuit",
+      subscriptionEndDate: null, // <-- Défaut
       isDarkMode: getInitialDarkMode(),
       hasSeenTour: { prompts: false, formations: false },
 
@@ -69,6 +79,10 @@ export const useAppStore = create<AppStore>()(
         set((state) => {
           const newMode = !state.isDarkMode;
           manageDarkModeClass(newMode);
+          // Stocke le mode actuel dans localStorage pour le helper au rechargement
+          if (typeof localStorage !== "undefined") {
+            localStorage.setItem("theme", newMode ? "dark" : "light");
+          }
           return { isDarkMode: newMode };
         });
       },
@@ -78,12 +92,14 @@ export const useAppStore = create<AppStore>()(
         userName,
         email,
         subscription = "Gratuit",
+        subscriptionEndDate = null, // <-- Récupération du champ
       }) => {
         set({
           isLoggedIn: true,
           userName: userName || email,
           email,
           subscription,
+          subscriptionEndDate, // <-- Enregistrement du champ
         });
       },
 
@@ -93,12 +109,13 @@ export const useAppStore = create<AppStore>()(
           userName: "Visiteur",
           email: "visiteur@ai-stock.com",
           subscription: "Gratuit",
+          subscriptionEndDate: null, // <-- Réinitialisation
           hasSeenTour: { prompts: false, formations: false },
         });
       },
 
-      updateSubscription: (newTier) => {
-        set({ subscription: newTier });
+      updateSubscription: (newTier, endDate) => {
+        set({ subscription: newTier, subscriptionEndDate: endDate });
       },
 
       updateProfile: (userName, email) => {
@@ -121,13 +138,13 @@ export const useAppStore = create<AppStore>()(
         userName: state.userName,
         email: state.email,
         subscription: state.subscription,
+        subscriptionEndDate: state.subscriptionEndDate, // <-- PERSISTE
         isLoggedIn: state.isLoggedIn,
         hasSeenTour: state.hasSeenTour,
       }),
       onRehydrateStorage: () => (state) => {
         if (!state) return;
         manageDarkModeClass(state.isDarkMode || false);
-        // Les autres états sont restaurés automatiquement par persist.
       },
     }
   )

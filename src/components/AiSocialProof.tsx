@@ -34,7 +34,7 @@ export const AISocialProof: React.FC = () => {
       />
 
       {/* SECTION PRINCIPALE - ⭐ FOND BLANC/CLAIR (Nécessaire pour l'effet de transition) */}
-      <section className="bg-white dark:bg-neutral-950 py-16 md:py-24 relative z-10 mt-80 ">
+      <section className="bg-white dark:bg-neutral-950 py-16 md:py-24 relative z-10 mt-80 socialTools">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* TITRE - Maintient de la clarté sur fond clair/sombre */}

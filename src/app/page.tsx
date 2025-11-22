@@ -26,6 +26,7 @@ import { FeatureHighlight } from "../components/FeatureHighlight";
 import { PricingSection } from "../components/pricingSection";
 import { FaqSection } from "@/components/FaqSetion";
 import { FooterCTA } from "@/components/footerSection";
+import { CommunitySection } from "@/components/communitySection";
 
 export default function SpotlightPreview() {
   const [featuredTools, setFeaturedTools] = useState<AiTool[]>([]);
@@ -111,6 +112,7 @@ export default function SpotlightPreview() {
 
       <AISocialProof />
       <FeaturesSectionDemo />
+      <CommunitySection />
       <PricingSection />
       <FaqSection />
       <FooterCTA />

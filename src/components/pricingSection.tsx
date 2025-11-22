@@ -150,7 +150,7 @@ export const PricingSection: React.FC = () => {
     const displayPlans = monthlyPlans.filter(p => p.monthlyPrice === 0 || p.isGold);
 
   return (
-    <section className="bg-black py-20 md:py-32 relative">
+    <section className="bg-black py-20 md:py-32 relative mt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Titre de Section */}
