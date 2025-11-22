@@ -12,11 +12,18 @@ const nextConfig = {
         port: '',
         pathname: '/**', // Autorise n'importe quel chemin sur ce domaine
       },
-      // Si vous avez d'autres domaines d'images (comme un CDN ou un service de stockage), vous les ajouteriez ici.
+      // ⭐ AJOUT DE CLOUDINARY
+      {
+        protocol: 'https',
+        // Le domaine standard de Cloudinary pour la livraison de contenu
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**', // Autorise n'importe quel chemin sur ce domaine
+      },
+      // Si vous utilisez un sous-domaine personnalisé, remplacez 'res.cloudinary.com'
+      // par ce sous-domaine.
     ],
   },
-  
-
 };
 
 module.exports = nextConfig;

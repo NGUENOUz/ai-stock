@@ -3,6 +3,17 @@ body {
   height: auto;
   overflow-x: hidden !important;
 }
+.flex-line{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: 12px;
+}
+.tops{
+  margin-top: -1%;
+}
 
 .mainContainer {
   display: flex !important;
@@ -45,12 +56,20 @@ body {
 }
 
 .flex-group {
-  padding-top: 6%;
+  background: #000000ad;
+  padding-top: 4%;
   display: flex !important;
   flex-direction: column;
   gap: 10px;
   align-items: center !important;
   justify-content: center !important;
+
+
+  P{
+    text-align: center;
+    display: flex;
+    width: 100%;
+  }
 }
 .fontImage {
   width: 100%;

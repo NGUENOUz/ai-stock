@@ -1,38 +1,52 @@
-import React from "react";
+// src/components/FeaturesSectionDemo.tsx
+"use client";
+
+import React, { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import createGlobe from "cobe";
-import { useEffect, useRef } from "react";
-import { motion } from "motion/react";
+// Assurez-vous que cobe et Framer Motion sont bien installés
+import createGlobe from "cobe"; 
+import { motion } from "framer-motion"; // Remplacé motion/react par framer-motion
 import { IconBrandYoutubeFilled } from "@tabler/icons-react";
+
+// --- Images Fictives (à remplacer par vos assets) ---
+const PROMPT_IMAGES = [
+  "https://image.pollinations.ai/prompt/Golden,glowing,abstract,AI,creation,dark,glassmorphism?width=500&height=500&seed=10",
+  "https://image.pollinations.ai/prompt/Futuristic,AI,generated,cityscape,dark,gold,neon,glowing?width=500&height=500&seed=11",
+  "https://image.pollinations.ai/prompt/Intricate,golden,circuitry,network,on,a,dark,background?width=500&height=500&seed=12",
+  "https://image.pollinations.ai/prompt/Abstract,data,visualization,gold,and,blue,on,black?width=500&height=500&seed=13",
+  "https://image.pollinations.ai/prompt/AI,brain,glowing,golden,filaments,dark,scene?width=500&height=500&seed=14",
+];
+const YOUTUBE_THUMBNAIL = "https://image.pollinations.ai/prompt/AI,training,course,thumbnail,with,golden,lines,and,futuristic,HUD,elements?width=800&height=450&seed=30";
+
 
 export function FeaturesSectionDemo() {
   const features = [
     {
-      title: "Infos à la une ",
-      description: "Découvrez les dernières actualités du jour ",
+      title: "Hub d'Outils AI",
+      description: "Gérez et intégrez les meilleurs outils d'intelligence artificielle du marché en un seul endroit. Un contrôle total sur votre workflow.",
       skeleton: <SkeletonOne />,
       className:
         "col-span-1 lg:col-span-4 border-b lg:border-r dark:border-neutral-800",
     },
     {
-      title: "Vous etes votre seul limite",
+      title: "Prompts Pro & Illimités",
       description:
-        "Explorez des prompts populaires , des combiniasons gratuites que vous pouvez vious en servir pour etoffer vos créations .",
-      skeleton: <SkeletonTwo />,
+        "Accédez à une librairie de milliers de prompts testés et optimisés pour la création d'images, la productivité et le marketing.",
+      skeleton: <SkeletonTwo images={PROMPT_IMAGES} />,
       className: "border-b col-span-1 lg:col-span-2 dark:border-neutral-800",
     },
     {
-      title: "Formez vous maintenant",
+      title: "Formations Certifiantes",
       description:
-        "Whether its you or Tyler Durden, you can get to know about our product on YouTube",
-      skeleton: <SkeletonThree />,
+        "Maîtrisez les dernières techniques d'IA avec des cours vidéo, des tutoriels interactifs et des sessions de coaching par des experts.",
+      skeleton: <SkeletonThree youtubeThumbnail={YOUTUBE_THUMBNAIL} />,
       className:
-        "col-span-1 lg:col-span-3 lg:border-r  dark:border-neutral-800",
+        "col-span-1 lg:col-span-3 lg:border-r  dark:border-neutral-800",
     },
     {
-      title: "L'IA n'as pas de frontière",
+      title: "L'IA n'a pas de frontière",
       description:
-        "Exploitez à 100% le potenciel de L'IA ou que vous soyez dans le monde et faites de vos reves uen realité plus vite que ce que vous avez immaginer",
+        "Exploitez à 100% le potentiel de l'IA où que vous soyez dans le monde et faites de vos rêves une réalité plus vite que ce que vous avez imaginé.",
       skeleton: <SkeletonFour />,
       className: "col-span-1 lg:col-span-3 border-b lg:border-none",
     },
@@ -40,13 +54,16 @@ export function FeaturesSectionDemo() {
   return (
     <div className="relative z-20 py-10 lg:py-40 max-w-7xl mx-auto">
       <div className="px-8">
-        <h4 className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium text-black dark:text-white">
-          Au delà des outils nous vous rapprochons du futur
+        {/* Titre avec Dégradé Gold/Blanc */}
+        <h4 className="
+          text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-extrabold 
+          text-transparent bg-clip-text bg-gradient-to-b from-[#ffff] via-[#dddd] to-[#FFD700]
+        ">
+          Au-delà des outils, nous vous rapprochons du futur
         </h4>
 
-        <p className="text-sm lg:text-base  max-w-2xl  my-4 mx-auto text-neutral-500 text-center font-normal dark:text-neutral-300">
-          From Image generation to video generation, Everything AI has APIs for
-          literally everything. It can even create this website copy for you.
+        <p className="text-sm lg:text-base max-w-2xl my-4 mx-auto text-center font-normal text-neutral-400">
+          Accédez à une puissance d'IA illimitée : des prompts testés, des formations certifiantes, et une communauté qui repousse les frontières.
         </p>
       </div>
 
@@ -65,6 +82,8 @@ export function FeaturesSectionDemo() {
   );
 }
 
+// --- Composants Structurels (Inchangés) ---
+
 const FeatureCard = ({
   children,
   className,
@@ -81,7 +100,7 @@ const FeatureCard = ({
 
 const FeatureTitle = ({ children }: { children?: React.ReactNode }) => {
   return (
-    <p className=" max-w-5xl mx-auto text-left tracking-tight text-black dark:text-white text-xl md:text-2xl md:leading-snug">
+    <p className=" max-w-5xl mx-auto text-left tracking-tight text-white text-xl md:text-2xl md:leading-snug">
       {children}
     </p>
   );
@@ -91,8 +110,8 @@ const FeatureDescription = ({ children }: { children?: React.ReactNode }) => {
   return (
     <p
       className={cn(
-        "text-sm md:text-base  max-w-4xl text-left mx-auto",
-        "text-neutral-500 text-center font-normal dark:text-neutral-300",
+        "text-sm md:text-base  max-w-4xl text-left mx-auto",
+        "text-neutral-400 text-center font-normal",
         "text-left max-w-sm mx-0 md:text-sm my-2"
       )}
     >
@@ -101,73 +120,42 @@ const FeatureDescription = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
+// --- Skeletons Adaptés ---
+
 export const SkeletonOne = () => {
   return (
-    <div className="relative flex py-8 px-2 gap-10  topNews">
-      <div className="w-full  p-1  mx-auto bg-white dark:bg-neutral-900 shadow-2xl group">
-        <div className=" ">
-          <div className="newsContainer">
-            <span className="etiquet">#Actu</span>
-            <span className="bann">
-              <img
-                src="https://images.unsplash.com/photo-1517322048670-4fba75cbbb62?q=80&w=3000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="header"
-                className=" banniere"
-              />
-            </span>
-
-            <div className="infoContainer">
-              <h1 className="newsTitre">
-                Facebook decide de bloquer les accès à meta aux Africains
-              </h1>
-              <span className="newsDescription">
-                description de ihuy uiuhiu huihiui uhiuhu huhiuhuihuh hhiuhih
-                hhiuhu huihiuh hiuhiu uhuihi ihui hiuhiu hiuhui ... <><a href="#" className="orange">En savoir plus </a></>
-              </span>
-            </div>
+    // Adapté pour représenter un Dashboard/Hub d'Outils IA
+    <div className="relative flex py-8 px-2 gap-10">
+      <div className="w-full p-4 mx-auto bg-neutral-900/50 backdrop-blur-sm border border-yellow-400/20 shadow-2xl group rounded-lg">
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-yellow-400/20">
+            <h5 className="text-lg font-semibold text-yellow-400">Dashboard</h5>
+            <span className="text-xs text-gray-500">Actif: 3 outils</span>
           </div>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex justify-between items-center p-2 bg-neutral-800/70 rounded">
+                <div className="flex items-center space-x-3">
+                  <div className="h-4 w-4 bg-yellow-600 rounded-full animate-pulse" />
+                  <p className="text-sm text-white">{i === 1 ? "Prompt Hub" : i === 2 ? "Formation" : "GPT-4"}</p>
+                </div>
+                <span className="text-xs text-green-400">Connecté</span>
+              </div>
+            ))}
+          </div>
+          <button className="w-full py-2 mt-4 text-sm font-bold text-black bg-yellow-400 rounded hover:bg-yellow-500 transition">
+            Gérer les Outils
+          </button>
         </div>
       </div>
 
-      <div className="absolute bottom-0 z-40 inset-x-0 h-60 bg-gradient-to-t from-white dark:from-black via-white dark:via-black to-transparent w-full pointer-events-none" />
-      <div className="absolute top-0 z-10 inset-x-0 h-60 bg-gradient-to-b from-white dark:from-black via-transparent to-transparent w-full pointer-events-none" />
+      <div className="absolute bottom-0 z-40 inset-x-0 h-60 bg-gradient-to-t from-black via-black/80 to-transparent w-full pointer-events-none" />
+      <div className="absolute top-0 z-10 inset-x-0 h-60 bg-gradient-to-b from-black via-transparent to-transparent w-full pointer-events-none" />
     </div>
   );
 };
 
-export const SkeletonThree = () => {
-  return (
-    <a
-      href="https://www.youtube.com/watch?v=RPa3_AD1_Vs"
-      target="__blank"
-      className="relative flex gap-10  h-full group/image"
-    >
-      <div className="w-full  mx-auto bg-transparent dark:bg-transparent group h-full">
-        <div className="flex flex-1 w-full h-full flex-col space-y-2  relative">
-          {/* TODO */}
-          <IconBrandYoutubeFilled className="h-20 w-20 absolute z-10 inset-0 text-red-500 m-auto " />
-          <img
-            src="https://assets.aceternity.com/fireship.jpg"
-            alt="header"
-            width={800}
-            height={800}
-            className="h-full w-full aspect-square object-cover object-center rounded-sm blur-none group-hover/image:blur-md transition-all duration-200"
-          />
-        </div>
-      </div>
-    </a>
-  );
-};
-
-export const SkeletonTwo = () => {
-  const images = [
-    "https://images.unsplash.com/photo-1517322048670-4fba75cbbb62?q=80&w=3000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1573790387438-4da905039392?q=80&w=3425&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1554931670-4ebfabf6e7a9?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1546484475-7f7bd55792da?q=80&w=2581&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  ];
-
+export const SkeletonTwo = ({ images }: { images: string[] }) => {
   const imageVariants = {
     whileHover: {
       scale: 1.1,
@@ -181,8 +169,8 @@ export const SkeletonTwo = () => {
     },
   };
   return (
+    // Prompts Pro : Galeries d'images générées par IA
     <div className="relative flex flex-col items-start p-8 gap-10 h-full overflow-hidden">
-      {/* TODO */}
       <div className="flex flex-row -ml-20">
         {images.map((image, idx) => (
           <motion.div
@@ -193,11 +181,11 @@ export const SkeletonTwo = () => {
             }}
             whileHover="whileHover"
             whileTap="whileTap"
-            className="rounded-xl -mr-4 mt-4 p-1 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-100 shrink-0 overflow-hidden"
+            className="rounded-xl -mr-4 mt-4 p-1 bg-white dark:bg-neutral-800 dark:border-yellow-700 border border-yellow-400/50 shrink-0 overflow-hidden"
           >
             <img
               src={image}
-              alt="bali images"
+              alt="Prompts Pro Gallery Image"
               width="500"
               height="500"
               className="rounded-lg h-20 w-20 md:h-40 md:w-40 object-cover shrink-0"
@@ -215,11 +203,11 @@ export const SkeletonTwo = () => {
             variants={imageVariants}
             whileHover="whileHover"
             whileTap="whileTap"
-            className="rounded-xl -mr-4 mt-4 p-1 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-100 shrink-0 overflow-hidden"
+            className="rounded-xl -mr-4 mt-4 p-1 bg-white dark:bg-neutral-800 dark:border-yellow-700 border border-yellow-400/50 shrink-0 overflow-hidden"
           >
             <img
               src={image}
-              alt="bali images"
+              alt="Prompts Pro Gallery Image"
               width="500"
               height="500"
               className="rounded-lg h-20 w-20 md:h-40 md:w-40 object-cover shrink-0"
@@ -228,15 +216,39 @@ export const SkeletonTwo = () => {
         ))}
       </div>
 
-      <div className="absolute left-0 z-[100] inset-y-0 w-20 bg-gradient-to-r from-white dark:from-black to-transparent  h-full pointer-events-none" />
-      <div className="absolute right-0 z-[100] inset-y-0 w-20 bg-gradient-to-l from-white dark:from-black  to-transparent h-full pointer-events-none" />
+      <div className="absolute left-0 z-[100] inset-y-0 w-20 bg-gradient-to-r from-black via-black/50 to-transparent h-full pointer-events-none" />
+      <div className="absolute right-0 z-[100] inset-y-0 w-20 bg-gradient-to-l from-black via-black/50 to-transparent h-full pointer-events-none" />
     </div>
+  );
+};
+
+export const SkeletonThree = ({ youtubeThumbnail }: { youtubeThumbnail: string }) => {
+  return (
+    // Formations Certifiantes : Mise en avant d'une vidéo YouTube
+    <a
+      href="https://www.youtube.com/user/votre-chaine-formation" // Remplacez par votre lien YouTube
+      target="__blank"
+      className="relative flex gap-10  h-full group/image"
+    >
+      <div className="w-full mx-auto bg-transparent dark:bg-transparent group h-full">
+        <div className="flex flex-1 w-full h-full flex-col space-y-2 relative">
+          <IconBrandYoutubeFilled className="h-20 w-20 absolute z-10 inset-0 text-red-500 m-auto" />
+          <img
+            src={youtubeThumbnail} // Image Fictive
+            alt="Formation Youtube Thumbnail"
+            width={800}
+            height={800}
+            className="h-full w-full aspect-square object-cover object-center rounded-sm blur-none group-hover/image:opacity-80 transition-all duration-200"
+          />
+        </div>
+      </div>
+    </a>
   );
 };
 
 export const SkeletonFour = () => {
   return (
-    <div className="h-60 md:h-60  flex flex-col items-center relative bg-transparent dark:bg-transparent mt-10">
+    <div className="h-60 md:h-60  flex flex-col items-center relative bg-transparent dark:bg-transparent mt-10">
       <Globe className="absolute -right-10 md:-right-10 -bottom-80 md:-bottom-72" />
     </div>
   );
@@ -260,19 +272,20 @@ export const Globe = ({ className }: { className?: string }) => {
       diffuse: 1.2,
       mapSamples: 16000,
       mapBrightness: 6,
-      baseColor: [0.3, 0.3, 0.3],
-      markerColor: [0.1, 0.8, 1],
-      glowColor: [1, 1, 1],
+      // Couleurs adaptées au thème Gold/Dark
+      baseColor: [0.1, 0.1, 0.1], // Très sombre
+      markerColor: [1, 0.8, 0.1], // Or (Yellow/Gold)
+      glowColor: [1, 0.8, 0.1], // Lueur Or
       markers: [
-        // longitude latitude
-        { location: [37.7595, -122.4367], size: 0.03 },
-        { location: [40.7128, -74.006], size: 0.1 },
+        // longitude latitude - Marqueurs sur la carte
+        { location: [34.0522, -118.2437], size: 0.1 }, // Los Angeles
+        { location: [51.5074, 0.1278], size: 0.1 }, // Londres
+        { location: [48.8566, 2.3522], size: 0.1 }, // Paris
+        { location: [35.6895, 139.6917], size: 0.1 }, // Tokyo
       ],
       onRender: (state: any) => {
-        // Called on every animation frame.
-        // `state` will be an empty object, return updated params.
         state.phi = phi;
-        phi += 0.01;
+        phi += 0.005; // Vitesse de rotation légèrement réduite
       },
     });
 

@@ -1,0 +1,24 @@
+@media only screen and (max-width: 480px) {
+  .flex-group {
+     padding: 2%;
+     margin-top: -14%;
+  
+  h1 {
+    font-size: 2.9rem !important;
+    
+  }
+}
+
+.squelleton{
+    margin-top: -90%;
+    overflow-x: hidden;
+}
+.squelletons{
+    margin-top: -78%;
+    width: 106vw;
+    height: 120vh;
+    transform: translateX(10px);
+    
+}
+
+}
