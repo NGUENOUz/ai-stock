@@ -11,14 +11,22 @@
 
 .squelleton{
     margin-top: -90%;
-    overflow-x: hidden;
+ 
+   
 }
 .squelletons{
-    margin-top: -78%;
-    width: 106vw;
-    height: 120vh;
-    transform: translateX(10px);
-    
+    margin-top: -98%;
+    overflow: hidden;
+    opacity: 20%;
+ 
+}
+.squelleteSize{
+   width: 100%;
+   height: 100%; 
+}
+.lineLite{
+    opacity: 100%;
+    visibility: visible;
 }
 
 }

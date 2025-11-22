@@ -74,7 +74,7 @@ export const ContainerScroll: React.FC<ContainerScrollProps> = ({ children }) =>
 
   return (
     <div
-      className=" flex items-center justify-center relative p-2 md:p-20"
+      className=" flex items-center justify-center relative  p-2 md:p-20 squelleteSize "
       ref={containerRef}
     >
       <div

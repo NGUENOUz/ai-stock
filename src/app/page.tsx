@@ -70,11 +70,11 @@ export default function SpotlightPreview() {
               "[background-image:linear-gradient(to_right,#171717_1px,transparent_1px),linear-gradient(to_bottom,#171717_1px,transparent_1px)]"
             )}
           />
-          {/* 
+        
         <FondCareler
-          className="-top-40 left-0 md:-top-20 md:left-60"
+          className="-top-40 left-0 md:-top-20 md:left-60 invisible lineLite"
           fill="white"
-        /> */}
+        /> 
           <div className="relative z-10 mx-auto w-full max-w-7xl p-20 pt-20 md:pt-0 md:justify-center flex-group ">
             <div className="relative z-20 flex w-full justify-start max-w-7xl mx-auto p-4 pt-1">
               <span className="hereTxtContainer">
@@ -85,7 +85,7 @@ export default function SpotlightPreview() {
             </div>
 
             <h1 className="text-center text-transparent font-extrabold md:text-7xl text-5xl bg-clip-text bg-gradient-to-b from-[#ffff] via-[#dddd] to-neutral-400 mb-6 leading-tight heroTitle ">
-              La plus grande plateforme AI au monde qui regroupe
+              La plus grande communaute AI au monde qui regroupe
               <div className="flex justify-center items-center mt-3 gap-2 text-[#FFD700] md:text-4xl text-xl font-bold">
                 
                 <motion.div className="tops midelText" id="midelText">
@@ -96,7 +96,7 @@ export default function SpotlightPreview() {
 
             <div className="btn scoop">
               <AnimatedButton
-                text="Découvrir"
+                text="Rejoindre"
                 onClick={() => console.log("Bouton cliqué!")}
               />
             </div>
