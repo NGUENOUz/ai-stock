@@ -20,6 +20,14 @@ const nextConfig = {
         port: '',
         pathname: '/**', // Autorise n'importe quel chemin sur ce domaine
       },
+       {
+        protocol: 'https',
+        // Le domaine standard de Cloudinary pour la livraison de contenu
+        hostname: 'www.transparenttextures.com',
+        port: '',
+        pathname: '/**', // Autorise n'importe quel chemin sur ce domaine
+      },
+      
       // Si vous utilisez un sous-domaine personnalisé, remplacez 'res.cloudinary.com'
       // par ce sous-domaine.
     ],

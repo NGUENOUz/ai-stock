@@ -9,8 +9,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Zap } from "lucide-react";
 
-// --- Interfaces ---
-
 interface NavbarProps {
   children: React.ReactNode;
   className?: string;
@@ -19,36 +17,30 @@ interface NavbarProps {
 interface NavBodyProps {
   children: React.ReactNode;
   className?: string;
-  visible?: boolean;
+  isScrolled?: boolean;
 }
 
-interface NavItemsProps {
-  items: { name: string; link: string }[];
-  className?: string;
-  onItemClick?: () => void;
-}
-
-// ---------------------------
-// 1. NAVBAR (STABLE & STICKY)
-// ---------------------------
+// 1. NAVBAR (Le conteneur fixe)
 export const Navbar = ({ children, className }: NavbarProps) => {
   return (
-    <nav className={cn("fixed top-0 z-50 w-full pt-4", className)}>
+    <nav className={cn("fixed top-0 z-50 w-full transition-all duration-300", className)}>
       {children}
     </nav>
   );
 };
 
-// ---------------------------
-// 2. NAVBODY (DESKTOP - CLEAN PREMIUM)
-// ---------------------------
-export const NavBody = ({ children, className }: NavBodyProps) => {
+// 2. NAVBODY (Desktop - Transition Pilule -> Barre Pleine)
+export const NavBody = ({ children, className, isScrolled }: NavBodyProps) => {
   return (
     <motion.div
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className={cn(
-        "relative z-[60] mx-auto hidden max-w-7xl flex-row items-center justify-between rounded-full border border-neutral-100 bg-white/80 px-6 py-2.5 backdrop-blur-md shadow-premium lg:flex",
+        "relative z-[60] mx-auto hidden flex-row items-center justify-between transition-all duration-300 ease-in-out lg:flex",
+        // État initial : Pilule centrée
+        "mt-4 max-w-7xl rounded-full border border-neutral-100 bg-white/80 px-6 py-2.5 backdrop-blur-md shadow-premium",
+        // État au Scroll : Barre pleine largeur sans arrondis sur les côtés
+        isScrolled && "mt-0 max-w-full rounded-none border-none border-b border-neutral-200 bg-white/95 py-4 px-10 shadow-md",
         className
       )}
     >
@@ -57,10 +49,8 @@ export const NavBody = ({ children, className }: NavBodyProps) => {
   );
 };
 
-// ---------------------------
-// 3. NAVITEMS (STYLE FRAMER AVEC ACCENT JAUNE)
-// ---------------------------
-export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
+// 3. NAVITEMS
+export const NavItems = ({ items, className, onItemClick }: any) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const pathname = usePathname();
 
@@ -69,7 +59,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       onMouseLeave={() => setHovered(null)}
       className={cn("flex flex-1 items-center justify-center space-x-1", className)}
     >
-      {items.map((item, idx) => {
+      {items.map((item: any, idx: number) => {
         const isCurrentPage = item.link === pathname || (item.link !== '/' && pathname.startsWith(item.link));
 
         return (
@@ -83,7 +73,6 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
               isCurrentPage ? "text-black" : "text-neutral-500 hover:text-black"
             )}
           >
-            {/* Background au Hover (Gris très léger) */}
             {hovered === idx && (
               <motion.div
                 layoutId="hover-bg"
@@ -91,8 +80,6 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            
-            {/* Indicateur Page Active (Petit point Jaune ou ligne discrète) */}
             {isCurrentPage && (
               <motion.div
                 layoutId="active-nav"
@@ -100,7 +87,6 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            
             <span className="relative z-10">{item.name}</span>
           </Link>
         );
@@ -109,14 +95,16 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   );
 };
 
-// ---------------------------
-// 4. MOBILENAV (MODERNE)
-// ---------------------------
-export const MobileNav = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+// 4. MOBILENAV (S'adapte aussi au scroll)
+export const MobileNav = ({ children, className, isScrolled }: { children: React.ReactNode; className?: string; isScrolled?: boolean }) => {
   return (
     <div
       className={cn(
-        "mx-4 flex items-center justify-between rounded-2xl border border-neutral-100 bg-white/90 p-3 backdrop-blur-md shadow-premium lg:hidden",
+        "flex items-center justify-between transition-all duration-300 lg:hidden",
+        // État initial
+        "mx-4 mt-4 rounded-2xl border border-neutral-100 bg-white/90 p-3 backdrop-blur-md shadow-premium",
+        // État scroll
+        isScrolled && "mx-0 mt-0 rounded-none border-none border-b bg-white py-4 px-6 shadow-md",
         className
       )}
     >
@@ -125,37 +113,22 @@ export const MobileNav = ({ children, className }: { children: React.ReactNode; 
   );
 };
 
-export const MobileNavMenu = ({
-  isOpen,
-  onClose,
-  items,
-  mobileActions,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  items: { name: string; link: string }[];
-  mobileActions: React.ReactNode;
-}) => {
+export const MobileNavMenu = ({ isOpen, onClose, items, mobileActions }: any) => {
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="absolute inset-x-0 top-20 mx-4 z-50 flex flex-col gap-4 rounded-3xl border border-neutral-100 bg-white p-6 shadow-2xl"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute inset-x-0 top-full z-50 flex flex-col gap-4 border-t border-neutral-100 bg-white p-8 shadow-2xl lg:hidden"
         >
-          {items.map((item, idx) => (
-            <Link
-              key={idx}
-              href={item.link}
-              onClick={onClose}
-              className="text-lg font-bold text-neutral-800 hover:text-primary transition-colors"
-            >
+          {items.map((item: any, idx: number) => (
+            <Link key={idx} href={item.link} onClick={onClose} className="text-xl font-bold text-neutral-800">
               {item.name}
             </Link>
           ))}
-          <div className="mt-4 flex flex-col gap-3 border-t border-neutral-50 pt-4">
+          <div className="mt-4 flex flex-col gap-3 border-t border-neutral-50 pt-6">
             {mobileActions}
           </div>
         </motion.div>
@@ -164,55 +137,29 @@ export const MobileNavMenu = ({
   );
 };
 
-// ---------------------------
-// 5. COMPONENTS ATOMIQUES (LOGO & BOUTONS)
-// ---------------------------
+// 5. ATOMES
+export const NavbarLogo = () => (
+  <Link href="/" className="flex items-center gap-2.5 px-2 group">
+    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-sm transition-transform group-hover:rotate-6">
+      <Zap className="h-5 w-5 fill-black text-black" />
+    </div>
+    <span className="text-xl font-black tracking-tighter text-black">AI-STOCK</span>
+  </Link>
+);
 
-export const NavbarLogo = () => {
-  return (
-    <Link href="/" className="flex items-center gap-2.5 px-2 group">
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-[0_4px_14px_0_rgba(255,208,7,0.39)] transition-transform group-hover:rotate-6">
-        <Zap className="h-5 w-5 fill-black text-black" />
-      </div>
-      <span className="text-xl font-black tracking-tighter text-black">
-        AI-STOCK
-      </span>
-    </Link>
-  );
-};
-
-export const NavbarButton = ({
-  href,
-  onClick,
-  children,
-  className,
-  variant = "primary",
-}: {
-  href?: string;
-  onClick?: () => void;
-  children: React.ReactNode;
-  className?: string;
-  variant?: "primary" | "secondary" | "black";
-}) => {
-  const baseStyles = "px-5 py-2 rounded-full text-sm font-bold transition-all duration-200 active:scale-95";
-  
+export const NavbarButton = ({ href, onClick, children, className, variant = "primary" }: any) => {
+  const baseStyles = "px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-200 active:scale-95 whitespace-nowrap";
   const variants = {
-    primary: "bg-primary text-black hover:bg-yellow-400 shadow-sm",
+    primary: "bg-primary text-black hover:bg-yellow-400",
     secondary: "bg-neutral-100 text-neutral-600 hover:bg-neutral-200",
-    black: "bg-black text-white hover:bg-neutral-800 shadow-md",
+    black: "bg-black text-white hover:bg-neutral-800",
   };
-
-  const content = (
-    <button onClick={onClick} className={cn(baseStyles, variants[variant], className)}>
-      {children}
-    </button>
-  );
-
+  const content = <button onClick={onClick} className={cn(baseStyles, variants[variant as keyof typeof variants], className)}>{children}</button>;
   return href ? <Link href={href}>{content}</Link> : content;
 };
 
 export const MobileNavToggle = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) => (
-  <button onClick={onClick} className="p-2 text-black">
-    {isOpen ? <IconX size={24} /> : <IconMenu2 size={24} />}
+  <button onClick={onClick} className="p-2 text-black transition-transform active:scale-90">
+    {isOpen ? <IconX size={28} /> : <IconMenu2 size={28} />}
   </button>
 );
