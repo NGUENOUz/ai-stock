@@ -1,156 +1,117 @@
 "use client";
-import React, { useEffect } from "react";
-import type { NextPage } from "next";
+
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { FondCareler } from "../components/fondCareler";
-import "../styles/style.scss";
-import "../styles/feature.scss";
-import "../styles/responsive.scss";
+import { motion } from "framer-motion";
 
-import { motion } from "motion/react";
-
-import { useState } from "react";
-import { imagesAI } from "@/bd/imageAI";
-
-import { FeaturesSectionDemo } from "@/components/feuture";
-import { AnimatedButton } from "@/components/animationBouton";
-import { getFeaturedTools } from "@/lib/supabase/services/service";
-
-import { AiTool } from "@/types/type";
-import { AiToolCard } from "@/components/AiToolCard";
+// Tes composants existants
 import { LayoutTextFlip } from "@/components/LayoutText";
-import { ContainerScroll } from "@/components/containerScrool";
+import { AnimatedButton } from "@/components/animationBouton";
 import { ThreeDMarquee } from "@/components/maquette";
+import { ContainerScroll } from "@/components/containerScrool";
 import { AISocialProof } from "@/components/AiSocialProof";
-import { FeatureHighlight } from "../components/FeatureHighlight";
-import { PricingSection } from "../components/pricingSection";
+import { FeaturesSectionDemo } from "@/components/feuture";
+import { PricingSection } from "@/components/pricingSection";
 import { FaqSection } from "@/components/FaqSetion";
 import { FooterCTA } from "@/components/footerSection";
 import { CommunitySection } from "@/components/communitySection";
 
-export default function SpotlightPreview() {
+// Tes données et services
+import { imagesAI } from "@/bd/imageAI";
+import { getFeaturedTools } from "@/lib/supabase/services/service";
+import { AiTool } from "@/types/type";
+import { LogoMarquee } from '../components/LogoMarquee';
+import { ToolsGrid } from "@/components/ToolsGrid";
+
+export default function AIStockLanding() {
   const [featuredTools, setFeaturedTools] = useState<AiTool[]>([]);
-  const [loadingFeatured, setLoadingFeatured] = useState(true);
-  const [errorFeatured, setErrorFeatured] = useState<string | null>(null);
-  const pages = ["PROMPTS", "FORMATIONS", "OUTILS AI"];
+  const pages = ["PROMPTS", "FORMATIONS", "OUTILS IA", "WORKFLOWS"];
+
   useEffect(() => {
-    async function fetchFeaturedTools() {
-      setLoadingFeatured(true);
-      setErrorFeatured(null);
-      try {
-        const { data, error } = await getFeaturedTools(8); // Limite à 4 IA en vogue
-        if (error) {
-          console.error(
-            "Erreur lors de la récupération des IA en vogue :",
-            error
-          );
-          setErrorFeatured("Impossible de charger les IA en vogue.");
-        } else {
-          setFeaturedTools(data || []);
-        }
-      } catch (err) {
-        console.error(
-          "Erreur inattendue lors de la récupération des IA en vogue :",
-          err
-        );
-        setErrorFeatured("Erreur inattendue.");
-      } finally {
-        setLoadingFeatured(false);
-      }
+    async function fetchTools() {
+      const { data } = await getFeaturedTools(8);
+      if (data) setFeaturedTools(data);
     }
-    fetchFeaturedTools();
+    fetchTools();
   }, []);
 
   return (
-    <div className="mainContainer">
-      <section id="#Acceuil">
-        <div className="relative flex h-[40rem] w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
-          <div
-            className={cn(
-              "pointer-events-none absolute inset-0 [background-size:40px_40px] select-none",
-              "[background-image:linear-gradient(to_right,#171717_1px,transparent_1px),linear-gradient(to_bottom,#171717_1px,transparent_1px)]"
-            )}
-          />
-        
-        <FondCareler
-          className="-top-40 left-0 md:-top-20 md:left-60 invisible lineLite"
-          fill="white"
-        /> 
-          <div className="relative z-10 mx-auto w-full max-w-7xl p-20 pt-20 md:pt-0 md:justify-center flex-group ">
-            <div className="relative z-20 flex w-full justify-start max-w-7xl mx-auto p-4 pt-1">
-              <span className="hereTxtContainer">
-                <p className="heroTxt bg-gradient-to-r from-[#FFD70066] via-[#fffbe2aa] to-transparent bg-clip-text text-transparent text-center font-semibold md:text-lg text-base px-4 py-2 rounded-xl drop-shadow-lg border-l-4 border-[#FFD700]">
-                  La plateforme AI tout-en-un
-                </p>
-              </span>
-            </div>
+    <div className="relative w-full bg-white selection:bg-primary/30">
+      {/* --- HERO SECTION (STYLE FRAMER) --- */}
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-20 overflow-hidden">
+        {/* Background : Grille discrète et aura de lumière jaune */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/10 rounded-full blur-[120px] -z-10" />
+        </div>
 
-            <h1 className="text-center text-transparent font-extrabold md:text-7xl text-5xl bg-clip-text bg-gradient-to-b from-[#ffff] via-[#dddd] to-neutral-400 mb-6 leading-tight heroTitle ">
-              La plus grande communaute AI au monde qui regroupe
-              <div className="flex justify-center items-center mt-3 gap-2 text-[#FFD700] md:text-4xl text-xl font-bold">
-                
-                <motion.div className="tops midelText" id="midelText">
-                  <LayoutTextFlip text="" words={pages} />
-                </motion.div>
-              </div>
-            </h1>
+        <div className="container relative z-10 mx-auto px-6 flex flex-col items-center text-center">
+          {/* Badge Nouveauté */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-neutral-100 bg-white shadow-premium mb-8"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
+              La plateforme AI tout-en-un
+            </span>
+          </motion.div>
 
-            <div className="btn scoop">
-              <AnimatedButton
-                text="Rejoindre"
-                onClick={() => console.log("Bouton cliqué!")}
-              />
+          {/* Titre Principal H1 */}
+          <h1 className="text-5xl md:text-[5.5rem] font-extrabold tracking-tight text-black leading-[1.05] mb-6">
+            La plus grande communauté <br />
+            <span className="text-neutral-400 italic font-medium">
+              au monde qui regroupe
+            </span>
+          </h1>
+
+          {/* Animation Flip Text */}
+          <div className="h-20 flex items-center justify-center mb-10">
+            <div className="text-primary text-3xl md:text-5xl font-black tracking-tighter uppercase italic">
+              <LayoutTextFlip words={pages} />
             </div>
+          </div>
+
+          {/* Boutons d'Action */}
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+           
+              <AnimatedButton text="Rejoindre AI-STOCK" onClick={() => {}} />
+            
+            <button className="h-14 px-10 rounded-2xl border border-neutral-200 bg-white font-bold hover:bg-neutral-50 transition-all text-neutral-600">
+              Déposer un outil
+            </button>
           </div>
         </div>
       </section>
-      <section className="mx-0 my-10 max-w-10xl rounded-3xl  p-2 ring-1 ring-neutral-700/10  fontImage squellete">
+      <LogoMarquee/>
+       <ToolsGrid/>
+      {/* --- SECTION MARQUEE (SCROLL) --- */}
+      <section className="relative py-20 bg-white overflow-hidden">
+        <h2 className="text-3xl font-bold text-black mb-4 max-w-7xl mx-auto px-6">
+          Nos ressources populaires
+        </h2>
         <ContainerScroll>
           <ThreeDMarquee images={imagesAI} />
         </ContainerScroll>
       </section>
 
-      <AISocialProof />
-      <FeaturesSectionDemo />
-      <CommunitySection />
-      <PricingSection />
-      <FaqSection />
-      <FooterCTA />
-
-      {/*<section className="sectionVog text-center">
-        {" "}
-         Fond un peu plus sombre que le Hero 
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-2 text-white">
-            IA en Vogue de la Semaine
-          </h2>
-          <span className="sousTitle text-center align-center">
-            Découvez les outils qui font forte impression actuellement{" "}
-          </span>
-
-          {loadingFeatured ? (
-            <div className="text-center text-gray-400">
-              Chargement des IA en vedette...
-            </div>
-          ) : errorFeatured ? (
-            <div className="text-center text-red-400">{errorFeatured}</div>
-          ) : featuredTools.length === 0 ? (
-            <div className="text-center text-gray-400">
-              Aucune IA en vogue pour le moment.
-            </div>
-          ) : (
-            <div className="vogAcceuil">
-              {/* Grille responsive 
-              {featuredTools.map((tool) => (
-                <AiToolCard key={tool.id} tool={tool} />
-              ))}
-            </div>
-          )}
+      {/* --- PREUVE SOCIALE & FEATURES --- */}
+      <div className="bg-white space-y-32 pb-32">
+      
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="bg-neutral-50 rounded-[3rem] p-8 md:p-16 border border-neutral-100">
+            <FeaturesSectionDemo />
+          </div>
         </div>
-      </section>
-      */}
 
-      <section className="topCategories bg-gray"></section>
+        <CommunitySection />
+      </div>
+
+      <FooterCTA />
     </div>
   );
 }

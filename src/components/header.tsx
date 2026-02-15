@@ -1,11 +1,9 @@
 // src/components/header.tsx
 "use client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-
-// ⚠️ Assurez-vous que le chemin vers votre store Zustand est correct
 import { useAppStore } from "@/store/useAppStore"; 
-
 import {
   Navbar,
   NavBody,
@@ -13,129 +11,95 @@ import {
   NavItems,
   NavbarButton,
   MobileNav,
-  MobileNavHeader,
   MobileNavToggle,
   MobileNavMenu,
-} from "./navbar"; // ⚠️ Assurez-vous que le chemin est correct
+} from "./navbar";
 
 export default function HeaderComponent() {
-  // 1. Récupération de l'état d'authentification et des actions depuis Zustand
-  // ⚠️ NOTE: Si vous avez une erreur sur 'user' ou 'simulateLogout', vérifiez l'interface de useAppStore
   const { isLoggedIn, userName, handleLogout } = useAppStore();
   const router = useRouter();
-
-  const navItems = [
-    { name: "Liste des AI", link: "/liste" },
-    { name: "Prompts Populaires", link: "/prompt" },
-    { name: "Formations", link: "/formations" },
-    // { name: "Blog", link: "/blog" },
-    // { name: "Events", link: "/events" },
-    // { name: "Contact", link: "/contact" },
-  ];
-
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleGlobalLogout = () => { 
+  // Configuration des liens de navigation
+  const navItems = [
+    { name: "Outils IA", link: "/liste" },
+    { name: "Prompts", link: "/prompt" },
+    { name: "Formations", link: "/formations" },
+    { name: "Workflows", link: "/workflows" },
+  ];
+
+  const onLogout = () => { 
     handleLogout(); 
     router.push("/"); 
     setIsMobileMenuOpen(false); 
-  }
-
-  const handleNavClick = () => {
-    // Ferme le menu mobile après un clic
-    setIsMobileMenuOpen(false);
   };
 
-  // --- Contenu conditionnel pour l'authentification (Desktop) ---
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  const unauthenticatedButtons = (
-    <>
-      <NavbarButton href="/login" variant="secondary" className="hidden sm:inline-block">
-        Connexion
-      </NavbarButton>
-      <NavbarButton href="/signup" variant="primary">
-        S'inscrire
-      </NavbarButton>
-    </>
+  // --- Groupes de Boutons (Desktop) ---
+
+  const AuthButtons = () => (
+    <div className="flex items-center gap-3">
+      {isLoggedIn ? (
+        <>
+          <NavbarButton href="/dashboard" variant="secondary" className="hidden sm:inline-block">
+            {userName || "Dashboard"}
+          </NavbarButton>
+          <NavbarButton onClick={onLogout} variant="black">
+            Déconnexion
+          </NavbarButton>
+        </>
+      ) : (
+        <>
+          <NavbarButton href="/login" variant="secondary" className="hidden sm:inline-block">
+            Connexion
+          </NavbarButton>
+          <NavbarButton href="/signup" variant="primary">
+            S'inscrire
+          </NavbarButton>
+        </>
+      )}
+    </div>
   );
 
-  const authenticatedButtons = (
-    <>
-      <NavbarButton href="/dashboard" variant="secondary" className="hidden sm:inline-block">
-        {userName || "Mon Compte"} 
-      </NavbarButton>
-      {/* Utilisation de handleGlobalLogout pour gérer la redirection après déconnexion */}
-      <NavbarButton as="button" onClick={handleGlobalLogout} variant="primary">
-        Déconnexion
-      </NavbarButton>
-    </>
+  // --- Groupes de Boutons (Mobile) ---
+
+  const MobileActionButtons = () => (
+    <div className="flex flex-col gap-3 w-full">
+      {isLoggedIn ? (
+        <>
+          <NavbarButton href="/dashboard" onClick={closeMobileMenu} variant="black" className="w-full h-12">
+            Mon Dashboard
+          </NavbarButton>
+          <NavbarButton onClick={onLogout} variant="secondary" className="w-full h-12">
+            Déconnexion
+          </NavbarButton>
+        </>
+      ) : (
+        <>
+          <NavbarButton href="/login" onClick={closeMobileMenu} variant="secondary" className="w-full h-12">
+            Connexion
+          </NavbarButton>
+          <NavbarButton href="/signup" onClick={closeMobileMenu} variant="primary" className="w-full h-12">
+            S'inscrire gratuitement
+          </NavbarButton>
+        </>
+      )}
+    </div>
   );
-
-  // --- Contenu conditionnel pour l'authentification (Mobile) ---
-
-  const mobileActionButtons = isLoggedIn ? (
-    <>
-      <NavbarButton href="/dashboard" onClick={handleNavClick} variant="primary" className="w-full">
-        Dashboard
-      </NavbarButton>
-      <NavbarButton as="button" onClick={handleGlobalLogout} variant="secondary" className="w-full">
-        Déconnexion
-      </NavbarButton>
-    </>
-  ) : (
-    <>
-      <NavbarButton href="/login" onClick={handleNavClick} variant="primary" className="w-full">
-        Connexion
-      </NavbarButton>
-      <NavbarButton href="/signup" onClick={handleNavClick} variant="secondary" className="w-full">
-        S'inscrire
-      </NavbarButton>
-    </>
-  );
-
 
   return (
-    // 🎯 HEADER CONTENEUR : Maintient le header visible.
-    <header className="relative w-full fixed" >
-      <Navbar className="header  fixed">
-        {/* Desktop Navigation */}
+    <header className="relative w-full">
+      <Navbar>
+        {/* --- Version Desktop --- */}
         <NavBody>
           <NavbarLogo />
           
-          <NavItems items={navItems} onItemClick={handleNavClick} />
+          <NavItems items={navItems} onItemClick={closeMobileMenu} />
           
-          <div className="flex items-center gap-4">
-            {/* 🎯 AFFICHAGE DES BOUTONS */}
-            {isLoggedIn ? authenticatedButtons : unauthenticatedButtons}
-          </div>
+          <AuthButtons />
         </NavBody>
 
-        {/* Mobile Navigation */}
-        <MobileNav>
-          <MobileNavHeader>
-            <NavbarLogo />
-            <MobileNavToggle
-              isOpen={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            />
-          </MobileNavHeader>
-
-          <MobileNavMenu
-            isOpen={isMobileMenuOpen}
-            onClose={() => setIsMobileMenuOpen(false)}
-            items={navItems} 
-            mobileActions={mobileActionButtons} 
-          >
-            {/* <NavbarButton
-              onClick={() => setIsMobileMenuOpen(false)}
-              variant="dark"
-              href="/book-a-call"
-              className="w-full mt-4" 
-            >
-              Book a call
-            </NavbarButton> */}
-          </MobileNavMenu>
-        </MobileNav>
       </Navbar>
     </header>
   );

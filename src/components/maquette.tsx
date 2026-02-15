@@ -1,74 +1,8 @@
-// src/components/ThreeDMarquee.tsx
 "use client";
 
-import { motion } from "framer-motion"; // Assurez-vous d'utiliser framer-motion si votre ContainerScroll l'utilise
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import React from "react";
-
-// --- Composants de Lignes de Grille (GridLine) ---
-
-interface GridLineProps {
-  className?: string;
-  offset?: string;
-}
-
-const GridLineHorizontal: React.FC<GridLineProps> = ({ className, offset }) => {
-  return (
-    <div
-      style={
-        {
-          "--background": "#ffffff",
-          "--color": "rgba(0, 0, 0, 0.2)",
-          "--height": "1px",
-          "--width": "5px",
-          "--fade-stop": "90%",
-          "--offset": offset || "200px",
-          "--color-dark": "rgba(255, 255, 255, 0.2)",
-        } as React.CSSProperties
-      }
-      className={cn(
-        "absolute left-[calc(var(--offset)/2*-1)] h-[var(--height)] w-[calc(100%+var(--offset))]",
-        "bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)]",
-        "[background-size:var(--width)_var(--height)]",
-        "[mask:linear-gradient(to_left,var(--background)_var(--fade-stop),transparent),_linear-gradient(to_right,var(--background)_var(--fade-stop),transparent),_linear-gradient(black,black)]",
-        "[mask-composite:exclude]",
-        "z-30",
-        "dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]",
-        className,
-      )}
-    ></div>
-  );
-};
-
-const GridLineVertical: React.FC<GridLineProps> = ({ className, offset }) => {
-  return (
-    <div
-      style={
-        {
-          "--background": "#ffffff",
-          "--color": "rgba(0, 0, 0, 0.2)",
-          "--height": "5px",
-          "--width": "1px",
-          "--fade-stop": "90%",
-          "--offset": offset || "150px",
-          "--color-dark": "rgba(255, 255, 255, 0.2)",
-        } as React.CSSProperties
-      }
-      className={cn(
-        "absolute top-[calc(var(--offset)/2*-1)] h-[calc(100%+var(--offset))] w-[var(--width)]",
-        "bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)]",
-        "[background-size:var(--width)_var(--height)]",
-        "[mask:linear-gradient(to_top,var(--background)_var(--fade-stop),transparent),_linear-gradient(to_bottom,var(--background)_var(--fade-stop),transparent),_linear-gradient(black,black)]",
-        "[mask-composite:exclude]",
-        "z-30",
-        "dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]",
-        className,
-      )}
-    ></div>
-  );
-};
-
-// --- Composant Principal ThreeDMarquee ---
 
 interface ThreeDMarqueeProps {
   images: string[];
@@ -76,84 +10,81 @@ interface ThreeDMarqueeProps {
 }
 
 export const ThreeDMarquee: React.FC<ThreeDMarqueeProps> = ({ images, className }) => {
-  // Split the images array into 4 equal parts
-  const chunkSize = Math.ceil(images.length / 4);
-  const chunks = Array.from({ length: 4 }, (_, colIndex) => {
-    const start = colIndex * chunkSize;
-    return images.slice(start, start + chunkSize);
+  // On sépare en 4 colonnes
+  const columns = Array.from({ length: 4 }, (_, i) => {
+    const start = i * Math.ceil(images.length / 4);
+    const end = start + Math.ceil(images.length / 4);
+    const slice = images.slice(start, end);
+    // On double pour le scroll infini fluide
+    return [...slice, ...slice];
   });
 
   return (
-    <div
-      className={cn(
-        // Style VisionOS Glass + Lueur subtile
-        "mx-auto block h-[600px] overflow-hidden rounded-3xl max-sm:h-100 relative",
-        "bg-white/5 dark:bg-neutral-900/15 backdrop-blur-md", // Fond glassmorphism léger
-        "border border-white/10 dark:border-white/5", // Bordure translucide
-        "shadow-[0_0_40px_rgba(255,215,120,0.2)]", // Lueur Gold subtile
-        className,
-      )}
-    >
-      {/* ⭐ AURA LUMINEUSE VISION PRO */}
-      <div
-        className="
-          absolute -inset-10 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,130,0.1),transparent_70%)]
-          opacity-50 pointer-events-none
-        "
-      ></div>
+    <div className={cn(
+      "relative mx-auto h-[650px] w-full overflow-hidden rounded-[2.5rem]",
+      "bg-neutral-50/50 backdrop-blur-sm border border-neutral-200/50",
+      "shadow-[0_20px_50px_rgba(0,0,0,0.05)]",
+      className
+    )}>
+      
+      {/* 1. VIGNETTE & GRADIENTS (L'effet de profondeur) */}
+      <div className="absolute inset-0 z-20 pointer-events-none shadow-[inset_0_0_100px_rgba(255,255,255,1)]" />
+      <div className="absolute inset-x-0 top-0 z-30 h-32 bg-gradient-to-b from-white to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 z-30 h-32 bg-gradient-to-t from-white to-transparent" />
 
+      {/* 2. LE CONTENEUR 3D */}
       <div className="flex size-full items-center justify-center">
-        <div className="size-[1720px] shrink-0 scale-50 sm:scale-75 lg:scale-100">
+        <div className="relative w-full max-w-[1200px] shrink-0 scale-90 lg:scale-110">
           <div
             style={{
-              transform: "rotateX(50deg) rotateY(0deg) rotateZ(-35deg)",
+              transform: "rotateX(52deg) rotateZ(-12deg) skewX(5deg)",
+              transformStyle: "preserve-3d",
             }}
-            className="relative top-96 right-[50%] grid size-full origin-top-left grid-cols-4 gap-8 transform-3d"
+            className="grid grid-cols-4 gap-6 p-4"
           >
-            {chunks.map((subarray, colIndex) => (
+            {columns.map((colImages, colIndex) => (
               <motion.div
-                animate={{ y: colIndex % 2 === 0 ? 100 : -100 }}
+                key={colIndex}
+                initial={{ y: 0 }}
+                animate={{ y: colIndex % 2 === 0 ? "-50%" : "0%" }}
                 transition={{
-                  duration: colIndex % 2 === 0 ? 10 : 15,
+                  duration: 25 + colIndex * 2, // Vitesses légèrement différentes pour le réalisme
+                  ease: "linear",
                   repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "linear"
                 }}
-                key={colIndex + "marquee"}
-                className="flex flex-col items-start gap-8"
+                style={{
+                    // On démarre la colonne impaire à -50% pour varier le sens
+                    y: colIndex % 2 !== 0 ? "-50%" : "0"
+                }}
+                className="flex flex-col gap-6"
               >
-                <GridLineVertical className="-left-4" offset="80px" />
-                {subarray.map((image, imageIndex) => (
-                  <div className="relative" key={imageIndex + image}>
-                    <GridLineHorizontal className="-top-4" offset="20px" />
-                    <motion.img
-                      whileHover={{
-                        y: -15, 
-                        boxShadow: "0 10px 30px rgba(255, 215, 120, 0.7)", 
-                      }}
-                      transition={{
-                        duration: 0.3,
-                        ease: "easeInOut",
-                      }}
-                      key={imageIndex + image}
-                      src={image}
-                      alt={`Image ${imageIndex + 1}`}
-                      className="
-                        aspect-[970/700] rounded-xl object-cover 
-                        ring-2 ring-white/30 dark:ring-gray-900/10 
-                        hover:ring-yellow-400 hover:ring-4 
-                        transition-all duration-300
-                      "
-                      width={970}
-                      height={700}
+                {colImages.map((img, imgIndex) => (
+                  <motion.div
+                    key={imgIndex}
+                    whileHover={{ 
+                        translateZ: 30, // L'image sort de l'écran au survol
+                        rotateX: -5,
+                        scale: 1.05 
+                    }}
+                    className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-white shadow-lg border border-neutral-100 group"
+                  >
+                    <img
+                      src={img}
+                      alt="AI Resource"
+                      className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                  </div>
+                    {/* Overlay de lumière au survol */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </motion.div>
                 ))}
               </motion.div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* 3. AURA DE LUMIÈRE (Point chaud central) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,209,26,0.08)_0%,transparent_70%)] pointer-events-none" />
     </div>
   );
 };

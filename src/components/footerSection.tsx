@@ -1,78 +1,70 @@
-// src/components/FooterCTA.tsx
 "use client";
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react"; // Icône de flèche
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export const FooterCTA: React.FC = () => {
   return (
-    <section className="bg-black py-40 md:py-32 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        
-        {/* Conteneur Gold Lumineux */}
+    <section className="bg-white py-24 relative overflow-hidden">
+      {/* Cercle lumineux en arrière-plan pour l'effet de profondeur */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.7 }}
-          
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="
-            p-8 md:p-12 rounded-3xl relative z-10
-            bg-neutral-900/50 backdrop-blur-md
-            border border-yellow-400/50
-            shadow-[0_0_80px_rgba(255,215,100,0.4)]
+            relative p-12 md:p-20 rounded-[3rem] text-center
+            bg-black border border-white/10
+            shadow-[0_24px_80px_rgba(0,0,0,0.2)]
+            overflow-hidden
           "
         >
-            {/* Titre Impactant (Dégradé Gold) */}
-            <h2 className="
-                text-4xl md:text-6xl font-extrabold mb-4 
-                text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#FFD700]
-                leading-tight
-            ">
-                Prêt à rejoindre l'élite de l'IA ?
-            </h2>
-            
-            {/* Sous-titre */}
-            <p className="text-xl md:text-2xl text-gray-400 mb-10 max-w-3xl mx-auto">
-                Commencez gratuitement dès aujourd'hui et débloquez la puissance illimitée des Prompts Pro et des Formations Gold.
-            </p>
+          {/* Badge de rassurance */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-primary text-xs font-bold uppercase tracking-widest mb-8">
+            <Sparkles size={14} />
+            Ouvert à tous les niveaux
+          </div>
 
-            {/* Bouton CTA Massif Gold */}
+          <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-[0.9] mb-8">
+            L'aventure commence <br />
+            <span className="text-primary italic">maintenant.</span>
+          </h2>
+
+          <p className="text-lg md:text-xl text-neutral-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+            Inscrivez-vous gratuitement. Apprenez, utilisez des outils pros, et quand vous serez prêt, <span className="text-white font-bold">devenez contributeur</span> pour monétiser votre talent.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <motion.button 
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
                className="
-                  inline-flex items-center gap-3 py-4 px-10 rounded-xl font-bold text-xl
-                  bg-gradient-to-br from-[#FFF4C9] via-[#F5D98A] to-[#C89C36]
-                  text-black 
-                  shadow-[0_8px_30px_rgba(255,215,120,0.8)] hover:shadow-[0_10px_40px_rgba(255,225,150,1)]
-                  transition-all duration-500
+                 w-full sm:w-auto inline-flex items-center justify-center gap-3 py-5 px-12 rounded-2xl font-black text-xl
+                 bg-primary text-black shadow-[0_20px_40px_rgba(255,209,26,0.3)]
+                 transition-all duration-300
                "
             >
-              Commencer l'Essai Gratuit
-              <ArrowRight className="h-6 w-6 ml-2" />
+              Commencer gratuitement
+              <ArrowRight className="h-6 w-6" />
             </motion.button>
-            
-            {/* Mention légale / Social Proof subtile */}
-            <p className="text-sm text-gray-500 mt-6 italic">
-                Aucune carte de crédit requise pour l'essai. Accès instantané.
-            </p>
-        </motion.div>
+          </div>
 
-        {/* ------------------------------------------- */}
-        {/* Footer Standard (Mentions légales et Navigation) */}
-        {/* ------------------------------------------- */}
-        <div className="mt-20 border-t border-neutral-800 pt-10 text-sm text-gray-500">
-            <div className="flex justify-center space-x-6 mb-4">
-                <a href="#tarifs" className="hover:text-yellow-400 transition">Tarification</a>
-                <a href="#features" className="hover:text-yellow-400 transition">Fonctionnalités</a>
-                <a href="#faq" className="hover:text-yellow-400 transition">FAQ</a>
-                <a href="/mentions" className="hover:text-yellow-400 transition">Mentions Légales</a>
+          <div className="mt-10 flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-neutral-500 font-medium">
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              Accès immédiat au Dashboard
             </div>
-            <p>&copy; {new Date().getFullYear()} [Nom de Votre SaaS]. Tous droits réservés.</p>
-        </div>
-
+            <div className="hidden md:block text-neutral-700">•</div>
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+              Évolution vers profil Créateur à tout moment
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
