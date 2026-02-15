@@ -14,7 +14,7 @@ export const LayoutTextFlip = ({ words }: { words: string[] }) => {
   }, [words]);
 
   return (
-    <div className="relative inline-block overflow-hidden h-[1.2em] min-w-[300px]">
+    <div className="relative inline-block overflow-hidden h-[1.2em] min-w-75">
       <AnimatePresence mode="wait">
         <motion.span
           key={words[index]}

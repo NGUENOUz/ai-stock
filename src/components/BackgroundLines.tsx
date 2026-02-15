@@ -22,7 +22,7 @@ export const BackgroundLines = ({
     <div
       className={cn(
         // IMPORTANT : Définir la position relative pour que l'SVG (absolute) se positionne correctement
-        "relative h-[20rem] md:h-screen w-full bg-white dark:bg-black overflow-hidden",
+        "relative h-80 md:h-screen w-full bg-white dark:bg-black overflow-hidden",
         className
       )}
     >

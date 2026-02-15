@@ -68,7 +68,7 @@ export const CommunitySection: React.FC = () => {
               
               <div className="space-y-4">
                 {topCreators.map((creator, i) => (
-                  <div key={i} className="bg-white p-5 rounded-[2rem] border border-neutral-100 shadow-sm flex items-center justify-between group hover:border-primary/50 transition-all">
+                  <div key={i} className="bg-white p-5 rounded-4xl border border-neutral-100 shadow-sm flex items-center justify-between group hover:border-primary/50 transition-all">
                     <div className="flex items-center gap-4">
                       <img src={creator.avatar} className="w-14 h-14 rounded-full bg-neutral-100 shadow-inner" alt="" />
                       <div>
@@ -84,7 +84,7 @@ export const CommunitySection: React.FC = () => {
                 ))}
 
                 {/* Placeholder pour le futur créateur */}
-                <div className="border-2 border-dashed border-neutral-200 p-8 rounded-[2rem] flex flex-col items-center justify-center text-center">
+                <div className="border-2 border-dashed border-neutral-200 p-8 rounded-4xl flex flex-col items-center justify-center text-center">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
                     <UserPlus className="h-6 w-6 text-primary" />
                   </div>
@@ -107,7 +107,7 @@ export const CommunitySection: React.FC = () => {
 
 const ContributorFeature = ({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) => (
   <div className="flex gap-5">
-    <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center shadow-sm">
+    <div className="shrink-0 w-12 h-12 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center shadow-sm">
       {icon}
     </div>
     <div>

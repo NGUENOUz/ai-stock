@@ -102,8 +102,8 @@ export default function AiToolsListPage() {
         <div className="relative min-h-screen bg-white">
             {/* Grille & Glow Background */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/10 rounded-full blur-[120px] -z-10" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[40px_40px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-primary/10 rounded-full blur-[120px] -z-10" />
             </div>
 
             <div className="relative z-10 pt-32 md:pt-40">
@@ -120,7 +120,7 @@ export default function AiToolsListPage() {
                 </div>
 
                 {/* Barre de Recherche Sticky */}
-                <div className="sticky top-[72px] z-40 w-full bg-white/70 backdrop-blur-md border-y border-slate-100 shadow-sm">
+                <div className="sticky top-18 z-40 w-full bg-white/70 backdrop-blur-md border-y border-slate-100 shadow-sm">
                     <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="flex bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200 w-full md:w-auto overflow-x-auto no-scrollbar">
                             {['all', 'popular', 'trending', 'new'].map(id => (
@@ -133,7 +133,7 @@ export default function AiToolsListPage() {
                                 </button>
                             ))}
                         </div>
-                        <div className="relative w-full md:w-[400px]">
+                        <div className="relative w-full md:w-100">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                             <input type="text" placeholder="Rechercher..." className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none" onChange={(e) => setSearchTerm(e.target.value)} />
                         </div>
@@ -143,7 +143,7 @@ export default function AiToolsListPage() {
                 <div className="max-w-7xl mx-auto px-6 py-16 flex flex-col lg:flex-row gap-16">
                     
                     {/* Sidebar Filtres */}
-                    <aside className="w-full lg:w-64 flex-shrink-0">
+                    <aside className="w-full lg:w-64 shrink-0">
                         <div className="sticky top-44 space-y-10">
                             {/* Secteurs */}
                             <div>
@@ -173,7 +173,7 @@ export default function AiToolsListPage() {
                     </aside>
 
                     {/* Grille */}
-                    <main className="flex-grow">
+                    <main className="grow">
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                             {paginatedTools.map((tool, index) => (
                                 <div key={tool.id} className="group relative flex flex-col bg-white border border-slate-100 rounded-[2.5rem] p-7 hover:border-primary/30 hover:shadow-xl transition-all duration-500">
@@ -205,7 +205,7 @@ export default function AiToolsListPage() {
                                         </span>
                                     </div>
                                     <h3 className="text-2xl font-black mb-3">{tool.name}</h3>
-                                    <p className="text-[15px] text-slate-500 leading-relaxed mb-8 flex-grow">{tool.shortDesc}</p>
+                                    <p className="text-[15px] text-slate-500 leading-relaxed mb-8 grow">{tool.shortDesc}</p>
 
                                     <div className="flex items-center justify-between pt-6 border-t border-slate-50">
                                         <div className="flex items-center gap-1.5 text-green-600 font-bold text-xs">

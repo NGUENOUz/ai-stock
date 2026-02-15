@@ -18,7 +18,7 @@ export const ContainerScroll = ({ children }: { children: React.ReactNode }) => 
       <div className="w-full relative" style={{ perspective: "1000px" }}>
         <motion.div
           style={{ rotateX: rotate, scale }}
-          className="framer-card w-full mx-auto h-[30rem] md:h-[45rem] p-4 bg-white/80 backdrop-blur-xl border-white/40 shadow-2xl overflow-hidden"
+          className="framer-card w-full mx-auto h-120 md:h-180 p-4 bg-white/80 backdrop-blur-xl border-white/40 shadow-2xl overflow-hidden"
         >
           {children}
         </motion.div>

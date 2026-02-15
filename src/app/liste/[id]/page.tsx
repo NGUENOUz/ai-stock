@@ -88,7 +88,7 @@ const SimilarToolsCarousel = ({
           <Link
             href={`/liste/${tool.id}`}
             key={tool.id}
-            className="flex-shrink-0 w-72 p-4 bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700/80 transition duration-200"
+            className="shrink-0 w-72 p-4 bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700/80 transition duration-200"
           >
             <div className="flex items-center mb-3">
               <Image
@@ -163,7 +163,7 @@ const AiToolDetailPage = ({ params }: any) => {
             </div>
           </div>
           <button
-            className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200 font-medium flex items-center flex-shrink-0"
+            className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200 font-medium flex items-center shrink-0"
             aria-label={`Voter pour ${tool.name}`}
           >
             <IconArrowUp className="w-5 h-5 mr-1" />
@@ -207,7 +207,7 @@ const AiToolDetailPage = ({ params }: any) => {
           <ul className="space-y-3">
             {tool.features.map((feature, index) => (
               <li key={index} className="flex items-start text-gray-700 dark:text-gray-300">
-                <IconCheck className="w-5 h-5 text-green-500 flex-shrink-0 mt-1 mr-3" />
+                <IconCheck className="w-5 h-5 text-green-500 shrink-0 mt-1 mr-3" />
                 <span>{feature}</span>
               </li>
             ))}
@@ -232,7 +232,7 @@ const AiToolDetailPage = ({ params }: any) => {
             target="_blank"
             rel="noopener noreferrer"
             className="full-with px-8 py-3 rounded-xl font-bold text-lg
-                    bg-gradient-to-br from-[#FFF4C9] via-[#F5D98A] to-[#C89C36]
+                    bg-linear-to-br from-[#FFF4C9] via-[#F5D98A] to-[#C89C36]
                     text-black shadow-[0_4px_20px_rgba(255,215,120,0.45)]
                     hover:shadow-[0_6px_25px_rgba(255,225,150,0.7)]
                     transition-all duration-500 transform hover:scale-[1.03]"

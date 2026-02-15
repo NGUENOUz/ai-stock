@@ -21,7 +21,7 @@ export const ThreeDMarquee: React.FC<ThreeDMarqueeProps> = ({ images, className 
 
   return (
     <div className={cn(
-      "relative mx-auto h-[650px] w-full overflow-hidden rounded-[2.5rem]",
+      "relative mx-auto h-162.5 w-full overflow-hidden rounded-[2.5rem]",
       "bg-neutral-50/50 backdrop-blur-sm border border-neutral-200/50",
       "shadow-[0_20px_50px_rgba(0,0,0,0.05)]",
       className
@@ -29,12 +29,12 @@ export const ThreeDMarquee: React.FC<ThreeDMarqueeProps> = ({ images, className 
       
       {/* 1. VIGNETTE & GRADIENTS (L'effet de profondeur) */}
       <div className="absolute inset-0 z-20 pointer-events-none shadow-[inset_0_0_100px_rgba(255,255,255,1)]" />
-      <div className="absolute inset-x-0 top-0 z-30 h-32 bg-gradient-to-b from-white to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 z-30 h-32 bg-gradient-to-t from-white to-transparent" />
+      <div className="absolute inset-x-0 top-0 z-30 h-32 bg-linear-to-b from-white to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 z-30 h-32 bg-linear-to-t from-white to-transparent" />
 
       {/* 2. LE CONTENEUR 3D */}
       <div className="flex size-full items-center justify-center">
-        <div className="relative w-full max-w-[1200px] shrink-0 scale-90 lg:scale-110">
+        <div className="relative w-full max-w-300 shrink-0 scale-90 lg:scale-110">
           <div
             style={{
               transform: "rotateX(52deg) rotateZ(-12deg) skewX(5deg)",
@@ -66,7 +66,7 @@ export const ThreeDMarquee: React.FC<ThreeDMarqueeProps> = ({ images, className 
                         rotateX: -5,
                         scale: 1.05 
                     }}
-                    className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-white shadow-lg border border-neutral-100 group"
+                    className="relative aspect-4/3 w-full rounded-2xl overflow-hidden bg-white shadow-lg border border-neutral-100 group"
                   >
                     <img
                       src={img}
@@ -74,7 +74,7 @@ export const ThreeDMarquee: React.FC<ThreeDMarqueeProps> = ({ images, className 
                       className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                     {/* Overlay de lumière au survol */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   </motion.div>
                 ))}
               </motion.div>

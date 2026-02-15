@@ -94,7 +94,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
             </div>
         )}
 
-        <div className="flex-grow">
+        <div className="grow">
           <h3 className={cn("text-2xl font-bold mb-2", isGold ? "text-yellow-400" : "text-white")}>
             {name}
           </h3>
@@ -155,7 +155,7 @@ export const PricingSection: React.FC = () => {
         
         {/* Titre de Section */}
         <div className="text-center mb-16 md:mb-24">
-          <h2 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-[#ffff] via-[#dddd] to-[#FFD700] mb-4">
+          <h2 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-b from-[#ffff] via-[#dddd] to-[#FFD700] mb-4">
             Choisissez le Plan qui Transformera votre Travail.
           </h2>
           <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">

@@ -8,7 +8,7 @@ export const FooterCTA: React.FC = () => {
   return (
     <section className="bg-white py-24 relative overflow-hidden">
       {/* Cercle lumineux en arrière-plan pour l'effet de profondeur */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <motion.div

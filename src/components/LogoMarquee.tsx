@@ -21,8 +21,8 @@ export const LogoMarquee = () => {
   return (
     <div className="relative w-full py-12 overflow-hidden bg-white">
       {/* Gradients de flou sur les bords (Effet Framer) */}
-      <div className="absolute inset-y-0 left-0 z-10 w-40 bg-gradient-to-r from-white to-transparent" />
-      <div className="absolute inset-y-0 right-0 z-10 w-40 bg-gradient-to-l from-white to-transparent" />
+      <div className="absolute inset-y-0 left-0 z-10 w-40 bg-linear-to-r from-white to-transparent" />
+      <div className="absolute inset-y-0 right-0 z-10 w-40 bg-linear-to-l from-white to-transparent" />
 
       <motion.div
         className="flex w-max gap-12 items-center"

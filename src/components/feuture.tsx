@@ -84,7 +84,7 @@ const FeatureTitle = ({ children }: { children?: React.ReactNode }) => (
 );
 
 const FeatureDescription = ({ children }: { children?: React.ReactNode }) => (
-  <p className="text-sm text-neutral-500 mt-2 max-w-[250px]">{children}</p>
+  <p className="text-sm text-neutral-500 mt-2 max-w-62.5">{children}</p>
 );
 
 // --- Squelette 1 : Hub avec liste d'outils ---
@@ -121,13 +121,13 @@ export const SkeletonTwo = () => (
         <motion.div
           key={i}
           whileHover={{ scale: 1.1, rotate: 0 }}
-          className="w-24 h-24 rounded-xl border-4 border-white shadow-lg overflow-hidden flex-shrink-0 bg-neutral-100"
+          className="w-24 h-24 rounded-xl border-4 border-white shadow-lg overflow-hidden shrink-0 bg-neutral-100"
         >
           <img src={img} alt="AI Gallery" className="h-full w-full object-cover" />
         </motion.div>
       ))}
     </div>
-    <div className="absolute inset-0 bg-gradient-to-t from-neutral-50/50 to-transparent pointer-events-none" />
+    <div className="absolute inset-0 bg-linear-to-t from-neutral-50/50 to-transparent pointer-events-none" />
   </div>
 );
 

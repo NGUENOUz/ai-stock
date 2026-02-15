@@ -29,7 +29,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     >
       {/* 1. Effet de brillance au survol (Glow tournant) */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <div className="absolute inset-[-100%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0%,var(--color-primary)_50%,transparent_100%)] opacity-20" />
+        <div className="absolute -inset-full animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0%,var(--color-primary)_50%,transparent_100%)] opacity-20" />
       </div>
 
       {/* 2. Contenu du bouton */}
@@ -53,7 +53,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       </span>
 
       {/* 3. Overlay de finition (Lissage interne) */}
-      <div className="absolute inset-[1px] rounded-full bg-black z-0 group-hover:bg-neutral-900 transition-colors duration-300" />
+      <div className="absolute inset-px rounded-full bg-black z-0 group-hover:bg-neutral-900 transition-colors duration-300" />
     </button>
   );
 };
