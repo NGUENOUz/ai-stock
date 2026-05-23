@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import { useRouter, notFound } from "next/navigation";
 import { Lesson, Training, Instructor } from "@/types/training";
 import { useAppStore } from "@/store/useAppStore";
@@ -72,11 +72,11 @@ const GLASS_CONTAINER_CLASSES = `
 `;
 
 interface LessonPageProps {
-    params:any;
+    params: Promise<{ id: string; lessonId: string }>;
 }
 
 export default function LessonPage({ params }: LessonPageProps) {
-    const { id, lessonId } = params;
+    const { id, lessonId } = use(params);
     const router = useRouter();
     const { isLoggedIn, subscription } = useAppStore();
 

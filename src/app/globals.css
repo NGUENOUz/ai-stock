@@ -1,98 +1,53 @@
 @import "tailwindcss";
 
-@theme {
-  /* Couleurs de marque */
-  --color-primary: #1aff79;
-  --color-secondary: #F5F5F7;
-  
-  /* Design System */
-  --radius-premium: 1.5rem;
-  --shadow-premium: 0 0 0 1px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.02), 0 12px 24px rgba(0,0,0,0.03);
-  
-  /* Animations personnalisées */
-  --animate-spin-slow: spin 4s linear infinite;
-  --animate-ping-custom: ping-custom 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-/* Définition des Keyframes pour Tailwind v4 */
-@keyframes ping-custom {
-  75%, 100% {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
-
 @layer base {
+  :root {
+    --primary: #FFC107;
+    --primary-foreground: #000000;
+    --background: #FFFFFF;
+    --foreground: #000000;
+  }
+
   body {
-    background-color: white;
-    color: black;
-    /* Lissage de police pour le style Premium */
+    @apply bg-white text-slate-900;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Empêche les rebonds de scroll indésirables */
-    overscroll-behavior-y: none;
   }
 
-  /* Sélection de texte personnalisée (Jaune AI-STOCK) */
   ::selection {
-    background-color: rgba(255, 209, 26, 0.3);
+    background-color: rgba(255, 193, 7, 0.3);
     color: black;
   }
-}
 
-/* --- UTILITAIRES PERSONNALISÉS (STYLE FRAMER) --- */
+  /* Scrollbar personnalisée */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 
-@utility framer-card {
-  background-color: white;
-  border: 1px solid color-mix(in srgb, black, transparent 92%);
-  border-radius: var(--radius-premium);
-  box-shadow: var(--shadow-premium);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-100;
+  }
 
-  &:hover {
-    transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--color-primary), transparent 60%);
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05);
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #FFC107;
   }
 }
 
-@utility bg-grid-framer {
-  /* Crée la grille subtile en arrière-plan */
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-  mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%);
-}
-
-@utility text-balance {
-  /* Pour des titres harmonieux sans mots orphelins */
-  text-wrap: balance;
-}
-
-/* --- OPTIMISATION DES BOUTONS ANIMÉS --- */
-
-@utility btn-glow-container {
-  /* Conteneur pour le bouton avec halo tournant */
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  
-  & .glow-effect {
-    position: absolute;
-    inset: -100%;
-    background: conic-gradient(
-      from 0deg,
-      transparent 0%,
-      var(--color-primary) 50%,
-      transparent 100%
-    );
-    animation: spin 3s linear infinite;
-    opacity: 0;
-    transition: opacity 0.5s ease;
+@layer utilities {
+  /* Classes utilitaires personnalisées */
+  .text-gradient {
+    background: linear-gradient(to right, #FFC107, #F59E0B);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
-  &:hover .glow-effect {
-    opacity: 0.3;
+  .border-gradient {
+    border-image: linear-gradient(to right, #FFC107, #FFB300) 1;
   }
 }

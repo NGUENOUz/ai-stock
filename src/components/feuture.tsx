@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
-import createGlobe from "cobe"; 
 import { motion } from "framer-motion";
-import { IconBrandYoutubeFilled, IconChevronRight } from "@tabler/icons-react";
+import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 
 // --- Images de remplacement pour le rendu visuel ---
 const PROMPT_IMAGES = [
@@ -145,46 +144,59 @@ export const SkeletonThree = () => (
   </div>
 );
 
-// --- Squelette 4 : Le Globe ---
+// --- Squelette 4 : Le Globe (Version simplifiée avec animation CSS) ---
 export const SkeletonFour = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    const globe = createGlobe(canvasRef.current, {
-      devicePixelRatio: 2,
-      width: 500 * 2,
-      height: 500 * 2,
-      phi: 0,
-      theta: 0.1,
-      dark: 0,
-      diffuse: 1.2,
-      mapSamples: 16000,
-      mapBrightness: 6,
-      baseColor: [1, 1, 1],
-      markerColor: [255/255, 209/255, 26/255],
-      glowColor: [245/255, 245/255, 247/255],
-      markers: [
-        { location: [48.8566, 2.3522], size: 0.08 },
-        { location: [40.7128, -74.006], size: 0.08 },
-        { location: [35.6762, 139.6503], size: 0.08 },
-        { location: [4.0511, 9.7679], size: 0.08 },
-      ],
-      onRender: (state) => {
-        state.phi += 0.005;
-      },
-    });
-    return () => globe.destroy();
-  }, []);
-
   return (
-    <div className="h-64 w-full flex items-center justify-center relative bg-transparent overflow-hidden">
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <canvas
-          ref={canvasRef}
-          style={{ width: "400px", height: "400px", maxWidth: "100%" }}
-          className="opacity-90"
+    <div className="h-64 w-full flex items-center justify-center relative bg-gradient-to-br from-slate-50 to-white rounded-2xl overflow-hidden">
+      {/* Globe animé en CSS pur */}
+      <div className="relative w-64 h-64">
+        {/* Cercle principal */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30 shadow-2xl" />
+        
+        {/* Lignes de latitude */}
+        <div className="absolute inset-0 flex flex-col justify-around py-8">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="w-full h-px bg-primary/20" />
+          ))}
+        </div>
+        
+        {/* Lignes de longitude animées */}
+        <div className="absolute inset-0">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute top-0 left-1/2 w-px h-full bg-primary/20 origin-center"
+              style={{ transform: `rotate(${i * 30}deg)` }}
+              animate={{ opacity: [0.2, 0.5, 0.2] }}
+              transition={{ duration: 3, repeat: Infinity, delay: i * 0.2 }}
+            />
+          ))}
+        </div>
+        
+        {/* Points de localisation */}
+        <motion.div
+          className="absolute top-1/4 left-1/3 w-3 h-3 bg-primary rounded-full shadow-lg"
+          animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
         />
+        <motion.div
+          className="absolute top-1/2 right-1/4 w-3 h-3 bg-primary rounded-full shadow-lg"
+          animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+          transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 left-1/2 w-3 h-3 bg-primary rounded-full shadow-lg"
+          animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+          transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+        />
+        
+        {/* Effet de brillance */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
+      </div>
+      
+      {/* Texte en bas */}
+      <div className="absolute bottom-8 text-center">
+        <p className="text-sm font-bold text-slate-600">Disponible dans le monde entier</p>
       </div>
     </div>
   );

@@ -9,51 +9,50 @@ interface AnimatedButtonProps {
   text: string;
   onClick?: () => void;
   className?: string;
+  variant?: 'primary' | 'secondary';
 }
 
 export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   text,
   onClick,
   className,
+  variant = 'primary',
 }) => {
+  const isPrimary = variant === 'primary';
+
   return (
     <button
       onClick={onClick}
       className={cn(
         "group relative inline-flex items-center justify-center px-8 py-4",
-        "bg-black text-primary font-bold text-lg rounded-full",
-        "border border-white/10 overflow-hidden transition-all duration-300",
-        "hover:scale-105 active:scale-95 cursor-pointer shadow-2xl",
+        "font-bold text-base rounded-full overflow-hidden",
+        "transition-all duration-300 active:scale-95 shadow-premium",
+        isPrimary 
+          ? "bg-primary text-black hover:bg-primary-600 hover:shadow-glow" 
+          : "bg-white text-black border border-neutral-200 hover:bg-neutral-50",
         className
       )}
     >
-      {/* 1. Effet de brillance au survol (Glow tournant) */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <div className="absolute -inset-full animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0%,var(--color-primary)_50%,transparent_100%)] opacity-20" />
-      </div>
+      {/* Effet de brillance au survol */}
+      {isPrimary && (
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
+          <div className="absolute -inset-full animate-spin-slow bg-[conic-gradient(from_0deg,transparent_0%,white_50%,transparent_100%)]" />
+        </div>
+      )}
 
-      {/* 2. Contenu du bouton */}
+      {/* Contenu */}
       <span className="relative z-10 flex items-center gap-3">
-        {/* Point vert "Live" pulsant */}
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+        {/* Point live pulsant */}
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
         </span>
 
         {text}
 
         {/* Flèche animée */}
-        <motion.span
-          initial={{ x: -5, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          className="inline-block"
-        >
-          <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-        </motion.span>
+        <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
       </span>
-
-      {/* 3. Overlay de finition (Lissage interne) */}
-      <div className="absolute inset-px rounded-full bg-black z-0 group-hover:bg-neutral-900 transition-colors duration-300" />
     </button>
   );
 };

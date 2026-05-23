@@ -10,26 +10,38 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'picsum.photos',
         port: '',
-        pathname: '/**', // Autorise n'importe quel chemin sur ce domaine
+        pathname: '/**',
       },
-      // ⭐ AJOUT DE CLOUDINARY
       {
         protocol: 'https',
-        // Le domaine standard de Cloudinary pour la livraison de contenu
         hostname: 'res.cloudinary.com',
         port: '',
-        pathname: '/**', // Autorise n'importe quel chemin sur ce domaine
+        pathname: '/**',
       },
-       {
+      {
         protocol: 'https',
-        // Le domaine standard de Cloudinary pour la livraison de contenu
         hostname: 'www.transparenttextures.com',
         port: '',
-        pathname: '/**', // Autorise n'importe quel chemin sur ce domaine
+        pathname: '/**',
       },
-      
-      // Si vous utilisez un sous-domaine personnalisé, remplacez 'res.cloudinary.com'
-      // par ce sous-domaine.
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.suno.ai',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

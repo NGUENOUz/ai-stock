@@ -8,15 +8,17 @@ import {
     ChevronRight, LayoutGrid, Flame, ChevronLeft,
     Scale, X, Check, Minus, PlusCircle
 } from 'lucide-react';
+import { apiClient } from '@/lib/api-client';
+import { AiTool } from '@/types/type';
 
 // --- Types ---
-interface AiTool {
-    id: number;
+interface LocalTool {
+    id: string;
     name: string;
     shortDesc: string;
     category: string;
     sector: string;
-    priceType: 'Gratuit' | 'Freemium' | 'Payant';
+    priceType: string;
     upvotes: number;
     isTrending: boolean;
     isNew: boolean;
@@ -24,28 +26,16 @@ interface AiTool {
     features: string[]; 
 }
 
-// Simulation de données
-const allAiTools: AiTool[] = Array.from({ length: 48 }, (_, i) => ({
-    id: i + 1,
-    name: `Outil IA ${i + 1}`,
-    shortDesc: "Une solution intelligente pour optimiser vos workflows et gagner en productivité au quotidien.",
-    category: "Technologie",
-    sector: ["Banque", "Médecine", "Droit", "Formation"][i % 4],
-    priceType: ["Gratuit", "Freemium", "Payant"][i % 3] as any,
-    upvotes: Math.floor(Math.random() * 2000),
-    isTrending: i % 5 === 0,
-    isNew: i % 8 === 0,
-    logo: `https://picsum.photos/60/60?random=${i}`,
-    features: ["API", "Support 24/7", "Export Cloud", "Mobile App"].filter((_, idx) => (i + idx) % 2 === 0)
-}));
-
 const sectorsList = ["Banque", "Médecine", "Droit", "Formation", "Immobilier", "Marketing"];
 const priceList = ["Gratuit", "Freemium", "Payant"];
 
 export default function AiToolsListPage() {
+    const [allAiTools, setAllAiTools] = useState<LocalTool[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [favorites, setFavorites] = useState<number[]>([]);
-    const [compareList, setCompareList] = useState<AiTool[]>([]); 
+    const [favorites, setFavorites] = useState<string[]>([]);
+    const [compareList, setCompareList] = useState<LocalTool[]>([]); 
     const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<'all' | 'popular' | 'trending' | 'new'>('all');
     const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
@@ -56,15 +46,43 @@ export default function AiToolsListPage() {
     useEffect(() => {
         const saved = localStorage.getItem('user-favs');
         if (saved) setFavorites(JSON.parse(saved));
+
+        async function fetchTools() {
+            try {
+                setLoading(true);
+                setError(null);
+                const result = await apiClient.getTools({ limit: 100 });
+                const mapped: LocalTool[] = result.data.map(tool => ({
+                    id: tool.id,
+                    name: tool.name,
+                    shortDesc: tool.description_short || 'Aucune description',
+                    category: tool.categories?.[0] || 'Non catégorisé',
+                    sector: tool.categories?.[0] || 'Autre',
+                    priceType: tool.pricing_type || 'Gratuit',
+                    upvotes: 0,
+                    isTrending: tool.is_featured || false,
+                    isNew: false,
+                    logo: tool.logo_url || 'https://via.placeholder.com/60',
+                    features: []
+                }));
+                setAllAiTools(mapped);
+            } catch (err: any) {
+                console.error('Erreur chargement outils:', err);
+                setError(err.message || 'Erreur lors du chargement');
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchTools();
     }, []);
 
-    const toggleFavorite = (id: number) => {
+    const toggleFavorite = (id: string) => {
         const newFavs = favorites.includes(id) ? favorites.filter(f => f !== id) : [...favorites, id];
         setFavorites(newFavs);
         localStorage.setItem('user-favs', JSON.stringify(newFavs));
     };
 
-    const toggleCompare = (tool: AiTool) => {
+    const toggleCompare = (tool: LocalTool) => {
         if (compareList.find(t => t.id === tool.id)) {
             setCompareList(compareList.filter(t => t.id !== tool.id));
         } else if (compareList.length < 3) {
@@ -93,7 +111,7 @@ export default function AiToolsListPage() {
         if (activeTab === 'trending') result = result.filter(t => t.isTrending);
         if (activeTab === 'new') result = result.filter(t => t.isNew);
         return result;
-    }, [searchTerm, selectedSectors, selectedPrices, activeTab]);
+    }, [searchTerm, selectedSectors, selectedPrices, activeTab, allAiTools]);
 
     const totalPages = Math.ceil(filteredTools.length / itemsPerPage);
     const paginatedTools = filteredTools.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -164,45 +182,105 @@ export default function AiToolsListPage() {
 
                     {/* Grille */}
                     <main className="grow">
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                        {loading && (
+                            <div className="flex justify-center items-center min-h-[400px]">
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                            </div>
+                        )}
+                        {error && (
+                            <div className="text-center text-red-500 py-12">
+                                <p className="font-bold mb-2">Erreur lors du chargement</p>
+                                <p className="text-sm">{error}</p>
+                            </div>
+                        )}
+                        {!loading && !error && allAiTools.length === 0 && (
+                            <div className="text-center text-slate-500 py-12">Aucun outil disponible</div>
+                        )}
+                        {!loading && !error && allAiTools.length > 0 && (
+                        <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             {paginatedTools.map((tool, index) => (
-                                <div key={tool.id} className="group relative flex flex-col bg-white border border-slate-100 rounded-[2.5rem] p-7 hover:border-primary/30 transition-all duration-500">
-                                    <div className="absolute -top-3 -left-3 w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center font-black text-xs shadow-sm z-10">
-                                        #{ (currentPage - 1) * itemsPerPage + index + 1 }
+                                <Link key={tool.id} href={`/liste/${tool.id}`} className="group relative flex flex-col bg-white border border-slate-200 rounded-3xl p-6 hover:border-primary/50 hover:shadow-xl transition-all duration-300">
+                                    {/* Badge numéro */}
+                                    <div className="absolute -top-3 -left-3 w-10 h-10 bg-primary text-slate-900 rounded-full flex items-center justify-center font-black text-xs shadow-lg z-10">
+                                        #{(currentPage - 1) * itemsPerPage + index + 1}
                                     </div>
-                                    <div className="flex justify-between items-start mb-8">
-                                        <div className="w-16 h-16 rounded-[1.25rem] overflow-hidden border border-slate-50 shadow-sm">
-                                            <Image src={tool.logo} alt={tool.name} width={64} height={64} />
+
+                                    {/* Header avec logo et actions */}
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-slate-100 shadow-sm group-hover:border-primary/30 transition-all">
+                                            <Image src={tool.logo} alt={tool.name} width={64} height={64} className="object-cover" />
                                         </div>
                                         <div className="flex gap-2">
-                                            <button onClick={() => toggleCompare(tool)} className={`p-2.5 rounded-full transition-all ${compareList.find(t => t.id === tool.id) ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-slate-50 text-slate-300 hover:text-primary'}`}>
-                                                <Scale className="w-5 h-5" />
+                                            <button 
+                                                onClick={(e) => { e.preventDefault(); toggleCompare(tool); }} 
+                                                className={`p-2 rounded-xl transition-all ${compareList.find(t => t.id === tool.id) ? 'bg-primary text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                                            >
+                                                <Scale className="w-4 h-4" />
                                             </button>
-                                            <button onClick={() => toggleFavorite(tool.id)} className={`p-2.5 rounded-full transition-all ${favorites.includes(tool.id) ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-300'}`}>
-                                                <Heart className={`w-5 h-5 ${favorites.includes(tool.id) ? 'fill-current' : ''}`} />
+                                            <button 
+                                                onClick={(e) => { e.preventDefault(); toggleFavorite(tool.id); }} 
+                                                className={`p-2 rounded-xl transition-all ${favorites.includes(tool.id) ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                                            >
+                                                <Heart className={`w-4 h-4 ${favorites.includes(tool.id) ? 'fill-current' : ''}`} />
                                             </button>
                                         </div>
                                     </div>
+
+                                    {/* Badges catégorie et prix */}
                                     <div className="flex gap-2 mb-4">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/5 px-3 py-1 rounded-lg">{tool.sector}</span>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 bg-slate-50 px-3 py-1 rounded-lg">{tool.priceType}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-primary bg-primary/10 px-3 py-1.5 rounded-lg">
+                                            {tool.sector}
+                                        </span>
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg">
+                                            {tool.priceType}
+                                        </span>
                                     </div>
-                                    <h3 className="text-2xl font-black mb-3">{tool.name}</h3>
-                                    <p className="text-[15px] text-slate-500 leading-relaxed mb-8 grow">{tool.shortDesc}</p>
-                                    <div className="flex items-center justify-between pt-6 border-t border-slate-50">
-                                        <div className="flex items-center gap-1.5 text-green-600 font-bold text-xs"><TrendingUp className="w-4 h-4" /> {tool.upvotes}</div>
-                                        <Link href={`/liste/${tool.id}`} className="flex items-center justify-center w-12 h-12 bg-slate-900 text-white rounded-2xl hover:bg-primary transition-all"><ChevronRight className="w-6 h-6" /></Link>
+
+                                    {/* Titre */}
+                                    <h3 className="text-xl font-black text-slate-900 mb-3 group-hover:text-primary transition-colors">
+                                        {tool.name}
+                                    </h3>
+
+                                    {/* Description */}
+                                    <p className="text-sm text-slate-500 leading-relaxed mb-6 line-clamp-2 grow">
+                                        {tool.shortDesc}
+                                    </p>
+
+                                    {/* Footer avec stats */}
+                                    <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                                        <div className="flex items-center gap-1.5 text-green-600 font-bold text-xs">
+                                            <TrendingUp className="w-4 h-4" />
+                                            {tool.upvotes}
+                                        </div>
+                                        <div className="flex items-center justify-center w-10 h-10 bg-slate-900 text-white rounded-xl group-hover:bg-primary transition-all">
+                                            <ChevronRight className="w-5 h-5" />
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
 
                         {/* Pagination */}
-                        <div className="mt-24 flex items-center justify-center gap-6">
-                            <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))} className="p-4 rounded-2xl border border-slate-200 disabled:opacity-20 transition-all hover:bg-slate-50"><ChevronLeft /></button>
-                            <span className="font-black text-slate-900">Page {currentPage} / {totalPages}</span>
-                            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))} className="p-4 rounded-2xl border border-slate-200 disabled:opacity-20 transition-all hover:bg-slate-50"><ChevronRight /></button>
+                        <div className="mt-16 flex items-center justify-center gap-4">
+                            <button 
+                                disabled={currentPage === 1} 
+                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))} 
+                                className="p-3 rounded-xl border-2 border-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:border-primary hover:bg-primary/5 active:scale-95"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <span className="font-black text-slate-900 px-4">Page {currentPage} / {totalPages}</span>
+                            <button 
+                                disabled={currentPage === totalPages} 
+                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))} 
+                                className="p-3 rounded-xl border-2 border-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:border-primary hover:bg-primary/5 active:scale-95"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
                         </div>
+                        </>
+                        )}
                     </main>
                 </div>
 

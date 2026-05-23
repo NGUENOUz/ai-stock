@@ -32,20 +32,22 @@ export const Navbar = ({ children, className }: NavbarProps) => {
 // 2. NAVBODY (Desktop - Transition Pilule -> Barre Pleine)
 export const NavBody = ({ children, className, isScrolled }: NavBodyProps) => {
   return (
-    <motion.div
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className={cn(
-        "relative z-[60] mx-auto hidden flex-row items-center justify-between transition-all duration-300 ease-in-out lg:flex",
-        // État initial : Pilule centrée
-        "mt-4 max-w-7xl rounded-full border border-neutral-100 bg-white/80 px-6 py-2.5 backdrop-blur-md shadow-premium",
-        // État au Scroll : Barre pleine largeur sans arrondis sur les côtés
-        isScrolled && "mt-0 max-w-full rounded-none border-none border-b border-neutral-200 bg-white/95 py-4 px-10 shadow-md",
-        className
-      )}
-    >
-      {children}
-    </motion.div>
+    <div className="relative w-full">
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className={cn(
+          "relative z-[60] mx-auto hidden flex-row items-center justify-between transition-all duration-300 ease-in-out lg:flex",
+          // État initial : Pilule centrée
+          "mt-4 max-w-7xl rounded-full border border-neutral-100 bg-white/80 px-6 py-2.5 backdrop-blur-md shadow-premium",
+          // État au Scroll : Barre pleine largeur sans arrondis sur les côtés
+          isScrolled && "mt-0 max-w-full rounded-none border-none border-b border-neutral-200 bg-white/95 py-4 px-10 shadow-md",
+          className
+        )}
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 };
 
@@ -98,17 +100,19 @@ export const NavItems = ({ items, className, onItemClick }: any) => {
 // 4. MOBILENAV (S'adapte aussi au scroll)
 export const MobileNav = ({ children, className, isScrolled }: { children: React.ReactNode; className?: string; isScrolled?: boolean }) => {
   return (
-    <div
-      className={cn(
-        "flex items-center justify-between transition-all duration-300 lg:hidden",
-        // État initial
-        "mx-4 mt-4 rounded-2xl border border-neutral-100 bg-white/90 p-3 backdrop-blur-md shadow-premium",
-        // État scroll
-        isScrolled && "mx-0 mt-0 rounded-none border-none border-b bg-white py-4 px-6 shadow-md",
-        className
-      )}
-    >
-      {children}
+    <div className="relative w-full">
+      <div
+        className={cn(
+          "flex items-center justify-between transition-all duration-300 lg:hidden",
+          // État initial
+          "mx-4 mt-4 rounded-2xl border border-neutral-100 bg-white/90 p-3 backdrop-blur-md shadow-premium",
+          // État scroll
+          isScrolled && "mx-0 mt-0 rounded-none border-none border-b bg-white py-4 px-6 shadow-md",
+          className
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 };

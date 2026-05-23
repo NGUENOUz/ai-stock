@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { Footer } from "@/components/footer";
-import HeaderComponent from "@/components/header";
-
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
+import ConditionalLayout from "@/components/ConditionalLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,17 +49,8 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          {/* Header fixe en haut */}
-          <HeaderComponent />
-
-          {/* Main avec un min-height pour éviter les sauts de page au chargement */}
-          <main className="relative flex flex-col min-h-screen">
-            {children}
-          </main>
-
-          <Footer />
+          <ConditionalLayout>{children}</ConditionalLayout>
         </ThemeProvider>
-
         <Analytics />
       </body>
     </html>

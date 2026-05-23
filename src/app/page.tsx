@@ -1,37 +1,64 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
-// Tes composants existants
+// Composants existants
 import { LayoutTextFlip } from "@/components/LayoutText";
 import { AnimatedButton } from "@/components/animationBouton";
 import { ThreeDMarquee } from "@/components/maquette";
 import { ContainerScroll } from "@/components/containerScrool";
-import { AISocialProof } from "@/components/AiSocialProof";
 import { FeaturesSectionDemo } from "@/components/feuture";
-import { PricingSection } from "@/components/pricingSection";
-import { FaqSection } from "@/components/FaqSetion";
 import { FooterCTA } from "@/components/footerSection";
 import { CommunitySection } from "@/components/communitySection";
-
-// Tes données et services
-import { imagesAI } from "@/bd/imageAI";
-import { getFeaturedTools } from "@/lib/supabase/services/service";
-import { AiTool } from "@/types/type";
 import { LogoMarquee } from '../components/LogoMarquee';
-import { ToolsGrid } from "@/components/ToolsGrid";
+import { ToolsGridMigrated } from "@/components/ToolsGridMigrated";
 
-export default function AIStockLanding() {
+// Données
+import { imagesAI } from "@/bd/imageAI";
+
+// ✅ NOUVEAU : Client API au lieu de Supabase direct
+import { apiClient } from "@/lib/api-client";
+import { AiTool } from "@/types/type";
+
+/**
+ * ✅ VERSION MIGRÉE : Page d'accueil avec API-First
+ * 
+ * CHANGEMENTS :
+ * - ❌ AVANT : import { getFeaturedTools } from '@/lib/supabase/services/service'
+ * - ✅ MAINTENANT : import { apiClient } from '@/lib/api-client'
+ * 
+ * AVANTAGES :
+ * - Sécurisé (API côté serveur)
+ * - Validation automatique (Zod)
+ * - Type-safe (TypeScript)
+ * - Business logic centralisée
+ */
+export default function AIStockLandingMigrated() {
   const [featuredTools, setFeaturedTools] = useState<AiTool[]>([]);
+  const [loading, setLoading] = useState(true);
   const pages = ["PROMPTS", "FORMATIONS", "OUTILS IA", "WORKFLOWS"];
 
   useEffect(() => {
     async function fetchTools() {
-      const { data } = await getFeaturedTools(8);
-      if (data) setFeaturedTools(data);
+      try {
+        setLoading(true);
+        
+        // ✅ NOUVEAU : Utilisation du client API
+        const tools = await apiClient.getFeaturedTools(8);
+        setFeaturedTools(tools);
+        
+        // ❌ ANCIEN CODE (commenté pour référence) :
+        // const { data } = await getFeaturedTools(8);
+        // if (data) setFeaturedTools(data);
+        
+      } catch (error) {
+        console.error('Erreur lors du chargement des outils:', error);
+      } finally {
+        setLoading(false);
+      }
     }
+
     fetchTools();
   }, []);
 
@@ -78,17 +105,19 @@ export default function AIStockLanding() {
 
           {/* Boutons d'Action */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
-           
-              <AnimatedButton text="Rejoindre AI-STOCK" onClick={() => {}} />
-            
+            <AnimatedButton text="Rejoindre AI-STOCK" onClick={() => {}} />
             <button className="h-14 px-10 rounded-2xl border border-neutral-200 bg-white font-bold hover:bg-neutral-50 transition-all text-neutral-600">
               Déposer un outil
             </button>
           </div>
         </div>
       </section>
-      <LogoMarquee/>
-       <ToolsGrid/>
+
+      <LogoMarquee />
+      
+      {/* ✅ NOUVEAU : Composant migré avec API */}
+      <ToolsGridMigrated />
+
       {/* --- SECTION MARQUEE (SCROLL) --- */}
       <section className="relative py-20 bg-white overflow-hidden">
         <h2 className="text-3xl font-bold text-black mb-4 max-w-7xl mx-auto px-6">
@@ -101,7 +130,6 @@ export default function AIStockLanding() {
 
       {/* --- PREUVE SOCIALE & FEATURES --- */}
       <div className="bg-white space-y-32 pb-32">
-      
         <div className="max-w-7xl mx-auto px-6">
           <div className="bg-neutral-50 rounded-[3rem] p-8 md:p-16 border border-neutral-100">
             <FeaturesSectionDemo />
