@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
+    "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.49.5",
     "@tabler/icons-react": "^3.36.1",
     "@tanstack/react-table": "^8.21.3",

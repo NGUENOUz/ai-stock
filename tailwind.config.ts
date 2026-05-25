@@ -29,11 +29,11 @@ const config: Config = {
           200: "#FFE896",
           300: "#FFDC68",
           400: "#FFD645",
-          DEFAULT: "#FFC107", // ⚡ Couleur signature (plus saturée)
-          600: "#FFB300",
-          700: "#FFA000",
-          800: "#FF8F00",
-          900: "#FF6F00",
+          DEFAULT: "#FFD11A", // ⚡ Couleur signature AI-STOCK
+          600: "#FFC107",
+          700: "#FFB300",
+          800: "#FFA000",
+          900: "#FF8F00",
           foreground: "#000000",
         },
 

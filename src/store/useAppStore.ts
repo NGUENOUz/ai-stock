@@ -2,104 +2,90 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-// --- Types d'abonnement
 export type SubscriptionTier = "Gratuit" | "Premium" | "Pro";
+export type UserRole = "user" | "contributor" | "admin";
 
-// --- Typage global état/auth/onboarding/theme ---
 interface AppState {
   isLoggedIn: boolean;
   userName: string;
   email: string;
+  role: UserRole;
   subscription: SubscriptionTier;
-  subscriptionEndDate: string | null; // <-- NOUVEAU: Date de fin d'abonnement (format string 'YYYY-MM-DD')
+  subscriptionEndDate: string | null;
   hasSeenTour: { prompts: boolean; formations: boolean };
   isDarkMode: boolean;
+  isContributor: boolean;
+  contributorRequestPending: boolean;
 }
 
 interface AppActions {
   toggleDarkMode: () => void;
-  loginFromDb: (
-    params: {
-      userName: string;
-      email: string;
-      subscription?: SubscriptionTier;
-      subscriptionEndDate?: string | null; // <-- NOUVEAU: Ajout dans le login
-    }
-  ) => void;
+  loginFromDb: (params: {
+    userName: string;
+    email: string;
+    role?: UserRole;
+    subscription?: SubscriptionTier;
+    subscriptionEndDate?: string | null;
+  }) => void;
   handleLogout: () => void;
-  updateSubscription: (newTier: SubscriptionTier, endDate: string | null) => void; // <-- MODIFIÉ
+  updateSubscription: (newTier: SubscriptionTier, endDate: string | null) => void;
   updateProfile: (userName: string, email: string) => void;
   setHasSeenTour: (page: "prompts" | "formations", seen: boolean) => void;
+  requestContributor: () => void;
 }
 
-// --- Typage combiné Zustand
 export type AppStore = AppState & AppActions;
 
-// --- Helper pour thème
 const manageDarkModeClass = (isDark: boolean) => {
   if (typeof document !== "undefined") {
-    if (isDark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle("dark", isDark);
   }
 };
 
 const getInitialDarkMode = (): boolean => {
   if (typeof window === "undefined") return false;
-  // Utilisation de la logique existante avec vérification si le storage est disponible
   try {
-    const savedMode = localStorage.getItem("theme") || "";
-    const isDark = savedMode === "dark";
+    const isDark = localStorage.getItem("theme") === "dark";
     manageDarkModeClass(isDark);
     return isDark;
-  } catch (error) {
-    // Fallback si localStorage n'est pas disponible (ex: SSR)
-    manageDarkModeClass(false);
-    return false; 
+  } catch {
+    return false;
   }
 };
 
-// --- STORE ZUSTAND ---
 export const useAppStore = create<AppStore>()(
   persist(
-    (set, get) => ({
-      // --- État par défaut ---
+    (set) => ({
       isLoggedIn: false,
       userName: "Visiteur",
       email: "visiteur@ai-stock.com",
+      role: "user",
       subscription: "Gratuit",
-      subscriptionEndDate: null, // <-- Défaut
+      subscriptionEndDate: null,
       isDarkMode: getInitialDarkMode(),
       hasSeenTour: { prompts: false, formations: false },
+      isContributor: false,
+      contributorRequestPending: false,
 
-      // --- Actions ---
       toggleDarkMode: () => {
         set((state) => {
           const newMode = !state.isDarkMode;
           manageDarkModeClass(newMode);
-          // Stocke le mode actuel dans localStorage pour le helper au rechargement
-          if (typeof localStorage !== "undefined") {
-            localStorage.setItem("theme", newMode ? "dark" : "light");
-          }
+          localStorage.setItem("theme", newMode ? "dark" : "light");
           return { isDarkMode: newMode };
         });
       },
 
-      // Pour login réel Supabase : synchronise tout l'état à partir de la BDD/user
-      loginFromDb: ({
-        userName,
-        email,
-        subscription = "Gratuit",
-        subscriptionEndDate = null, // <-- Récupération du champ
-      }) => {
-        set({
-          isLoggedIn: true,
-          userName: userName || email,
-          email,
-          subscription,
-          subscriptionEndDate, // <-- Enregistrement du champ
+      loginFromDb: ({ userName, email, role = "user", subscription = "Gratuit", subscriptionEndDate = null }) => {
+        set({ 
+          isLoggedIn: true, 
+          userName: userName || email, 
+          email, 
+          role, 
+          subscription, 
+          subscriptionEndDate,
+          isContributor: role === "contributor" || role === "admin",
+          contributorRequestPending: false
         });
       },
 
@@ -108,43 +94,38 @@ export const useAppStore = create<AppStore>()(
           isLoggedIn: false,
           userName: "Visiteur",
           email: "visiteur@ai-stock.com",
+          role: "user",
           subscription: "Gratuit",
-          subscriptionEndDate: null, // <-- Réinitialisation
+          subscriptionEndDate: null,
           hasSeenTour: { prompts: false, formations: false },
+          isContributor: false,
+          contributorRequestPending: false,
         });
       },
 
-      updateSubscription: (newTier, endDate) => {
-        set({ subscription: newTier, subscriptionEndDate: endDate });
-      },
-
-      updateProfile: (userName, email) => {
-        set({ userName, email });
-      },
-
-      setHasSeenTour: (page, seen) => set((state) => ({
-        hasSeenTour: {
-          ...state.hasSeenTour,
-          [page]: seen,
-        },
-      })),
+      updateSubscription: (newTier, endDate) => set({ subscription: newTier, subscriptionEndDate: endDate }),
+      updateProfile: (userName, email) => set({ userName, email }),
+      setHasSeenTour: (page, seen) =>
+        set((state) => ({ hasSeenTour: { ...state.hasSeenTour, [page]: seen } })),
+      requestContributor: () => set({ contributorRequestPending: true }),
     }),
     {
       name: "ai-stock-storage",
       storage: createJSONStorage(() => localStorage),
-      // Ne persiste que l’essentiel !
       partialize: (state) => ({
         isDarkMode: state.isDarkMode,
         userName: state.userName,
         email: state.email,
+        role: state.role,
         subscription: state.subscription,
-        subscriptionEndDate: state.subscriptionEndDate, // <-- PERSISTE
+        subscriptionEndDate: state.subscriptionEndDate,
         isLoggedIn: state.isLoggedIn,
         hasSeenTour: state.hasSeenTour,
+        isContributor: state.isContributor,
+        contributorRequestPending: state.contributorRequestPending,
       }),
       onRehydrateStorage: () => (state) => {
-        if (!state) return;
-        manageDarkModeClass(state.isDarkMode || false);
+        if (state) manageDarkModeClass(state.isDarkMode || false);
       },
     }
   )

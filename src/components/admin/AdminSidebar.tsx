@@ -13,7 +13,8 @@ import {
   Settings,
   LogOut,
   Workflow,
-  FileText
+  FileText,
+  Trophy
 } from 'lucide-react';
 
 const menuItems = [
@@ -32,6 +33,7 @@ const menuItems = [
       { icon: MessageSquare, label: 'Prompts', href: '/admin/prompts' },
       { icon: Wrench, label: 'Outils', href: '/admin/tools' },
       { icon: Workflow, label: 'Workflows', href: '/admin/workflows' },
+      { icon: Trophy, label: 'Tournois', href: '/admin/tournaments' },
     ]
   },
   {

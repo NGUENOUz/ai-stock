@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAppStore } from '@/store/useAppStore';
 import StatsCard from '@/components/admin/StatsCard';
 import RevenueChart from '@/components/admin/RevenueChart';
 import TopContributorsChart from '@/components/admin/TopContributorsChart';
@@ -50,6 +53,30 @@ const recentActivities = [
 ];
 
 export default function DashboardPage() {
+  const { role } = useAppStore();
+  const router = useRouter();
+
+  // Protection admin - rediriger les non-admins
+  useEffect(() => {
+    console.log('🔍 Admin dashboard - Rôle détecté:', role);
+    if (role && role !== 'admin') {
+      console.log('❌ Accès refusé, redirection vers dashboard user...');
+      router.replace('/dashboard');
+      return;
+    }
+  }, [role, router]);
+
+  // Ne pas afficher le contenu si pas admin
+  if (role !== 'admin') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Accès refusé</h2>
+          <p className="text-gray-600">Redirection en cours...</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="p-6 space-y-6">
       {/* Header */}

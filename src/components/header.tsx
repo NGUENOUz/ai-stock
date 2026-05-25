@@ -46,6 +46,7 @@ export default function HeaderComponent() {
     { name: "Outils IA", link: "/liste" },
     { name: "Prompts", link: "/prompt" },
     { name: "Formations", link: "/formations" },
+    { name: "Tournois", link: "/tournois" },
     { name: "Workflows", link: "/workflows" },
   ];
 

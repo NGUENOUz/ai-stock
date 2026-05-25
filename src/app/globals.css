@@ -2,7 +2,7 @@
 
 @layer base {
   :root {
-    --primary: #FFC107;
+    --primary: #FFD11A;
     --primary-foreground: #000000;
     --background: #FFFFFF;
     --foreground: #000000;
@@ -15,7 +15,7 @@
   }
 
   ::selection {
-    background-color: rgba(255, 193, 7, 0.3);
+    background-color: rgba(255, 209, 26, 0.3);
     color: black;
   }
 
@@ -34,20 +34,98 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #FFC107;
+    background-color: #FFD11A;
   }
 }
 
 @layer utilities {
   /* Classes utilitaires personnalisées */
   .text-gradient {
-    background: linear-gradient(to right, #FFC107, #F59E0B);
+    background: linear-gradient(to right, #FFD11A, #F59E0B);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   .border-gradient {
-    border-image: linear-gradient(to right, #FFC107, #FFB300) 1;
+    border-image: linear-gradient(to right, #FFD11A, #FFB300) 1;
+  }
+
+  /* Classes primaires universelles */
+  .bg-primary {
+    background-color: #FFD11A !important;
+  }
+
+  .text-primary {
+    color: #FFD11A !important;
+  }
+
+  .border-primary {
+    border-color: #FFD11A !important;
+  }
+
+  .hover\:bg-primary:hover {
+    background-color: #FFD11A !important;
+  }
+
+  .bg-primary\/90 {
+    background-color: rgba(255, 209, 26, 0.9) !important;
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 40px rgba(255, 209, 26, 0.3) !important;
+  }
+
+  /* Classes pour le design system */
+  .btn-primary {
+    background-color: #FFD11A;
+    color: #000000;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+    box-shadow: 0 0 40px rgba(255, 209, 26, 0.3);
+  }
+
+  .btn-primary:hover {
+    background-color: rgba(255, 209, 26, 0.9);
+  }
+
+  .framer-card {
+    background-color: white;
+    border-radius: 1rem;
+    border: 1px solid #E5E5E5;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+  }
+
+  .framer-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #E5E5E5;
+    background-color: #F5F5F5;
+    transition: all 0.2s;
+  }
+
+  .input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFD11A;
+    border-color: transparent;
+  }
+
+  .badge-success {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: #D1FAE5;
+    color: #065F46;
   }
 }

@@ -48,6 +48,7 @@ export default function RootLayout({
           defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange
+          forcedTheme="light"
         >
           <ConditionalLayout>{children}</ConditionalLayout>
         </ThemeProvider>
