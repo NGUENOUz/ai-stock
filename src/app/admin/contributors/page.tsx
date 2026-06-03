@@ -89,8 +89,8 @@ export default function ContributorsPage() {
 
         <div className="bg-white rounded-xl border border-neutral-200 p-6">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center">
-              <Star className="w-5 h-5 text-yellow-600" />
+            <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+              <Star className="w-5 h-5 text-purple-600" />
             </div>
             <div>
               <p className="text-sm text-neutral-500">Note Moyenne</p>
@@ -131,7 +131,7 @@ export default function ContributorsPage() {
                   {/* Rank */}
                   <div className="flex-shrink-0">
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl font-black ${
-                      index === 0 ? 'bg-yellow-100 text-yellow-700' :
+                      index === 0 ? 'bg-purple-100 text-purple-700' :
                       index === 1 ? 'bg-neutral-200 text-neutral-700' :
                       index === 2 ? 'bg-orange-100 text-orange-700' :
                       'bg-neutral-100 text-neutral-600'
@@ -149,7 +149,7 @@ export default function ContributorsPage() {
                       <h3 className="text-lg font-bold text-black">{contributor.name}</h3>
                       <p className="text-sm text-neutral-500">{contributor.email}</p>
                       <div className="flex items-center gap-1 mt-1">
-                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                        <Star className="w-4 h-4 text-purple-500 fill-purple-500" />
                         <span className="text-sm font-semibold text-black">{contributor.rating}</span>
                         <span className="text-sm text-neutral-400">• {contributor.items} contenus</span>
                       </div>

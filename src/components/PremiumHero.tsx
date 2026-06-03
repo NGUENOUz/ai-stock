@@ -15,7 +15,7 @@ export default function PremiumHero() {
           
           {/* COPYWRITING - Titre de Conversion */}
           <h1 className="text-5xl md:text-7xl font-extrabold mb-4 dark:text-white">
-            Arrêtez de gaspiller votre <span className="text-yellow-500">temps</span>.<br/> Obtenez des <span className="text-yellow-500">résultats parfaits</span>.
+            Arrêtez de gaspiller votre <span className="text-purple-500">temps</span>.<br/> Obtenez des <span className="text-purple-500">résultats parfaits</span>.
           </h1>
 
           {/* COPYWRITING - Sous-titre */}
@@ -25,7 +25,7 @@ export default function PremiumHero() {
 
           {/* Bouton d'Action */}
           <Link href="#pricing" passHref>
-            <button className="px-12 py-4 text-lg font-bold rounded-full bg-yellow-500 text-black hover:bg-yellow-600 transition-all shadow-xl">
+            <button className="px-12 py-4 text-lg font-bold rounded-full bg-purple-600 text-white hover:bg-purple-700 transition-all shadow-xl">
               Débloquez l'accès maintenant →
             </button>
           </Link>

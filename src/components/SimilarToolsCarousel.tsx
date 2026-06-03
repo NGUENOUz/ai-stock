@@ -60,7 +60,7 @@ export const SimilarToolsCarousel = ({
             <p className="text-sm text-gray-400 line-clamp-2">
               {tool.shortDesc}
             </p>
-            <span className="text-xs mt-2 inline-block text-yellow-500">
+            <span className="text-xs mt-2 inline-block text-purple-500">
               Voir Détails →
             </span>
           </Link>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Filter, UserCheck, UserX, Mail, MoreVertical } from 'lucide-react';
+import { Search, Filter, UserCheck, UserX, Mail, MoreVertical, Users as UsersIcon, UserPlus } from 'lucide-react';
 
 interface User {
   id: string;
@@ -41,9 +41,9 @@ export default function UsersPage() {
   });
 
   const roleColors = {
-    admin: 'bg-purple-50 text-purple-700',
-    contributor: 'bg-blue-50 text-blue-700',
-    user: 'bg-neutral-100 text-neutral-700',
+    admin: 'badge-purple',
+    contributor: 'badge-blue',
+    user: 'badge-gray',
   };
 
   const roleLabels = {
@@ -53,51 +53,64 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-8 space-y-6 max-w-[1600px] mx-auto">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black text-black mb-2">Utilisateurs</h1>
-          <p className="text-neutral-600">Gérez votre communauté</p>
+          <p className="text-sm text-gray-500 mb-1">BUSINESS</p>
+          <h1 className="text-3xl font-bold text-gray-900">Utilisateurs</h1>
+          <p className="text-gray-600 mt-1">Gérez votre communauté</p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl border border-neutral-200 p-6">
-          <p className="text-sm text-neutral-500 mb-1">Total Utilisateurs</p>
-          <h3 className="text-3xl font-bold text-black">2,847</h3>
+        <div className="stat-card">
+          <div className="stat-icon-purple mb-4">
+            <UsersIcon className="w-6 h-6 text-purple-600" />
+          </div>
+          <p className="text-sm text-gray-500 font-medium mb-1">Total Utilisateurs</p>
+          <h3 className="text-3xl font-bold text-gray-900">2,847</h3>
         </div>
-        <div className="bg-white rounded-xl border border-neutral-200 p-6">
-          <p className="text-sm text-neutral-500 mb-1">Actifs</p>
-          <h3 className="text-3xl font-bold text-green-600">2,654</h3>
+        <div className="stat-card">
+          <div className="stat-icon-green mb-4">
+            <UserCheck className="w-6 h-6 text-emerald-600" />
+          </div>
+          <p className="text-sm text-gray-500 font-medium mb-1">Actifs</p>
+          <h3 className="text-3xl font-bold text-gray-900">2,654</h3>
         </div>
-        <div className="bg-white rounded-xl border border-neutral-200 p-6">
-          <p className="text-sm text-neutral-500 mb-1">Contributeurs</p>
-          <h3 className="text-3xl font-bold text-blue-600">342</h3>
+        <div className="stat-card">
+          <div className="stat-icon-blue mb-4">
+            <UserPlus className="w-6 h-6 text-blue-600" />
+          </div>
+          <p className="text-sm text-gray-500 font-medium mb-1">Contributeurs</p>
+          <h3 className="text-3xl font-bold text-gray-900">342</h3>
         </div>
-        <div className="bg-white rounded-xl border border-neutral-200 p-6">
-          <p className="text-sm text-neutral-500 mb-1">Nouveaux (30j)</p>
-          <h3 className="text-3xl font-bold text-primary">156</h3>
+        <div className="stat-card">
+          <div className="stat-icon-yellow mb-4">
+            <UserPlus className="w-6 h-6 text-amber-600" />
+          </div>
+          <p className="text-sm text-gray-500 font-medium mb-1">Nouveaux (30j)</p>
+          <h3 className="text-3xl font-bold text-gray-900">156</h3>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-neutral-200 p-4">
+      <div className="card">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="search"
               placeholder="Rechercher un utilisateur..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 rounded-lg bg-neutral-50 border border-neutral-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+              className="input-search"
             />
           </div>
           <select
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            className="h-10 px-4 rounded-lg bg-neutral-50 border border-neutral-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+            className="h-10 px-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-purple-300 focus:ring-2 focus:ring-purple-100 outline-none text-sm font-medium"
           >
             <option value="all">Tous les rôles</option>
             <option value="user">Utilisateurs</option>
@@ -108,74 +121,72 @@ export default function UsersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+      <div className="card overflow-hidden p-0">
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-neutral-50 border-b border-neutral-200">
+          <table className="table-modern">
+            <thead>
               <tr>
-                <th className="text-left px-6 py-4 text-sm font-bold text-neutral-600">Utilisateur</th>
-                <th className="text-left px-6 py-4 text-sm font-bold text-neutral-600">Rôle</th>
-                <th className="text-left px-6 py-4 text-sm font-bold text-neutral-600">Statut</th>
-                <th className="text-left px-6 py-4 text-sm font-bold text-neutral-600">Inscription</th>
-                <th className="text-left px-6 py-4 text-sm font-bold text-neutral-600">Achats</th>
-                <th className="text-left px-6 py-4 text-sm font-bold text-neutral-600">Dépensé</th>
-                <th className="text-right px-6 py-4 text-sm font-bold text-neutral-600">Actions</th>
+                <th>Utilisateur</th>
+                <th>Rôle</th>
+                <th>Statut</th>
+                <th>Inscription</th>
+                <th>Achats</th>
+                <th>Dépensé</th>
+                <th className="text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-200">
+            <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-neutral-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                     Chargement...
                   </td>
                 </tr>
               ) : filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-neutral-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                     Aucun utilisateur trouvé
                   </td>
                 </tr>
               ) : (
                 filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-neutral-50 transition-colors">
-                    <td className="px-6 py-4">
+                  <tr key={user.id}>
+                    <td>
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="text-sm font-bold text-primary">
+                        <div className="avatar-md bg-purple-600">
+                          <span>
                             {user.name.split(' ').map(n => n[0]).join('')}
                           </span>
                         </div>
                         <div>
-                          <div className="font-semibold text-black">{user.name}</div>
-                          <div className="text-xs text-neutral-500">{user.email}</div>
+                          <div className="font-semibold text-gray-900">{user.name}</div>
+                          <div className="text-xs text-gray-500">{user.email}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${roleColors[user.role]}`}>
+                    <td>
+                      <span className={roleColors[user.role]}>
                         {roleLabels[user.role]}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        user.status === 'active' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-                      }`}>
+                    <td>
+                      <span className={user.status === 'active' ? 'badge-green' : 'badge-red'}>
                         {user.status === 'active' ? <UserCheck className="w-3 h-3" /> : <UserX className="w-3 h-3" />}
                         {user.status === 'active' ? 'Actif' : 'Inactif'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-neutral-600">
+                    <td className="text-gray-600">
                       {new Date(user.joinedAt).toLocaleDateString('fr-FR')}
                     </td>
-                    <td className="px-6 py-4 text-sm text-neutral-600">{user.purchases}</td>
-                    <td className="px-6 py-4 text-sm font-semibold text-black">{user.spent}€</td>
-                    <td className="px-6 py-4">
+                    <td className="text-gray-600">{user.purchases}</td>
+                    <td className="font-semibold text-gray-900">{user.spent}€</td>
+                    <td>
                       <div className="flex items-center justify-end gap-2">
-                        <button className="p-2 hover:bg-neutral-100 rounded-lg transition-colors">
-                          <Mail className="w-4 h-4 text-neutral-600" />
+                        <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                          <Mail className="w-4 h-4 text-gray-600" />
                         </button>
-                        <button className="p-2 hover:bg-neutral-100 rounded-lg transition-colors">
-                          <MoreVertical className="w-4 h-4 text-neutral-600" />
+                        <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                          <MoreVertical className="w-4 h-4 text-gray-600" />
                         </button>
                       </div>
                     </td>

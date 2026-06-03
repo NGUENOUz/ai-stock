@@ -56,14 +56,14 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-neutral-200 flex flex-col z-50">
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col z-50">
       {/* Logo */}
-      <div className="h-16 flex items-center px-6 border-b border-neutral-200">
-        <Link href="/admin/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-black font-black text-lg">AI</span>
+      <div className="h-16 flex items-center px-6 border-b border-gray-200">
+        <Link href="/admin/dashboard" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 bg-purple-600 rounded-xl flex items-center justify-center">
+            <span className="text-white font-black text-base">AI</span>
           </div>
-          <span className="font-black text-xl">AI-STOCK</span>
+          <span className="font-black text-xl text-gray-900">AI-STOCK</span>
         </Link>
       </div>
 
@@ -71,7 +71,7 @@ export default function AdminSidebar() {
       <nav className="flex-1 overflow-y-auto py-6 px-3">
         {menuItems.map((section, idx) => (
           <div key={idx} className="mb-6">
-            <h3 className="px-3 mb-2 text-xs font-bold uppercase tracking-wide text-neutral-400">
+            <h3 className="px-3 mb-2 text-xs font-bold uppercase tracking-wider text-gray-400">
               {section.title}
             </h3>
             <ul className="space-y-1">
@@ -84,10 +84,10 @@ export default function AdminSidebar() {
                     <Link
                       href={item.href}
                       className={`
-                        flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                        flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all
                         ${isActive 
-                          ? 'bg-primary text-black shadow-sm' 
-                          : 'text-neutral-600 hover:bg-neutral-50 hover:text-black'
+                          ? 'bg-purple-50 text-purple-600' 
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                         }
                       `}
                     >
@@ -103,8 +103,8 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Logout */}
-      <div className="p-3 border-t border-neutral-200">
-        <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 w-full transition-all">
+      <div className="p-3 border-t border-gray-200">
+        <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-red-50 hover:text-red-600 w-full transition-all">
           <LogOut className="w-5 h-5" />
           <span>Déconnexion</span>
         </button>

@@ -39,7 +39,7 @@ const monthlyPlans = [
     ],
     isGold: true,
     cta: "Rejoindre le Club Gold",
-    ctaColor: "bg-gradient-to-br from-[#FFD700] via-[#F5D98A] to-[#C89C36] text-black shadow-[0_4px_20px_rgba(255,215,120,0.6)] hover:shadow-[0_6px_25px_rgba(255,225,150,0.8)]",
+    ctaColor: "bg-gradient-to-br from-purple-500 via-purple-600 to-blue-600 text-white shadow-[0_4px_20px_rgba(139,92,246,0.4)] hover:shadow-[0_6px_25px_rgba(139,92,246,0.6)]",
   },
 ];
 
@@ -83,19 +83,19 @@ const PricingCard: React.FC<PricingCardProps> = ({
           "p-6 md:p-8 rounded-3xl border flex flex-col h-full",
           "bg-neutral-800/30 dark:bg-neutral-900/40 backdrop-blur-lg",
           isGold 
-            ? "border-yellow-400/50 shadow-[0_0_40px_rgba(255,215,100,0.4)] z-10"
+            ? "border-purple-400/50 shadow-[0_0_40px_rgba(139,92,246,0.3)] z-10"
             : "border-white/10 shadow-xl",
-          isAnnual && isGold && "transform scale-[1.05] border-yellow-400/80" // Met en relief l'Annuel Gold
+          isAnnual && isGold && "transform scale-[1.05] border-purple-500/80"
         )}
       >
         {isGold && discountText && (
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full bg-yellow-400 text-black font-bold text-sm shadow-lg">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full bg-purple-600 text-white font-bold text-sm shadow-lg">
                 {discountText}
             </div>
         )}
 
         <div className="grow">
-          <h3 className={cn("text-2xl font-bold mb-2", isGold ? "text-yellow-400" : "text-white")}>
+          <h3 className={cn("text-2xl font-bold mb-2", isGold ? "text-purple-400" : "text-white")}>
             {name}
           </h3>
           <p className="text-gray-400 mb-6">{description}</p>
@@ -113,7 +113,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
           <ul className="space-y-3 mb-10 text-gray-300">
             {features.map((feature, index) => (
               <li key={index} className="flex items-start">
-                <span className={cn("mr-2 text-xl", feature.includes('❌') ? 'text-red-500' : isGold ? "text-yellow-400" : "text-green-400")}>
+                <span className={cn("mr-2 text-xl", feature.includes('❌') ? 'text-red-500' : isGold ? "text-purple-400" : "text-green-400")}>
                   {feature.includes('❌') ? '❌' : '✓'}
                 </span>
                 <span className={feature.includes('❌') ? 'line-through opacity-70' : ''}>
@@ -155,7 +155,7 @@ export const PricingSection: React.FC = () => {
         
         {/* Titre de Section */}
         <div className="text-center mb-16 md:mb-24">
-          <h2 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-b from-[#ffff] via-[#dddd] to-[#FFD700] mb-4">
+          <h2 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-b from-white via-gray-300 to-purple-400 mb-4">
             Choisissez le Plan qui Transformera votre Travail.
           </h2>
           <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
@@ -170,7 +170,7 @@ export const PricingSection: React.FC = () => {
                     onClick={() => setIsAnnual(false)}
                     className={cn(
                         "py-2 px-6 rounded-full text-sm font-semibold transition-colors duration-300",
-                        isAnnual ? "text-gray-400" : "bg-yellow-400 text-black shadow-md"
+                        isAnnual ? "text-gray-400" : "bg-purple-600 text-white shadow-md"
                     )}
                 >
                     Mensuel
@@ -179,7 +179,7 @@ export const PricingSection: React.FC = () => {
                     onClick={() => setIsAnnual(true)}
                     className={cn(
                         "py-2 px-6 rounded-full text-sm font-semibold transition-colors duration-300 relative",
-                        isAnnual ? "bg-yellow-400 text-black shadow-md" : "text-gray-400"
+                        isAnnual ? "bg-purple-600 text-white shadow-md" : "text-gray-400"
                     )}
                 >
                     Annuel

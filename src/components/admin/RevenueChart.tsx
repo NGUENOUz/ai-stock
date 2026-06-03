@@ -21,46 +21,53 @@ interface RevenueChartProps {
 
 export default function RevenueChart({ data }: RevenueChartProps) {
   return (
-    <div className="bg-white rounded-xl border border-neutral-200 p-6">
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-md transition-shadow">
       <div className="mb-6">
-        <h3 className="text-lg font-bold text-black mb-1">Revenus & Ventes</h3>
-        <p className="text-sm text-neutral-500">Évolution sur les 7 derniers jours</p>
+        <h3 className="text-lg font-bold text-gray-900 mb-1">Revenus & Ventes</h3>
+        <p className="text-sm text-gray-500">Évolution sur 7 jours</p>
       </div>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorRevenus" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#FFD11A" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#FFD11A" stopOpacity={0}/>
+              <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
+              <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
             </linearGradient>
             <linearGradient id="colorVentes" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
               <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" vertical={false} />
           <XAxis 
             dataKey="name" 
-            stroke="#A3A3A3"
-            style={{ fontSize: '12px' }}
+            stroke="#9CA3AF"
+            style={{ fontSize: '12px', fontWeight: '500' }}
+            axisLine={false}
+            tickLine={false}
           />
           <YAxis 
-            stroke="#A3A3A3"
-            style={{ fontSize: '12px' }}
+            stroke="#9CA3AF"
+            style={{ fontSize: '12px', fontWeight: '500' }}
+            axisLine={false}
+            tickLine={false}
           />
           <Tooltip 
             contentStyle={{
               backgroundColor: '#FFFFFF',
-              border: '1px solid #E5E5E5',
-              borderRadius: '8px',
-              fontSize: '12px'
+              border: '1px solid #E5E7EB',
+              borderRadius: '12px',
+              fontSize: '12px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
             }}
           />
-          <Legend />
+          <Legend 
+            wrapperStyle={{ fontSize: '13px', fontWeight: '600' }}
+          />
           <Area 
             type="monotone" 
             dataKey="revenus" 
-            stroke="#FFD11A" 
+            stroke="#8B5CF6" 
             strokeWidth={2}
             fillOpacity={1} 
             fill="url(#colorRevenus)" 

@@ -2,130 +2,373 @@
 
 @layer base {
   :root {
-    --primary: #FFD11A;
-    --primary-foreground: #000000;
+    /* Nouvelle palette Purple/Blue professionnelle */
+    --primary: #8B5CF6; /* Purple */
+    --primary-foreground: #FFFFFF;
+    --secondary: #3B82F6; /* Blue */
+    --secondary-foreground: #FFFFFF;
+    --accent: #8B5CF6; /* Purple accent */
+    --accent-foreground: #FFFFFF;
     --background: #FFFFFF;
-    --foreground: #000000;
+    --foreground: #111827; /* gray-900 */
+    --muted: #F9FAFB; /* gray-50 */
+    --border: #E5E7EB; /* gray-200 */
   }
 
   body {
-    @apply bg-white text-slate-900;
+    @apply bg-gray-50 text-gray-900;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: rgba(255, 209, 26, 0.3);
-    color: black;
+    background-color: rgba(139, 92, 246, 0.2); /* purple selection */
+    color: inherit;
   }
 
-  /* Scrollbar personnalisée */
+  /* Scrollbar personnalisée - purple theme */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-slate-100;
+    @apply bg-gray-100;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-full;
+    @apply bg-gray-300 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #FFD11A;
+    @apply bg-purple-400;
   }
 }
 
 @layer utilities {
-  /* Classes utilitaires personnalisées */
-  .text-gradient {
-    background: linear-gradient(to right, #FFD11A, #F59E0B);
+  /* === NOUVEAU DESIGN SYSTEM === */
+  
+  /* Gradients Purple/Blue */
+  .text-gradient-purple {
+    background: linear-gradient(to right, #8B5CF6, #6366F1);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  .border-gradient {
-    border-image: linear-gradient(to right, #FFD11A, #FFB300) 1;
+  .text-gradient-blue {
+    background: linear-gradient(to right, #3B82F6, #2563EB);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
-  /* Classes primaires universelles */
+  /* Backgrounds avec nouvelle palette */
   .bg-primary {
-    background-color: #FFD11A !important;
+    background-color: #8B5CF6 !important; /* Purple */
+  }
+
+  .bg-secondary {
+    background-color: #3B82F6 !important; /* Blue */
+  }
+
+  .bg-accent {
+    background-color: #8B5CF6 !important; /* Purple accent */
   }
 
   .text-primary {
-    color: #FFD11A !important;
+    color: #8B5CF6 !important;
+  }
+
+  .text-secondary {
+    color: #3B82F6 !important;
   }
 
   .border-primary {
-    border-color: #FFD11A !important;
+    border-color: #8B5CF6 !important;
   }
 
-  .hover\:bg-primary:hover {
-    background-color: #FFD11A !important;
-  }
-
-  .bg-primary\/90 {
-    background-color: rgba(255, 209, 26, 0.9) !important;
-  }
-
-  .shadow-glow {
-    box-shadow: 0 0 40px rgba(255, 209, 26, 0.3) !important;
-  }
-
-  /* Classes pour le design system */
+  /* Boutons modernes */
   .btn-primary {
-    background-color: #FFD11A;
-    color: #000000;
-    font-weight: 600;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
-    transition: all 0.2s;
-    box-shadow: 0 0 40px rgba(255, 209, 26, 0.3);
+    @apply bg-purple-600 text-white font-semibold px-5 py-2.5 rounded-xl;
+    @apply hover:bg-purple-700 transition-all shadow-sm hover:shadow-md;
   }
 
-  .btn-primary:hover {
-    background-color: rgba(255, 209, 26, 0.9);
+  .btn-secondary {
+    @apply bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl;
+    @apply hover:bg-blue-700 transition-all shadow-sm hover:shadow-md;
   }
 
-  .framer-card {
-    background-color: white;
-    border-radius: 1rem;
-    border: 1px solid #E5E5E5;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.2s;
+  .btn-outline {
+    @apply bg-white text-gray-700 font-semibold px-5 py-2.5 rounded-xl;
+    @apply border border-gray-200 hover:bg-gray-50 transition-all shadow-sm;
   }
 
-  .framer-card:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  /* Cards modernes */
+  .card {
+    @apply bg-white rounded-2xl border border-gray-200 p-6;
+    @apply hover:shadow-md transition-all;
   }
 
+  .card-hover {
+    @apply bg-white rounded-2xl border border-gray-200 p-6;
+    @apply hover:shadow-lg hover:border-purple-200 transition-all cursor-pointer;
+  }
+
+  /* Inputs modernes */
   .input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    border: 1px solid #E5E5E5;
-    background-color: #F5F5F5;
-    transition: all 0.2s;
+    @apply w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50;
+    @apply focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-300;
+    @apply transition-all text-sm;
   }
 
-  .input:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #FFD11A;
-    border-color: transparent;
+  .input-search {
+    @apply w-full h-10 pl-10 pr-4 rounded-xl bg-gray-50 border border-gray-200;
+    @apply focus:border-purple-300 focus:ring-2 focus:ring-purple-100;
+    @apply outline-none transition-all text-sm;
+  }
+
+  /* Badges modernes */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .badge-purple {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #f5f3ff;
+    color: #6d28d9;
+  }
+
+  .badge-blue {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  .badge-green {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #ecfdf5;
+    color: #065f46;
+  }
+
+  .badge-yellow {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #fffbeb;
+    color: #92400e;
+  }
+
+  .badge-red {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #fff1f2;
+    color: #9f1239;
+  }
+
+  .badge-gray {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #f3f4f6;
+    color: #4b5563;
+  }
+
+  /* Stats Cards */
+  .stat-card {
+    @apply bg-white rounded-2xl border border-gray-200 p-6;
+    @apply hover:shadow-md transition-all;
+  }
+
+  .stat-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stat-icon-purple {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f3ff;
+  }
+
+  .stat-icon-blue {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eff6ff;
+  }
+
+  .stat-icon-green {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ecfdf5;
+  }
+
+  .stat-icon-yellow {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fffbeb;
+  }
+
+  /* Avatars */
+  .avatar {
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+  }
+
+  .avatar-sm {
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+
+  .avatar-md {
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.875rem;
+  }
+
+  .avatar-lg {
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+
+  /* Tables */
+  .table-modern {
+    @apply w-full;
+  }
+
+  .table-modern thead {
+    @apply bg-gray-50 border-b border-gray-200;
+  }
+
+  .table-modern th {
+    @apply text-left px-6 py-4 text-sm font-semibold text-gray-500 uppercase tracking-wider;
+  }
+
+  .table-modern td {
+    @apply px-6 py-4 text-sm;
+  }
+
+  .table-modern tbody tr {
+    @apply hover:bg-gray-50 transition-colors border-b border-gray-100;
+  }
+
+  /* Animations */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  /* Shadows */
+  .shadow-soft {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .shadow-purple {
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  }
+
+  .shadow-blue {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+
+  /* Legacy support */
+  .framer-card {
+    @apply bg-white rounded-2xl border border-gray-200 p-6;
+    @apply hover:shadow-md transition-all;
   }
 
   .badge-success {
     display: inline-flex;
     align-items: center;
-    padding: 0.125rem 0.625rem;
+    padding: 0.25rem 0.625rem;
     border-radius: 9999px;
     font-size: 0.75rem;
-    font-weight: 500;
-    background-color: #D1FAE5;
-    color: #065F46;
+    font-weight: 600;
+    background-color: #ecfdf5;
+    color: #065f46;
   }
 }

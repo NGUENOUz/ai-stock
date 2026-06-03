@@ -91,7 +91,7 @@ export const SkeletonOne = () => (
   <div className="relative h-60 w-full rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm overflow-hidden">
     <div className="flex items-center gap-2 mb-6">
       <div className="h-2 w-2 rounded-full bg-red-400" />
-      <div className="h-2 w-2 rounded-full bg-yellow-400" />
+      <div className="h-2 w-2 rounded-full bg-purple-500" />
       <div className="h-2 w-2 rounded-full bg-green-400" />
     </div>
     <div className="space-y-3">

@@ -45,7 +45,7 @@ export default function ReportsPage() {
       title: 'Rapport Contenu',
       description: 'Formations, prompts et outils',
       icon: FileText,
-      color: 'bg-yellow-50 text-yellow-600',
+      color: 'bg-purple-50 text-purple-600',
     },
   ];
 

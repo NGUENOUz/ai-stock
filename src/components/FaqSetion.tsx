@@ -47,7 +47,7 @@ const FaqItemClean: React.FC<FaqItemProps> = ({ question, answer, isGoldRelated 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-neutral-700/50 hover:border-yellow-400/50 transition-colors duration-300">
+    <div className="border-b border-gray-200 hover:border-purple-300 transition-colors duration-300">
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         className="flex justify-between items-center w-full py-5 text-left"
@@ -68,7 +68,7 @@ const FaqItemClean: React.FC<FaqItemProps> = ({ question, answer, isGoldRelated 
           transition={{ duration: 0.3 }}
         >
           {/* Icône de flèche : Couleur Gold réservée à l'icône */}
-          <ChevronDown className={cn("h-6 w-6 transition-colors duration-300", "text-yellow-400")} />
+          <ChevronDown className={cn("h-6 w-6 transition-colors duration-300", "text-purple-500")} />
         </motion.div>
       </motion.button>
 
@@ -101,7 +101,7 @@ export const FaqSection: React.FC = () => {
         
         {/* Titre de Section (Maintient du Dégradé Gold) */}
         <div className="text-center mb-16 md:mb-24">
-          <h2 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-[#ffff] via-[#dddd] to-[#FFD700] mb-4">
+          <h2 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-purple-400 mb-4">
             Questions Fréquentes.
           </h2>
           <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
@@ -112,7 +112,7 @@ export const FaqSection: React.FC = () => {
         {/* Conteneur de l'Accordéon (Design Clean & Glassmorphism) */}
         <div className="max-w-4xl mx-auto 
             bg-neutral-900/40 backdrop-blur-lg rounded-2xl p-6 md:p-10 
-            border border-white/10 shadow-[0_0_50px_rgba(255,215,100,0.05)]"
+            border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.05)]"
         >
           {faqItems.map((item, index) => (
             <FaqItemClean key={index} {...item} />
@@ -126,9 +126,9 @@ export const FaqSection: React.FC = () => {
             </p>
             <a 
                href="#contact"
-               className="text-lg font-semibold text-yellow-400 hover:text-yellow-300 transition duration-300 border-b border-yellow-400"
+               className="text-lg font-semibold text-purple-600 hover:text-purple-500 transition duration-300 border-b border-purple-400"
             >
-                Contacter l'équipe Gold &rarr;
+                Contacter l'équipe &rarr;
             </a>
         </div>
 

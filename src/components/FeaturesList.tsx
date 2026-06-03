@@ -43,7 +43,7 @@ export default function FeaturesList() {
           key={index} 
           className="p-6 rounded-xl border border-gray-700 bg-neutral-900 shadow-lg dark:text-white"
         >
-          <feature.icon className="h-10 w-10 text-yellow-500 mb-4" />
+          <feature.icon className="h-10 w-10 text-purple-500 mb-4" />
           <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
           <p className="text-gray-400">{feature.description}</p>
         </div>

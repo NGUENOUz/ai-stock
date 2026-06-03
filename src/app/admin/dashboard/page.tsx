@@ -6,7 +6,6 @@ import { useAppStore } from '@/store/useAppStore';
 import StatsCard from '@/components/admin/StatsCard';
 import RevenueChart from '@/components/admin/RevenueChart';
 import TopContributorsChart from '@/components/admin/TopContributorsChart';
-import CategoryDistribution from '@/components/admin/CategoryDistribution';
 import { 
   DollarSign, 
   Users, 
@@ -14,7 +13,12 @@ import {
   TrendingUp,
   Download,
   Eye,
-  Clock
+  Clock,
+  ShoppingBag,
+  ArrowUpRight,
+  MoreVertical,
+  Play,
+  BookOpen
 } from 'lucide-react';
 
 // Données mockées pour la démo
@@ -36,20 +40,42 @@ const topContributors = [
   { name: 'Claire B.', ventes: 87, revenus: 6900 },
 ];
 
-const categoryData = [
-  { name: 'IA Générative', value: 35 },
-  { name: 'Automatisation', value: 28 },
-  { name: 'Marketing', value: 18 },
-  { name: 'Design', value: 12 },
-  { name: 'Développement', value: 7 },
+const recentCourses = [
+  {
+    title: "Beginner's Guide To Becoming A Professional Frontend Developer",
+    instructor: "Prashant Kumar Singh",
+    category: "DESIGN",
+    categoryColor: "bg-purple-100 text-purple-700",
+    thumbnail: "from-purple-500 to-indigo-600",
+    views: "2.3k",
+    duration: "4h 20min"
+  },
+  {
+    title: "Mastering ChatGPT & Advanced AI Prompting Techniques",
+    instructor: "Sophie Martin",
+    category: "IA",
+    categoryColor: "bg-amber-100 text-amber-700",
+    thumbnail: "from-amber-500 to-orange-600",
+    views: "1.8k",
+    duration: "3h 15min"
+  },
+  {
+    title: "Complete Guide to Modern Web Development with React",
+    instructor: "Alex Rousseau",
+    category: "DEVELOPMENT",
+    categoryColor: "bg-blue-100 text-blue-700",
+    thumbnail: "from-blue-500 to-cyan-600",
+    views: "3.1k",
+    duration: "5h 45min"
+  },
 ];
 
-const recentActivities = [
-  { user: 'Marie Dubois', action: 'a acheté', item: 'Formation ChatGPT Pro', time: 'Il y a 5 min', avatar: 'MD' },
-  { user: 'Jean Martin', action: 'a publié', item: 'Nouveau workflow Midjourney', time: 'Il y a 12 min', avatar: 'JM' },
-  { user: 'Sophie Laurent', action: 'a complété', item: 'Formation IA Marketing', time: 'Il y a 23 min', avatar: 'SL' },
-  { user: 'Thomas Petit', action: 'a commenté', item: 'Prompt Engineering 101', time: 'Il y a 1h', avatar: 'TP' },
-  { user: 'Claire Bernard', action: 'a acheté', item: 'Pack Outils IA', time: 'Il y a 2h', avatar: 'CB' },
+const mentorsList = [
+  { name: "Prashant Kumar Singh", role: "Expert Frontend", status: "Active", color: "bg-purple-500" },
+  { name: "Sophie Martin", role: "Expert IA", status: "Active", color: "bg-pink-500" },
+  { name: "Alex Rousseau", role: "Full Stack Dev", status: "Active", color: "bg-blue-500" },
+  { name: "Marie Dubois", role: "UI/UX Designer", status: "Active", color: "bg-emerald-500" },
+  { name: "Thomas Petit", role: "Data Scientist", status: "Active", color: "bg-amber-500" },
 ];
 
 export default function DashboardPage() {
@@ -77,22 +103,23 @@ export default function DashboardPage() {
       </div>
     );
   }
+
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="p-8 space-y-6 max-w-[1600px] mx-auto">
+      {/* Header Simple */}
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black text-black mb-2">Tableau de Bord</h1>
-          <p className="text-neutral-600">Vue d'ensemble de votre plateforme AI-STOCK</p>
+          <p className="text-sm text-gray-500 mb-1">OVERVIEW</p>
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary text-black font-bold rounded-lg hover:bg-primary/90 transition-all">
-          <Download className="w-5 h-5" />
-          Télécharger le PDF
+        <button className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all shadow-sm">
+          <Download className="w-4 h-4" />
+          Export PDF
         </button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats Cards - 4 colonnes */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatsCard
           title="Revenus Total"
           value="34 700 €"
@@ -123,99 +150,100 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Charts Row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Section Continue Watching Style */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-xl font-bold text-gray-900">Formations Récentes</h2>
+          <button className="text-sm text-purple-600 font-semibold hover:text-purple-700 flex items-center gap-1">
+            See All <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {recentCourses.map((course, idx) => (
+            <div key={idx} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all group cursor-pointer">
+              {/* Thumbnail */}
+              <div className={`h-40 bg-gradient-to-br ${course.thumbnail} relative flex items-center justify-center`}>
+                <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Play size={24} className="text-white ml-1" />
+                </div>
+                <span className={`absolute top-4 left-4 text-xs font-bold px-3 py-1 rounded-full ${course.categoryColor}`}>
+                  {course.category}
+                </span>
+              </div>
+              
+              {/* Content */}
+              <div className="p-5">
+                <h3 className="text-sm font-bold text-gray-900 mb-3 line-clamp-2 leading-relaxed">
+                  {course.title}
+                </h3>
+                
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">
+                      {course.instructor.split(' ').map(n => n[0]).join('')}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-600 font-medium truncate">{course.instructor}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>{course.views} views</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>{course.duration}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <RevenueChart data={revenueData} />
         <TopContributorsChart data={topContributors} />
       </div>
 
-      {/* Charts Row 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl border border-neutral-200 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-bold text-black mb-1">Activités Récentes</h3>
-                <p className="text-sm text-neutral-500">Dernières actions sur la plateforme</p>
-              </div>
-              <button className="text-sm font-semibold text-primary hover:text-primary/80">
-                Voir tout
-              </button>
-            </div>
-            <div className="space-y-4">
-              {recentActivities.map((activity, idx) => (
-                <div key={idx} className="flex items-center gap-4 p-3 rounded-lg hover:bg-neutral-50 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-primary">{activity.avatar}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-black">
-                      <span className="font-semibold">{activity.user}</span>
-                      {' '}{activity.action}{' '}
-                      <span className="font-semibold">{activity.item}</span>
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Clock className="w-3 h-3 text-neutral-400" />
-                      <span className="text-xs text-neutral-500">{activity.time}</span>
-                    </div>
-                  </div>
+      {/* Your Mentor Section */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-xl font-bold text-gray-900">Top Mentors</h2>
+          <button className="text-sm text-purple-600 font-semibold hover:text-purple-700 flex items-center gap-1">
+            See All <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {mentorsList.map((mentor, idx) => (
+            <div key={idx} className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50 transition-colors group">
+              <div className="flex items-center gap-4">
+                <div className={`w-11 h-11 rounded-full ${mentor.color} flex items-center justify-center`}>
+                  <span className="text-white text-sm font-bold">
+                    {mentor.name.split(' ').map(n => n[0]).join('')}
+                  </span>
                 </div>
-              ))}
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">{mentor.name}</p>
+                  <p className="text-xs text-gray-500">{mentor.role}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">
+                  {mentor.status}
+                </span>
+                <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <MoreVertical className="w-5 h-5 text-gray-400" />
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-        
-        <CategoryDistribution data={categoryData} />
-      </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl border border-neutral-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-              <Eye className="w-5 h-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm text-neutral-500">Vues Totales</p>
-              <h4 className="text-2xl font-bold text-black">127.5K</h4>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 text-sm">
-            <span className="text-green-600 font-semibold">↑ 18.2%</span>
-            <span className="text-neutral-400">vs semaine dernière</span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-neutral-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
-              <Download className="w-5 h-5 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-sm text-neutral-500">Téléchargements</p>
-              <h4 className="text-2xl font-bold text-black">8,942</h4>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 text-sm">
-            <span className="text-green-600 font-semibold">↑ 12.8%</span>
-            <span className="text-neutral-400">vs semaine dernière</span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-neutral-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm text-neutral-500">Taux Engagement</p>
-              <h4 className="text-2xl font-bold text-black">68.4%</h4>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 text-sm">
-            <span className="text-green-600 font-semibold">↑ 5.3%</span>
-            <span className="text-neutral-400">vs semaine dernière</span>
-          </div>
+          ))}
         </div>
       </div>
     </div>

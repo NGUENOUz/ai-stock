@@ -237,7 +237,7 @@ const LoginPage = () => {
               type="submit"
               disabled={isLoading}
               className={cn(
-                "w-full py-3 px-6 rounded-xl font-semibold text-black bg-primary hover:bg-primary/90 shadow-glow transition-all duration-200",
+                "w-full py-3 px-6 rounded-xl font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow-sm transition-all duration-200",
                 "flex items-center justify-center gap-2",
                 isLoading && "opacity-70 cursor-not-allowed"
               )}

@@ -28,7 +28,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
         "font-bold text-base rounded-full overflow-hidden",
         "transition-all duration-300 active:scale-95 shadow-premium",
         isPrimary 
-          ? "bg-primary text-black hover:bg-primary-600 hover:shadow-glow" 
+          ? "bg-primary text-white hover:bg-primary-600 hover:shadow-glow" 
           : "bg-white text-black border border-neutral-200 hover:bg-neutral-50",
         className
       )}

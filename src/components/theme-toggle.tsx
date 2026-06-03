@@ -11,7 +11,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-full bg-neutral-700 dark:bg-neutral-800 text-white dark:text-yellow-500 hover:bg-neutral-600 dark:hover:bg-neutral-700 transition duration-300"
+      className="p-2 rounded-full bg-neutral-700 dark:bg-neutral-800 text-white dark:text-purple-400 hover:bg-neutral-600 dark:hover:bg-neutral-700 transition duration-300"
       aria-label={`Passer au mode ${theme === 'dark' ? 'jour' : 'nuit'}`}
     >
       {theme === 'dark' ? (

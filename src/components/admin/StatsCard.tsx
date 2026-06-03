@@ -14,32 +14,55 @@ interface StatsCardProps {
 }
 
 const colorClasses = {
-  primary: 'bg-primary/10 text-primary',
-  success: 'bg-green-50 text-green-600',
-  error: 'bg-red-50 text-red-600',
-  info: 'bg-blue-50 text-blue-600',
-  purple: 'bg-purple-50 text-purple-600',
+  primary: {
+    bg: 'bg-amber-50',
+    icon: 'text-amber-600',
+    trend: 'text-amber-600',
+  },
+  success: {
+    bg: 'bg-emerald-50',
+    icon: 'text-emerald-600',
+    trend: 'text-emerald-600',
+  },
+  error: {
+    bg: 'bg-rose-50',
+    icon: 'text-rose-600',
+    trend: 'text-rose-600',
+  },
+  info: {
+    bg: 'bg-blue-50',
+    icon: 'text-blue-600',
+    trend: 'text-blue-600',
+  },
+  purple: {
+    bg: 'bg-purple-50',
+    icon: 'text-purple-600',
+    trend: 'text-purple-600',
+  },
 };
 
 export default function StatsCard({ title, value, icon: Icon, trend, color = 'primary' }: StatsCardProps) {
+  const colors = colorClasses[color];
+  
   return (
-    <div className="bg-white rounded-xl border border-neutral-200 p-6 hover:shadow-lg transition-all">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-neutral-500 mb-1">{title}</p>
-          <h3 className="text-3xl font-bold text-black mb-2">{value}</h3>
-          {trend && (
-            <div className="flex items-center gap-1">
-              <span className={`text-sm font-semibold ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
-              </span>
-              <span className="text-xs text-neutral-400">vs mois dernier</span>
-            </div>
-          )}
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-md transition-all">
+      <div className="flex items-start justify-between mb-4">
+        <div className={`w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center`}>
+          <Icon className={`w-6 h-6 ${colors.icon}`} />
         </div>
-        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${colorClasses[color]}`}>
-          <Icon className="w-6 h-6" />
-        </div>
+        {trend && (
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+            trend.isPositive 
+              ? 'bg-emerald-50 text-emerald-600' 
+              : 'bg-rose-50 text-rose-600'
+          }`}>
+            {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
+          </span>
+        )}
+      </div>
+      <div>
+        <p className="text-sm text-gray-500 font-medium mb-1">{title}</p>
+        <h3 className="text-3xl font-bold text-gray-900">{value}</h3>
       </div>
     </div>
   );

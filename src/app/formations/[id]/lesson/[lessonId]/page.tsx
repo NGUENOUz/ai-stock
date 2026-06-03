@@ -57,9 +57,9 @@ const ALL_TRAININGS: Training[] = [
 // 💎 Style Gold CTA pour les boutons de navigation
 const GOLD_NAV_CLASSES = `
     flex items-center text-sm font-bold py-3 px-4 rounded-xl transition-all duration-500
-    bg-gradient-to-br from-[#FFF4C9] via-[#F5D98A] to-[#C89C36] text-black
-    shadow-[0_4px_15px_rgba(255,215,120,0.35)]
-    hover:shadow-[0_6px_20px_rgba(255,225,150,0.6)] hover:-translate-y-0.5
+    bg-gradient-to-br from-purple-500 to-blue-600 text-white
+    shadow-[0_4px_15px_rgba(139,92,246,0.35)]
+    hover:shadow-[0_6px_20px_rgba(139,92,246,0.5)] hover:-translate-y-0.5
 `;
 
 // 💎 Style Glassmorphism pour le conteneur
@@ -111,7 +111,7 @@ export default function LessonPage({ params }: LessonPageProps) {
                     onClick={() => router.push(`/formations/${id}`)}
                     className="
                         flex items-center text-sm font-semibold mb-8
-                        text-gray-400 hover:text-yellow-400 transition-colors duration-300
+                        text-gray-400 hover:text-purple-400 transition-colors duration-300
                     "
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" /> Retour à la formation : **{training.title}**
@@ -136,7 +136,7 @@ export default function LessonPage({ params }: LessonPageProps) {
                             ) : (
                                 // 💎 Overlay de Verrouillage (Premium Lock)
                                 <div className="absolute inset-0 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center text-white z-10">
-                                    <Lock className="w-14 h-14 mb-4 text-[#FFD86A] drop-shadow-[0_0_15px_rgba(255,215,120,0.6)]" />
+                                    <Lock className="w-14 h-14 mb-4 text-purple-400 drop-shadow-[0_0_15px_rgba(139,92,246,0.6)]" />
                                     <h3 className="text-2xl font-extrabold mb-2">Leçon Verrouillée</h3>
                                     <p className="text-gray-300 text-center max-w-sm">
                                         Cette leçon nécessite l'**Accès Premium** ou l'achat de la formation complète.
@@ -145,9 +145,9 @@ export default function LessonPage({ params }: LessonPageProps) {
                                         onClick={() => router.push('/premium')}
                                         className="
                                             mt-6 py-3 px-8 rounded-xl font-bold flex items-center
-                                            bg-gradient-to-br from-[#FFF4C9] via-[#F5D98A] to-[#C89C36]
-                                            text-black shadow-[0_4px_20px_rgba(255,215,120,0.45)]
-                                            hover:shadow-[0_6px_25px_rgba(255,225,150,0.7)] transition-all duration-500
+                                            bg-gradient-to-br from-purple-500 to-blue-600
+                                            text-white shadow-[0_4px_20px_rgba(139,92,246,0.45)]
+                                            hover:shadow-[0_6px_25px_rgba(139,92,246,0.6)] transition-all duration-500
                                         "
                                     >
                                         <Crown className="w-5 h-5 mr-2" />
@@ -159,11 +159,11 @@ export default function LessonPage({ params }: LessonPageProps) {
 
                         {/* Infos sur la leçon */}
                         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-100 dark:text-gray-100 mb-2 tracking-tight">
-                            <span className="text-yellow-400 text-2xl mr-3">{currentIndex + 1}.</span>
+                            <span className="text-purple-400 text-2xl mr-3">{currentIndex + 1}.</span>
                             {currentLesson.title}
                         </h1>
                         <p className="text-gray-400 flex items-center mb-10 font-medium">
-                            <Clock className="w-4 h-4 mr-2 text-yellow-400" /> Durée estimée : {currentLesson.duration}
+                            <Clock className="w-4 h-4 mr-2 text-purple-400" /> Durée estimée : {currentLesson.duration}
                             {currentLesson.isFreePreview && (
                                 <span className="ml-4 px-3 py-0.5 rounded-full bg-emerald-700/50 text-emerald-400 text-xs font-semibold">APERÇU GRATUIT</span>
                             )}
@@ -205,7 +205,7 @@ export default function LessonPage({ params }: LessonPageProps) {
                     <aside className="lg:col-span-1">
                         <div className={`${GLASS_CONTAINER_CLASSES}`}>
                             <h3 className="text-xl font-bold flex items-center mb-6 dark:text-gray-100 tracking-wide">
-                                <ListChecks className="w-5 h-5 mr-3 text-yellow-400 drop-shadow-[0_0_5px_rgba(255,215,120,0.5)]" />
+                                <ListChecks className="w-5 h-5 mr-3 text-purple-400 drop-shadow-[0_0_5px_rgba(139,92,246,0.5)]" />
                                 Programme de la Formation
                             </h3>
 
@@ -223,15 +223,15 @@ export default function LessonPage({ params }: LessonPageProps) {
                                                 flex justify-between items-center p-3 rounded-xl transition-all duration-300
                                                 border border-white/10 text-sm font-medium
                                                 ${isActive
-                                                    ? "bg-[#FFD86A] text-black shadow-inner shadow-yellow-600/50"
+                                                    ? "bg-purple-600 text-white shadow-inner shadow-purple-800/50"
                                                     : canNavigate
-                                                        ? "bg-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-gray-200 cursor-pointer hover:border-yellow-400/50"
+                                                        ? "bg-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-gray-200 cursor-pointer hover:border-purple-400/50"
                                                         : "bg-white/5 dark:bg-white/2 dark:text-gray-400 opacity-60 cursor-not-allowed"
                                                 }
                                             `}
                                         >
                                             <div className="flex items-center">
-                                                <span className={`font-bold mr-3 w-5 text-center ${isActive ? 'text-black' : 'text-yellow-400'}`}>
+                                                <span className={`font-bold mr-3 w-5 text-center ${isActive ? 'text-white' : 'text-purple-400'}`}>
                                                     {index + 1}.
                                                 </span>
                                                 <span className={`${isActive ? 'font-bold' : ''}`}>{lesson.title}</span>

@@ -87,7 +87,7 @@ const WITHDRAWALS = [
 ];
 
 const STATUS_CONFIG = {
-  pending: { label: "En attente", color: "bg-yellow-100 text-yellow-700", icon: Clock },
+  pending: { label: "En attente", color: "bg-blue-100 text-blue-700", icon: Clock },
   under_review: { label: "En révision", color: "bg-blue-100 text-blue-700", icon: Eye },
   approved: { label: "Approuvé", color: "bg-green-100 text-green-700", icon: CheckCircle },
   rejected: { label: "Rejeté", color: "bg-red-100 text-red-700", icon: XCircle }
@@ -183,7 +183,7 @@ export default function ContributorSubmissionsPage() {
                 onClick={() => setActiveTab(tab.key as any)}
                 className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   activeTab === tab.key
-                    ? "bg-primary text-black shadow-sm"
+                    ? "bg-purple-600 text-white shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
               >
@@ -309,7 +309,7 @@ export default function ContributorSubmissionsPage() {
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                             withdrawal.status === "completed" 
                               ? "bg-green-100 text-green-700" 
-                              : "bg-yellow-100 text-yellow-700"
+                              : "bg-blue-100 text-blue-700"
                           }`}>
                             {withdrawal.status === "completed" ? "Complété" : "En attente"}
                           </span>

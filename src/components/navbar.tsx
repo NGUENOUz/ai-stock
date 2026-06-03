@@ -145,7 +145,7 @@ export const MobileNavMenu = ({ isOpen, onClose, items, mobileActions }: any) =>
 export const NavbarLogo = () => (
   <Link href="/" className="flex items-center gap-2.5 px-2 group">
     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-sm transition-transform group-hover:rotate-6">
-      <Zap className="h-5 w-5 fill-black text-black" />
+      <Zap className="h-5 w-5 fill-white text-white" />
     </div>
     <span className="text-xl font-black tracking-tighter text-black">AI-STOCK</span>
   </Link>
@@ -154,7 +154,7 @@ export const NavbarLogo = () => (
 export const NavbarButton = ({ href, onClick, children, className, variant = "primary" }: any) => {
   const baseStyles = "px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-200 active:scale-95 whitespace-nowrap";
   const variants = {
-    primary: "bg-primary text-black hover:bg-yellow-400",
+    primary: "bg-purple-600 text-white hover:bg-purple-700",
     secondary: "bg-neutral-100 text-neutral-600 hover:bg-neutral-200",
     black: "bg-black text-white hover:bg-neutral-800",
   };

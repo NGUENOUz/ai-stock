@@ -8,13 +8,13 @@ import Image from 'next/image'; // 🎯 Importation de Next.js Image
 
 export default function HeroImage() {
   return (
-    <div className="relative w-full max-w-4xl mx-auto mt-16 p-2 rounded-xl bg-gray-900 border border-yellow-500/50 shadow-2xl shadow-yellow-500/20">
+    <div className="relative w-full max-w-4xl mx-auto mt-16 p-2 rounded-xl bg-gray-900 border border-purple-500/50 shadow-2xl shadow-purple-500/20">
       
       {/* Cadenas Déverrouillé pour la symbolique Premium */}
       <div 
         className={cn(
           "absolute -top-12 left-1/2 transform -translate-x-1/2",
-          "p-3 rounded-full bg-yellow-500 shadow-xl shadow-yellow-500/40 z-10"
+          "p-3 rounded-full bg-purple-600 shadow-xl shadow-purple-500/40 z-10"
         )}
       >
         <IconLockOpen className="w-8 h-8 text-black" stroke={2} />
@@ -25,7 +25,7 @@ export default function HeroImage() {
         
         {/* Barre de navigation simplifiée */}
         <div className="flex justify-between items-center p-3 bg-neutral-800">
-          <span className="text-xs text-yellow-500 font-semibold">ACCÈS PREMIUM DÉBLOQUÉ</span>
+          <span className="text-xs text-purple-400 font-semibold">ACCÈS PREMIUM DÉBLOQUÉ</span>
           <span className="text-xs text-gray-500">Profil: Alice</span>
         </div>
 

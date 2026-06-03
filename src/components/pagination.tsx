@@ -34,7 +34,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const pageNumbers = getPageNumbers();
 
   const baseClasses = "px-3 py-1 mx-1 rounded-lg transition-colors font-medium";
-  const activeClasses = "bg-yellow-500 text-black";
+  const activeClasses = "bg-purple-600 text-white";
   const inactiveClasses = "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600";
   const disabledClasses = "opacity-50 cursor-not-allowed";
 

@@ -73,10 +73,10 @@ const Slide: React.FC<SlideComponentProps> = ({
       {showParty && (
         <>
           <Confetti numberOfPieces={120} recycle={false} />
-          <IconSparkles className="w-12 h-12 text-yellow-400 animate-bounce absolute top-2 left-1/2 transform -translate-x-1/2 z-20" />
+          <IconSparkles className="w-12 h-12 text-purple-500 animate-bounce absolute top-2 left-1/2 transform -translate-x-1/2 z-20" />
         </>
       )}
-      <Icon className="w-16 h-16 text-yellow-400 mb-6 drop-shadow-[0_0_12px_rgba(255,215,100,0.7)]" />
+      <Icon className="w-16 h-16 text-purple-500 mb-6 drop-shadow-[0_0_12px_rgba(139,92,246,0.5)]" />
       <h2 className="text-3xl font-extrabold text-white mb-4">
         {title}
       </h2>
@@ -85,7 +85,7 @@ const Slide: React.FC<SlideComponentProps> = ({
         {Array.from({ length: totalSlides }).map((_, i) => (
           <div
             key={i}
-            className={`h-2 rounded-full transition-all duration-300 ${i === index ? "w-8 bg-yellow-500" : "w-2 bg-neutral-700"}`}
+            className={`h-2 rounded-full transition-all duration-300 ${i === index ? "w-8 bg-purple-600" : "w-2 bg-neutral-700"}`}
           />
         ))}
       </div>
@@ -93,7 +93,7 @@ const Slide: React.FC<SlideComponentProps> = ({
         {!isLast ? (
           <button
             onClick={onNext}
-            className="flex items-center justify-center text-black bg-yellow-500 px-6 py-3 rounded-xl font-bold hover:bg-yellow-400 transition"
+            className="flex items-center justify-center text-white bg-purple-600 px-6 py-3 rounded-xl font-bold hover:bg-purple-700 transition"
           >
             Suivant <IconArrowRight className="w-4 h-4 ml-2" />
           </button>
@@ -101,7 +101,7 @@ const Slide: React.FC<SlideComponentProps> = ({
           <>
             <button
               onClick={handleEssaiClick}
-              className="flex items-center justify-center bg-yellow-500 text-black px-6 py-3 rounded-xl font-bold hover:bg-yellow-400 transition duration-300 relative"
+              className="flex items-center justify-center bg-purple-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-purple-700 transition duration-300 relative"
             >
               <IconSparkles className="w-5 h-5 mr-2" /> Essayer l'Essai Gratuit
             </button>
@@ -138,7 +138,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
-      <div className="relative rounded-3xl w-full max-w-lg bg-white/10 dark:bg-neutral-900/40 backdrop-blur-3xl border border-white/22 shadow-[0_20px_60px_rgba(255,215,120,0.28)] p-6">
+      <div className="relative rounded-3xl w-full max-w-lg bg-white/10 dark:bg-neutral-900/40 backdrop-blur-3xl border border-white/22 shadow-[0_20px_60px_rgba(139,92,246,0.2)] p-6">
         <Slide
           index={currentSlide}
           totalSlides={slides.length}

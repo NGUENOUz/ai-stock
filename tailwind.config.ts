@@ -22,19 +22,19 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // === COULEUR PRIMAIRE (Jaune AI-STOCK) ===
+        // === COULEUR PRIMAIRE (Purple) ===
         primary: {
-          50: "#FFFBEB",
-          100: "#FFF3C4",
-          200: "#FFE896",
-          300: "#FFDC68",
-          400: "#FFD645",
-          DEFAULT: "#FFD11A", // ⚡ Couleur signature AI-STOCK
-          600: "#FFC107",
-          700: "#FFB300",
-          800: "#FFA000",
-          900: "#FF8F00",
-          foreground: "#000000",
+          50: "#FAF5FF",
+          100: "#F3E8FF",
+          200: "#E9D5FF",
+          300: "#D8B4FE",
+          400: "#C084FC",
+          DEFAULT: "#8B5CF6", // ⚡ Couleur signature AI-STOCK
+          600: "#7C3AED",
+          700: "#6D28D9",
+          800: "#5B21B6",
+          900: "#4C1D95",
+          foreground: "#FFFFFF",
         },
 
         // === NEUTRALS (Gris sophistiqués) ===
@@ -54,9 +54,9 @@ const config: Config = {
         // === COULEURS SÉMANTIQUES ===
         background: "#FFFFFF",
         foreground: "#000000",
-        border: "#E5E5E5",
-        input: "#F5F5F5",
-        ring: "#FFD11A",
+        border: "#E5E7EB",
+        input: "#F9FAFB",
+        ring: "#8B5CF6",
 
         // === ACCENTS & ÉTATS ===
         success: {
@@ -120,8 +120,8 @@ const config: Config = {
         "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
         premium: "0 0 0 1px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.02), 0 12px 24px rgba(0,0,0,0.03)",
         soft: "0 2px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.05)",
-        glow: "0 0 40px rgba(255, 209, 26, 0.3)",
-        "glow-lg": "0 0 60px rgba(255, 209, 26, 0.4)",
+        glow: "0 0 40px rgba(139, 92, 246, 0.3)",
+        "glow-lg": "0 0 60px rgba(139, 92, 246, 0.4)",
       },
 
       // === ANIMATIONS ===
