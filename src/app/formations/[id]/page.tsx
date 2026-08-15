@@ -148,8 +148,13 @@ export default function TrainingDetailsPage({ params }: TrainingDetailsPageProps
         ctaIcon = <Zap className="w-5 h-5 mr-3" />;
         ctaAction = 'GO_TO_TRAINING';
     } else if (isPremium && !isPremiumMember) {
-        ctaLabel = "Débloquez l'Accès Premium";
-        ctaIcon = <Crown className="w-5 h-5 mr-3" />;
+        if (price > 0) {
+            ctaLabel = `Acheter pour ${priceDisplay}`;
+            ctaIcon = <DollarSign className="w-5 h-5 mr-3" />;
+        } else {
+            ctaLabel = "Débloquez l'Accès Premium";
+            ctaIcon = <Crown className="w-5 h-5 mr-3" />;
+        }
         ctaAction = 'GO_TO_PREMIUM';
     } else if (!isLoggedIn) {
         ctaLabel = "Connectez-vous pour Accéder";
@@ -179,7 +184,7 @@ export default function TrainingDetailsPage({ params }: TrainingDetailsPageProps
     };
 
     return (
-        <div className="min-h-screen bg-neutral-50 py-16">
+        <div className="min-h-screen bg-neutral-50 py-16 pt-32">
             <div className="container mx-auto px-6 max-w-7xl">
                 <h1 className="text-3xl md:text-5xl font-black text-black mb-4 text-center lg:text-left">
                     {title}
@@ -234,17 +239,8 @@ export default function TrainingDetailsPage({ params }: TrainingDetailsPageProps
                                     <span className="text-neutral-600">Vidéos: <strong className='text-black'>{numberOfVideos}</strong></span>
                                 </div>
                                 <div className="flex items-center">
-                                    {isPremium ? (
-                                        <>
-                                            <Crown className="w-5 h-5 mr-2 text-primary" />
-                                            <span className="font-bold text-lg text-primary">PREMIUM</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <DollarSign className="w-5 h-5 mr-2 text-success" />
-                                            <span className="font-bold text-lg text-success">{priceDisplay}</span>
-                                        </>
-                                    )}
+                                    <DollarSign className="w-5 h-5 mr-2 text-primary" />
+                                    <span className="text-neutral-600">Prix: <strong className='text-black'>{priceDisplay}</strong></span>
                                 </div>
                             </div>
                         </div>

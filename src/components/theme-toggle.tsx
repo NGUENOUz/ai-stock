@@ -1,23 +1,29 @@
-// src/components/theme-toggle.tsx
 "use client";
 
-import React from 'react';
-import { useTheme } from '@/context/theme-provider';
+import React, { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 import { IconSun, IconMoon } from '@tabler/icons-react';
 
 const ThemeToggle = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <div className="w-9 h-9" />; // Placeholder pour éviter le layout shift
 
   return (
     <button
-      onClick={toggleTheme}
-      className="p-2 rounded-full bg-neutral-700 dark:bg-neutral-800 text-white dark:text-purple-400 hover:bg-neutral-600 dark:hover:bg-neutral-700 transition duration-300"
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      className="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition duration-300"
       aria-label={`Passer au mode ${theme === 'dark' ? 'jour' : 'nuit'}`}
     >
       {theme === 'dark' ? (
-        <IconSun className="w-6 h-6" />
+        <IconSun className="w-5 h-5" />
       ) : (
-        <IconMoon className="w-6 h-6" />
+        <IconMoon className="w-5 h-5" />
       )}
     </button>
   );

@@ -3,6 +3,10 @@ import { Training, Lesson } from '@/types/training';
 import { ToolFilter, PaginatedResponse } from '../schemas/tool.schema';
 import { TrainingFilter, PaginatedResponse as TrainingPaginatedResponse } from '../schemas/training.schema';
 import { ApiResponse } from '../schemas/api.schema';
+import mockToolsData from '@/bd/mock-tools.json';
+import { ToolFilter, PaginatedResponse } from '../schemas/tool.schema';
+import { TrainingFilter, PaginatedResponse as TrainingPaginatedResponse } from '../schemas/training.schema';
+import { ApiResponse } from '../schemas/api.schema';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 
@@ -69,14 +73,46 @@ class ApiClient {
    * Récupère un outil par son ID ou slug
    */
   async getToolById(id: string): Promise<AiTool> {
-    return this.request<AiTool>(`/tools/${id}`);
+    const tool = (mockToolsData as any[]).find(t => t.id === id);
+    if (!tool) throw new Error("Outil introuvable");
+    return this.mapMockToDetail(tool);
   }
 
   /**
    * Récupère un outil par son slug
    */
   async getToolBySlug(slug: string): Promise<AiTool> {
-    return this.request<AiTool>(`/tools/${slug}`);
+    const tool = (mockToolsData as any[]).find(t => t.slug === slug);
+    if (!tool) throw new Error("Outil introuvable");
+    return this.mapMockToDetail(tool);
+  }
+
+  private mapMockToDetail(tool: any): any {
+    return {
+      ...tool,
+      tagline: tool.tagline || "L'outil IA indispensable pour votre entreprise.",
+      description_long: tool.description_long || `${tool.description_short} Découvrez comment ${tool.name} peut transformer votre workflow grâce à ses fonctionnalités d'intelligence artificielle de pointe. Rejoignez des milliers d'utilisateurs satisfaits.`,
+      ban_url: tool.ban_url || "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1200&auto=format&fit=crop",
+      website_url: tool.website_url || "https://example.com",
+      pricing: tool.pricing_type || "Freemium",
+      rating: tool.rating || +(Math.random() * 1.5 + 3.5).toFixed(1),
+      views: Math.floor(Math.random() * 5000) + 500,
+      upvotes: Math.floor(Math.random() * 2000) + 100,
+      verified: true,
+      highlights: ["Accès immédiat", "Support prioritaire", "Mises à jour régulières", "Communauté active"],
+      features: [
+        { title: "Interface intuitive", desc: "Une prise en main rapide et simplifiée pour tous." },
+        { title: "Performance optimale", desc: "Des temps de réponse ultra rapides." },
+        { title: "Sécurité maximale", desc: "Vos données sont cryptées et protégées." }
+      ],
+      use_cases: [
+        { title: "Pour les indépendants", desc: "Gagnez un temps précieux au quotidien." },
+        { title: "Pour les équipes", desc: "Collaborez facilement sur vos projets." }
+      ],
+      benefits: ["Support 24/7", "Export illimité", "Accès API", "Formation incluse"],
+      pricing_details: { priceMonthly: "29€", priceDetails: "Facturé annuellement" },
+      stats: { users: "10k+", reviews: 150, uptime: "99.9%", accuracy: "98%" }
+    };
   }
 
   // ==================== TRAININGS ====================

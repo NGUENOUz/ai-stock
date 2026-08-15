@@ -1,130 +1,130 @@
 @import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+}
 
 @layer base {
   :root {
-    /* Nouvelle palette Purple/Blue professionnelle */
-    --primary: #8B5CF6; /* Purple */
+    /* Nouvelle palette Navy/Blue professionnelle */
+    --primary: #3B82F6; /* Vivid Blue */
     --primary-foreground: #FFFFFF;
-    --secondary: #3B82F6; /* Blue */
+    --secondary: #1E40AF; /* Navy */
     --secondary-foreground: #FFFFFF;
-    --accent: #8B5CF6; /* Purple accent */
-    --accent-foreground: #FFFFFF;
+    --accent: #EFF6FF; /* Ice Blue */
+    --accent-foreground: #1E40AF;
     --background: #FFFFFF;
-    --foreground: #111827; /* gray-900 */
-    --muted: #F9FAFB; /* gray-50 */
-    --border: #E5E7EB; /* gray-200 */
+    --foreground: #0F172A; /* Slate 900 */
+    --muted: #F8FAFC; /* Slate 50 */
+    --border: #E2E8F0; /* Slate 200 */
+    --ring: #3B82F6;
+  }
+
+  .dark {
+    --primary: #3B82F6;
+    --primary-foreground: #FFFFFF;
+    --secondary: #1E40AF;
+    --secondary-foreground: #FFFFFF;
+    --accent: #1E293B; /* Slate 800 */
+    --accent-foreground: #F8FAFC;
+    --background: #0F172A; /* Slate 900 */
+    --foreground: #F8FAFC; /* Slate 50 */
+    --muted: #1E293B; /* Slate 800 */
+    --border: #334155; /* Slate 700 */
+    --ring: #3B82F6;
   }
 
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-background text-foreground transition-colors duration-300;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: rgba(139, 92, 246, 0.2); /* purple selection */
+    background-color: rgba(59, 130, 246, 0.2); /* blue selection */
     color: inherit;
   }
 
-  /* Scrollbar personnalisée - purple theme */
+  /* Scrollbar personnalisée */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    @apply bg-slate-100 dark:bg-slate-800;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
+    @apply bg-slate-300 dark:bg-slate-600 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-purple-400;
+    @apply bg-primary/80;
   }
 }
 
 @layer utilities {
   /* === NOUVEAU DESIGN SYSTEM === */
   
-  /* Gradients Purple/Blue */
-  .text-gradient-purple {
-    background: linear-gradient(to right, #8B5CF6, #6366F1);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .text-gradient-blue {
+  /* Gradients */
+  .text-gradient-primary {
     background: linear-gradient(to right, #3B82F6, #2563EB);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  /* Backgrounds avec nouvelle palette */
-  .bg-primary {
-    background-color: #8B5CF6 !important; /* Purple */
-  }
-
-  .bg-secondary {
-    background-color: #3B82F6 !important; /* Blue */
-  }
-
-  .bg-accent {
-    background-color: #8B5CF6 !important; /* Purple accent */
-  }
-
-  .text-primary {
-    color: #8B5CF6 !important;
-  }
-
-  .text-secondary {
-    color: #3B82F6 !important;
-  }
-
-  .border-primary {
-    border-color: #8B5CF6 !important;
+  .text-gradient-secondary {
+    background: linear-gradient(to right, #1E40AF, #1E3A8A);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   /* Boutons modernes */
   .btn-primary {
-    @apply bg-purple-600 text-white font-semibold px-5 py-2.5 rounded-xl;
-    @apply hover:bg-purple-700 transition-all shadow-sm hover:shadow-md;
+    @apply bg-primary text-primary-foreground font-semibold px-5 py-2.5 rounded-xl;
+    @apply hover:bg-primary/90 transition-all shadow-sm hover:shadow-md;
   }
 
   .btn-secondary {
-    @apply bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl;
-    @apply hover:bg-blue-700 transition-all shadow-sm hover:shadow-md;
+    @apply bg-secondary text-secondary-foreground font-semibold px-5 py-2.5 rounded-xl;
+    @apply hover:bg-secondary/90 transition-all shadow-sm hover:shadow-md;
   }
 
   .btn-outline {
-    @apply bg-white text-gray-700 font-semibold px-5 py-2.5 rounded-xl;
-    @apply border border-gray-200 hover:bg-gray-50 transition-all shadow-sm;
+    @apply bg-transparent text-foreground font-semibold px-5 py-2.5 rounded-xl;
+    @apply border border-border hover:bg-muted transition-all shadow-sm;
   }
 
   /* Cards modernes */
   .card {
-    @apply bg-white rounded-2xl border border-gray-200 p-6;
+    @apply bg-white dark:bg-slate-800 rounded-2xl border border-border p-6;
     @apply hover:shadow-md transition-all;
   }
 
   .card-hover {
-    @apply bg-white rounded-2xl border border-gray-200 p-6;
-    @apply hover:shadow-lg hover:border-purple-200 transition-all cursor-pointer;
+    @apply bg-white dark:bg-slate-800 rounded-2xl border border-border p-6;
+    @apply hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer;
   }
 
   /* Inputs modernes */
   .input {
-    @apply w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50;
-    @apply focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-300;
+    @apply w-full px-4 py-2.5 rounded-xl border border-border bg-background;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
     @apply transition-all text-sm;
   }
 
   .input-search {
-    @apply w-full h-10 pl-10 pr-4 rounded-xl bg-gray-50 border border-gray-200;
-    @apply focus:border-purple-300 focus:ring-2 focus:ring-purple-100;
+    @apply w-full h-10 pl-10 pr-4 rounded-xl bg-background border border-border;
+    @apply focus:border-primary focus:ring-2 focus:ring-primary/20;
     @apply outline-none transition-all text-sm;
   }
 
@@ -136,77 +136,44 @@
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 600;
+    @apply transition-colors;
   }
 
-  .badge-purple {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: #f5f3ff;
-    color: #6d28d9;
+  .badge-primary {
+    @apply bg-primary/10 text-primary dark:bg-primary/20;
+  }
+
+  .badge-secondary {
+    @apply bg-secondary/10 text-secondary dark:bg-secondary/20 dark:text-blue-300;
   }
 
   .badge-blue {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: #eff6ff;
-    color: #1d4ed8;
+    @apply bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300;
   }
 
   .badge-green {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: #ecfdf5;
-    color: #065f46;
+    @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300;
   }
 
   .badge-yellow {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: #fffbeb;
-    color: #92400e;
+    @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300;
   }
 
   .badge-red {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: #fff1f2;
-    color: #9f1239;
+    @apply bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300;
   }
 
   .badge-gray {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: #f3f4f6;
-    color: #4b5563;
+    @apply bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300;
+  }
+  
+  .badge-success {
+    @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300;
   }
 
   /* Stats Cards */
   .stat-card {
-    @apply bg-white rounded-2xl border border-gray-200 p-6;
+    @apply bg-white dark:bg-slate-800 rounded-2xl border border-border p-6;
     @apply hover:shadow-md transition-all;
   }
 
@@ -219,44 +186,20 @@
     justify-content: center;
   }
 
-  .stat-icon-purple {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f5f3ff;
+  .stat-icon-primary {
+    @apply flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary dark:bg-primary/20;
   }
 
   .stat-icon-blue {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #eff6ff;
+    @apply flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300;
   }
 
   .stat-icon-green {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ecfdf5;
+    @apply flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300;
   }
 
   .stat-icon-yellow {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fffbeb;
+    @apply flex items-center justify-center w-12 h-12 rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300;
   }
 
   /* Avatars */
@@ -270,39 +213,15 @@
   }
 
   .avatar-sm {
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    color: white;
-    width: 2rem;
-    height: 2rem;
-    font-size: 0.75rem;
+    @apply flex items-center justify-center rounded-full font-bold text-white w-8 h-8 text-xs;
   }
 
   .avatar-md {
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    color: white;
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 0.875rem;
+    @apply flex items-center justify-center rounded-full font-bold text-white w-10 h-10 text-sm;
   }
 
   .avatar-lg {
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    color: white;
-    width: 3rem;
-    height: 3rem;
-    font-size: 1rem;
+    @apply flex items-center justify-center rounded-full font-bold text-white w-12 h-12 text-base;
   }
 
   /* Tables */
@@ -311,19 +230,19 @@
   }
 
   .table-modern thead {
-    @apply bg-gray-50 border-b border-gray-200;
+    @apply bg-muted border-b border-border;
   }
 
   .table-modern th {
-    @apply text-left px-6 py-4 text-sm font-semibold text-gray-500 uppercase tracking-wider;
+    @apply text-left px-6 py-4 text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider;
   }
 
   .table-modern td {
-    @apply px-6 py-4 text-sm;
+    @apply px-6 py-4 text-sm text-foreground;
   }
 
   .table-modern tbody tr {
-    @apply hover:bg-gray-50 transition-colors border-b border-gray-100;
+    @apply hover:bg-muted/50 transition-colors border-b border-border/50;
   }
 
   /* Animations */
@@ -347,28 +266,17 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   }
 
-  .shadow-purple {
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  .shadow-primary {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15); /* Vivid Blue */
   }
 
-  .shadow-blue {
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  .shadow-secondary {
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15); /* Navy */
   }
 
   /* Legacy support */
   .framer-card {
-    @apply bg-white rounded-2xl border border-gray-200 p-6;
+    @apply bg-white dark:bg-slate-800 rounded-2xl border border-border p-6;
     @apply hover:shadow-md transition-all;
-  }
-
-  .badge-success {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: #ecfdf5;
-    color: #065f46;
   }
 }

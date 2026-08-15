@@ -136,12 +136,12 @@ export default function UserDashboard() {
       {/* ── LEFT SIDEBAR ─────────────────────────────────────────────────────── */}
       <aside className="w-64 bg-white border-r border-gray-100 flex flex-col py-6 px-4 fixed h-full z-20 shadow-sm">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 px-2 mb-8">
-          <div className="w-8 h-8 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-lg flex items-center justify-center">
-            <Sparkles size={16} className="text-white" />
-          </div>
-          <span className="text-xl font-extrabold text-gray-900">ai-stock</span>
-        </Link>
+        <Link href="/" className="flex items-center gap-2.5 px-2 group">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-sm transition-transform group-hover:rotate-6">
+              <Zap className="h-5 w-5 fill-white text-white" />
+            </div>
+            <span className="text-xl font-black tracking-tighter text-black">AI-STOCK</span>
+          </Link>
 
         {/* Nav */}
         <nav className="flex-1 space-y-1">

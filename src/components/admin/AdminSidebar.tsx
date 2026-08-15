@@ -14,7 +14,8 @@ import {
   LogOut,
   Workflow,
   FileText,
-  Trophy
+  Trophy,
+  Zap
 } from 'lucide-react';
 
 const menuItems = [
@@ -59,12 +60,12 @@ export default function AdminSidebar() {
     <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col z-50">
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-gray-200">
-        <Link href="/admin/dashboard" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-purple-600 rounded-xl flex items-center justify-center">
-            <span className="text-white font-black text-base">AI</span>
-          </div>
-          <span className="font-black text-xl text-gray-900">AI-STOCK</span>
-        </Link>
+        <Link href="/" className="flex items-center gap-2.5 px-2 group">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-sm transition-transform group-hover:rotate-6">
+              <Zap className="h-5 w-5 fill-white text-white" />
+            </div>
+            <span className="text-xl font-black tracking-tighter text-black">AI-STOCK</span>
+          </Link>
       </div>
 
       {/* Navigation */}

@@ -1,377 +1,372 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { 
-  Search, Filter, Copy, Flame, MessageSquare, Play, Star, Eye, Zap, 
-  Award, Share2, ThumbsUp, MessageCircle, ChevronDown, Check,
-  Trophy, Clock, Sparkles, Send, ExternalLink, ChevronRight, 
-  Bookmark, LayoutGrid, List, Info, Database, Scale
+  Search, ChevronDown, Copy, Star, Eye, Trophy, Play, Heart, Share2, Sparkles, ArrowRight, ChevronLeft, ChevronRight
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import PromptsIllustration from "@/components/hero-illustrations/PromptsIllustration";
+import CursorGlow from "@/components/CursorGlow";
 
-// --- TYPES ENRICHIS ---
-interface Prompt {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  sector: string;
-  tool: string;
-  type: "Image" | "Video" | "Text" | "Code";
-  mediaUrl: string; // Toujours une image/vidéo de couverture
-  author: { name: string; avatar: string; points: number; verified: boolean };
-  stats: { copies: number; likes: number; comments: number; views: number };
-  tags: string[];
-  variables?: string[]; // Liste des variables détectées [Pays], [Nom]...
-}
+// Mock Data
+const leaderboard = [
+  { rank: 1, name: "Alex Dev", points: "12.4k pts", avatar: "https://i.pravatar.cc/150?u=1" },
+  { rank: 2, name: "Sarah Prompt", points: "9.8k pts", avatar: "https://i.pravatar.cc/150?u=2" },
+  { rank: 3, name: "Mounir IA", points: "8.7k pts", avatar: "https://i.pravatar.cc/150?u=3" },
+  { rank: 4, name: "CodeMaster", points: "6.5k pts", avatar: "https://i.pravatar.cc/150?u=4" },
+  { rank: 5, name: "PromptQueen", points: "5.4k pts", avatar: "https://i.pravatar.cc/150?u=5" },
+];
 
-// --- DONNÉES DE SIMULATION MASSIVES ---
-const ALL_PROMPTS: Prompt[] = [
+const mockPrompts = [
   {
-    id: "p1",
-    title: "Sora : Cyber-Douala 2077",
-    content: "Drone shot of Douala port in 2077, flying taxis, neon lights reflecting on Wouri river, ultra-realistic...",
-    category: "Vidéo",
-    sector: "Art",
+    id: 1,
+    title: "Cinematic Tokyo Cyberpunk Night",
+    tool: "Midjourney v6",
+    toolColor: "bg-[#2563EB]", 
+    category: "Images",
+    views: "34k",
+    likes: 1250,
+    type: "image", 
+    heightClass: "h-[450px]", 
+    author: { name: "NeonDreamer", avatar: "https://i.pravatar.cc/150?u=12" },
+    image: "https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    id: 2,
+    title: "Drone flight over an alien glowing forest",
     tool: "Sora",
-    type: "Video",
-    mediaUrl: "https://cdn.pixabay.com/video/2023/10/20/185808-876542784_tiny.mp4",
-    author: { name: "CameroonAI", avatar: "https://i.pravatar.cc/150?u=1", points: 4500, verified: true },
-    stats: { copies: 1200, likes: 850, comments: 42, views: 15000 },
-    tags: ["Cyberpunk", "Africa"],
+    toolColor: "bg-[#10B981]", 
+    category: "Vidéos",
+    views: "89k",
+    likes: 3420,
+    type: "video",
+    heightClass: "h-[280px]", 
+    author: { name: "AI Director", avatar: "https://i.pravatar.cc/150?u=15" },
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600&auto=format&fit=crop"
   },
   {
-    id: "p2",
-    title: "Analyseur Juridique OHADA",
-    content: "Analyse ce contrat de [Type_Contrat] selon les normes OHADA en vigueur au [Pays]...",
-    category: "Productivité",
-    sector: "Juridique",
-    tool: "Claude 3.5",
-    type: "Text",
-    mediaUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=800", // Image cover pour le texte
-    author: { name: "Maître_AI", avatar: "https://i.pravatar.cc/150?u=10", points: 3200, verified: true },
-    stats: { copies: 2100, likes: 940, comments: 56, views: 8000 },
-    tags: ["Droit", "Business"],
-    variables: ["Type_Contrat", "Pays"]
+    id: 3,
+    title: "Article de blog ultra-optimisé SEO",
+    tool: "ChatGPT 4",
+    toolColor: "bg-[#10B981]", 
+    category: "Textes",
+    views: "12k",
+    likes: 450,
+    type: "text",
+    heightClass: "h-[340px]", 
+    author: { name: "Sarah Prompt", avatar: "https://i.pravatar.cc/150?u=2" },
+    image: "https://images.unsplash.com/photo-1455390582262-044cdead27d8?q=80&w=600&auto=format&fit=crop"
   },
   {
-    id: "p3",
-    title: "Logo Minimaliste Luxury",
-    content: "Minimalist logo for a [Industrie] brand, vector, symmetrical, golden ratio, white background...",
-    category: "Image",
-    sector: "Design",
-    tool: "Midjourney",
-    type: "Image",
-    mediaUrl: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=800",
-    author: { name: "KingArt", avatar: "https://i.pravatar.cc/150?u=3", points: 8900, verified: true },
-    stats: { copies: 12400, likes: 5200, comments: 310, views: 45000 },
-    tags: ["Logo", "Minimalist"],
-    variables: ["Industrie"]
+    id: 4,
+    title: "Realistic product photography mockup",
+    tool: "Midjourney v6",
+    toolColor: "bg-[#2563EB]", 
+    category: "Images",
+    views: "18k",
+    likes: 890,
+    type: "image",
+    heightClass: "h-[380px]", 
+    author: { name: "UI Master", avatar: "https://i.pravatar.cc/150?u=6" },
+    image: "https://images.unsplash.com/photo-1528297506728-9533d2ac3fa4?q=80&w=600&auto=format&fit=crop"
   },
   {
-    id: "p4",
-    title: "Expert Python Refactor",
-    content: "Optimise cette fonction [Nom_Fonction] pour réduire la complexité de O(n²) à O(log n)...",
-    category: "Développement",
-    sector: "Tech",
-    tool: "GPT-4",
-    type: "Code",
-    mediaUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800",
-    author: { name: "DevGénie", avatar: "https://i.pravatar.cc/150?u=15", points: 1200, verified: false },
-    stats: { copies: 540, likes: 120, comments: 12, views: 3000 },
-    tags: ["Python", "Algorithms"],
-    variables: ["Nom_Fonction"]
+    id: 5,
+    title: "Script complet de landing page SaaS",
+    tool: "Claude 3",
+    toolColor: "bg-[#D97757]", 
+    category: "Textes",
+    views: "22k",
+    likes: 1100,
+    type: "text",
+    heightClass: "h-[260px]", 
+    author: { name: "CopyNinja", avatar: "https://i.pravatar.cc/150?u=18" },
+    image: "https://images.unsplash.com/photo-1555421689-d68471e189f2?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    id: 6,
+    title: "Générateur d'animations CSS fluides",
+    tool: "Cursor",
+    toolColor: "bg-[#3B82F6]", 
+    category: "Code",
+    views: "45k",
+    likes: 2300,
+    type: "text",
+    heightClass: "h-[320px]", 
+    author: { name: "CodeMaster", avatar: "https://i.pravatar.cc/150?u=4" },
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    id: 7,
+    title: "Logo minimalist 3D gradient abstract",
+    tool: "Midjourney v6",
+    toolColor: "bg-[#2563EB]", 
+    category: "Images",
+    views: "19k",
+    likes: 900,
+    type: "image",
+    heightClass: "h-[280px]", 
+    author: { name: "LogoGenius", avatar: "https://i.pravatar.cc/150?u=10" },
+    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop"
   }
 ];
 
-export default function PromptsDeepDive() {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("Tous");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [copyId, setCopyId] = useState<string | null>(null);
+export default function PromptsCatalogPage() {
+  const [activeCategory, setActiveCategory] = useState("Tous");
+  const [likedPrompts, setLikedPrompts] = useState<number[]>([]);
 
-  // LOGIQUE DE FILTRAGE FONCTIONNELLE
-  const filteredPrompts = useMemo(() => {
-    return ALL_PROMPTS.filter(p => {
-      const matchSearch = p.title.toLowerCase().includes(search.toLowerCase()) || 
-                          p.content.toLowerCase().includes(search.toLowerCase()) ||
-                          p.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
-      const matchCat = category === "Tous" || p.category === category;
-      return matchSearch && matchCat;
-    });
-  }, [search, category]);
+  const toggleLike = (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (likedPrompts.includes(id)) {
+      setLikedPrompts(likedPrompts.filter(pId => pId !== id));
+    } else {
+      setLikedPrompts([...likedPrompts, id]);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pt-24 pb-20 font-sans text-slate-900">
-      <div className="max-w-[1700px] mx-auto px-6">
-        
-        {/* --- HERO CHALLENGE --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
-          <div className="lg:col-span-8 bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden flex flex-col justify-between shadow-2xl min-h-[420px] group">
-            <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200')] bg-cover group-hover:scale-105 transition-transform duration-1000" />
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="bg-primary text-black px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 animate-pulse">
-                  <Flame className="w-4 h-4 fill-current" /> Prompt de la semaine
-                </span>
-              </div>
-              <h1 className="text-5xl md:text-7xl font-black mb-6 leading-none tracking-tighter">
-                SORA <span className="text-primary">ULTIMATE</span> <br /> CINEMATIC GUIDE
-              </h1>
-              <p className="max-w-xl text-slate-300 text-lg font-medium">Apprenez à maîtriser les mouvements de caméra Sora pour des rendus Hollywoodiens.</p>
-            </div>
-            <div className="relative z-10 flex gap-4">
-              <button className="bg-white text-black px-10 py-5 rounded-2xl font-black hover:bg-primary transition-all flex items-center gap-3 shadow-xl">
-                <Zap className="w-6 h-6 fill-current" /> TESTER LE GUIDE
-              </button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] font-sans text-slate-900 dark:text-white relative">
+      
+      {/* Scroll Bleed Blocker - Prevents items from showing behind transparent global navbar */}
+      <div className="fixed top-0 inset-x-0 h-[72px] lg:h-[80px] bg-[#F8FAFC] dark:bg-[#0B1120] z-[35]" />
 
-          <div className="lg:col-span-4 bg-primary rounded-[3rem] p-10 flex flex-col justify-between shadow-xl relative overflow-hidden group">
-             <Trophy className="absolute -bottom-4 -right-4 w-40 h-40 text-black/10 rotate-12 group-hover:rotate-0 transition-transform duration-500" />
-             <div className="relative z-10">
-                <div className="flex justify-between mb-8">
-                   <div className="bg-black text-white p-4 rounded-2xl"><Trophy size={32}/></div>
-                   <span className="text-black font-black uppercase text-xs tracking-widest">Live Now</span>
-                </div>
-                <h3 className="text-3xl font-black text-black leading-tight mb-4 tracking-tighter">AI LAW CHALLENGE</h3>
-                <p className="text-black/70 font-bold mb-6 italic">Créez le meilleur prompt d'analyse de litiges fonciers.</p>
-                <div className="flex -space-x-3 mb-6">
-                   {[1,2,3,4].map(i => <img key={i} src={`https://i.pravatar.cc/100?u=${i}`} className="w-10 h-10 rounded-full border-2 border-primary" />)}
-                   <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-[10px] font-black">+42</div>
-                </div>
+      
+      {/* Background Interactive Elements */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Subtle Tech Grid Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+      </div>
+
+      {/* Hero Header Harmonisé avec CursorGlow */}
+      <div className="relative">
+        <CursorGlow gradientClasses="from-blue-500 to-pink-500" />
+        <div className="relative z-10 pt-28 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between">
+           <div className="w-full md:w-1/2">
+             <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+               Prompts IA
+             </h1>
+             <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
+               Explorez les meilleurs prompts d'intelligence artificielle triés par popularité et par format (Image, Vidéo, Texte, Code).
+             </p>
+           </div>
+           <div className="hidden md:block w-1/2">
+             <PromptsIllustration />
+           </div>
+        </div>
+      </div>
+
+      {/* Sticky Filter Bar - Harmonisé avec Outils IA */}
+      <div className="sticky top-[72px] lg:top-[80px] z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-8">
+           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+             <div className="flex flex-col md:flex-row md:items-center gap-4 lg:gap-6 w-full md:w-auto">
+               
+               {/* Search Bar - Style Pill */}
+               <div className="relative w-full md:w-64 shrink-0">
+                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                   <Search className="w-4 h-4 text-slate-400" />
+                 </div>
+                 <input 
+                   type="text" 
+                   placeholder="Rechercher un prompt..." 
+                   className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#0F172A] border border-slate-200/60 dark:border-slate-800 rounded-full text-sm font-medium focus:outline-none focus:border-primary/50 transition-colors shadow-sm"
+                 />
+               </div>
+               
+               {/* Filter Pills */}
+               <div className="flex items-center gap-1 overflow-x-auto no-scrollbar bg-slate-200/50 dark:bg-slate-800/50 p-1 rounded-full border border-slate-200/30 dark:border-slate-700/30 shrink-0">
+                  {["Tous", "Images", "Vidéos", "Textes", "Code"].map(type => (
+                    <button
+                      key={type}
+                      onClick={() => setActiveCategory(type)}
+                      className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all whitespace-nowrap ${
+                        activeCategory === type 
+                        ? 'bg-white dark:bg-[#0F172A] text-slate-900 dark:text-white shadow-sm' 
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+               </div>
+               
+               {/* Sort - Text style */}
+               <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 shrink-0 ml-2">
+                 <span>Trier par</span>
+                 <button className="font-bold text-slate-900 dark:text-white flex items-center gap-1 hover:text-primary transition-colors">
+                   Populaires <ChevronDown className="w-4 h-4" />
+                 </button>
+               </div>
+               
              </div>
-             <button className="bg-black text-white w-full py-5 rounded-2xl font-black relative z-10 hover:scale-[1.02] transition-transform shadow-2xl">REJOINDRE LE DÉFI</button>
-          </div>
+
+             {/* Right: Count */}
+             <div className="text-sm font-bold text-slate-900 dark:text-white shrink-0 hidden md:flex items-center gap-1">
+               {mockPrompts.length} <span className="font-medium text-slate-500 dark:text-slate-400">prompts</span>
+             </div>
+           </div>
         </div>
+      </div>
 
-        {/* --- SMART SEARCH & FILTERS --- */}
-        <div className="sticky top-20 z-50 bg-white/70 backdrop-blur-2xl border border-slate-200/50 p-4 rounded-[2.5rem] mb-12 shadow-xl flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-4 flex-1">
-            <div className="relative flex-1 max-w-md group">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
-              <input 
-                type="text" 
-                placeholder="Rechercher un prompt, un outil..." 
-                className="w-full bg-slate-100/50 border-none rounded-2xl py-4 pl-14 pr-6 text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex gap-2 bg-slate-100 p-1.5 rounded-2xl">
-              {["Tous", "Image", "Vidéo", "Productivité", "Développement"].map(cat => (
-                <button 
-                  key={cat}
-                  onClick={() => setCategory(cat)}
-                  className={cn(
-                    "px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
-                    category === cat ? "bg-white text-black shadow-sm" : "text-slate-400 hover:text-slate-600"
-                  )}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 border-l pl-6 border-slate-200">
-            <button 
-              onClick={() => setViewMode("grid")}
-              className={cn("p-3 rounded-xl transition-all", viewMode === "grid" ? "bg-black text-white" : "bg-slate-100 text-slate-400")}
-            >
-              <LayoutGrid size={20} />
-            </button>
-            <button 
-              onClick={() => setViewMode("list")}
-              className={cn("p-3 rounded-xl transition-all", viewMode === "list" ? "bg-black text-white" : "bg-slate-100 text-slate-400")}
-            >
-              <List size={20} />
-            </button>
-          </div>
-        </div>
-
-        {/* --- MAIN CONTENT --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="pt-10 pb-24 max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-8">
           
-          {/* LEADERBOARD ANIMÉ */}
-          <aside className="lg:col-span-3 space-y-8">
-            <div className="bg-white rounded-[3rem] p-8 border border-slate-100 shadow-sm sticky top-44">
-              <h3 className="text-xl font-black mb-8 flex items-center justify-between">
-                LEADERBOARD 
-                <span className="text-[10px] bg-primary/10 text-primary px-3 py-1 rounded-full animate-pulse">LIVE</span>
-              </h3>
-              <div className="space-y-6">
-                {ALL_PROMPTS.map((p, i) => (
-                  <div key={i} className="flex items-center justify-between group cursor-pointer hover:bg-slate-50 p-2 rounded-2xl transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-slate-900 overflow-hidden border-2 border-white shadow-md group-hover:border-primary transition-all">
-                        <img src={p.author.avatar} alt="" />
+          {/* Left Sidebar (Leaderboard) */}
+          <aside className="lg:w-72 shrink-0 space-y-8 hidden lg:block">
+            <div className="bg-white dark:bg-[#0F172A] rounded-3xl p-6 border border-slate-200/60 dark:border-slate-800 shadow-sm sticky top-[160px]">
+               <h3 className="font-extrabold text-lg flex items-center gap-2 mb-6 text-slate-900 dark:text-white">
+                 <span className="w-8 h-8 rounded-full bg-amber-400/20 text-amber-500 flex items-center justify-center"><Trophy className="w-4 h-4" /></span>
+                 Leaderboard
+               </h3>
+               
+               <div className="space-y-4 mb-6">
+                 {leaderboard.map((user) => (
+                   <div key={user.rank} className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                         <span className={`w-5 text-center text-sm font-black ${user.rank <= 3 ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>
+                           {user.rank}
+                         </span>
+                         <div className="relative w-10 h-10 rounded-full border-2 border-white dark:border-slate-800 overflow-hidden shadow-sm">
+                           <Image src={user.avatar} alt={user.name} fill className="object-cover" />
+                         </div>
+                         <span className="font-bold text-sm text-slate-700 dark:text-slate-300">{user.name}</span>
                       </div>
-                      <div>
-                        <p className="text-sm font-black">{p.author.name}</p>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase">{p.author.points} pts</p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <div className="text-primary font-black text-xs">#{i + 1}</div>
-                      <div className="text-[8px] text-green-500 font-black flex items-center gap-1">
-                        <Flame size={8} /> +12
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <button className="w-full mt-8 py-4 border-2 border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:border-primary hover:text-primary transition-all">VOIR TOUS LES EXPERTS</button>
+                      <span className="text-[11px] font-bold text-slate-400">{user.points}</span>
+                   </div>
+                 ))}
+               </div>
+               
+               <button className="w-full py-3 bg-slate-50 dark:bg-[#151E32] rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-200/50 dark:border-slate-700">
+                 Voir le classement
+               </button>
             </div>
           </aside>
 
-          {/* GRID DES PROMPTS */}
-          <main className="lg:col-span-9">
-            <AnimatePresence mode="popLayout">
-              <motion.div 
-                layout
-                className={cn(
-                  "grid gap-8",
-                  viewMode === "grid" ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
-                )}
-              >
-                {filteredPrompts.map((prompt) => (
-                  <PromptCard 
-                    key={prompt.id} 
-                    prompt={prompt} 
-                    isCopied={copyId === prompt.id}
-                    onCopy={() => {
-                      navigator.clipboard.writeText(prompt.content);
-                      setCopyId(prompt.id);
-                      setTimeout(() => setCopyId(null), 2000);
-                    }}
-                  />
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          </main>
-        </div>
-      </div>
-    </div>
-  );
-}
+          {/* Right Content - True Masonry Gallery */}
+          <div className="flex-1">
+            <div className="columns-1 sm:columns-2 xl:columns-3 gap-6 space-y-6">
+              {mockPrompts.map((prompt) => (
+                <Link href={`/prompt/${prompt.id}`} key={prompt.id} className="break-inside-avoid group relative flex flex-col bg-white dark:bg-[#0F172A] rounded-3xl border border-slate-200/60 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-2xl dark:hover:shadow-primary/5 transition-all duration-500 cursor-pointer">
+                   
+                   {/* Main Media Preview */}
+                   <div className={`relative w-full ${prompt.heightClass} bg-slate-100 dark:bg-slate-900 overflow-hidden`}>
+                      <Image 
+                        src={prompt.image} 
+                        alt={prompt.title} 
+                        fill 
+                        className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                      />
+                      
+                      {/* Dark overlay on hover for better icon visibility */}
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 z-10" />
+                      
+                      {/* Permanent Gradient overlay for text readability at bottom */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-80 z-10 pointer-events-none" />
+                      
+                      {/* Hover Actions - Interactive Buttons */}
+                      <div className={`absolute top-4 left-4 z-30 flex items-center gap-2 transition-opacity duration-300 ${likedPrompts.includes(prompt.id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                         <button 
+                           onClick={(e) => toggleLike(e, prompt.id)}
+                           className={`w-9 h-9 rounded-full backdrop-blur-md border border-white/20 flex items-center justify-center transition-all duration-300 shadow-xl ${likedPrompts.includes(prompt.id) ? 'bg-pink-500/90 text-white border-pink-500' : 'bg-white/20 text-white hover:bg-pink-500 hover:border-pink-500'}`} 
+                           title="Aimer"
+                         >
+                            <Heart className={`w-4 h-4 ${likedPrompts.includes(prompt.id) ? 'fill-white' : ''}`} />
+                         </button>
+                         <button 
+                           onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                           className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-blue-500 hover:border-blue-500 transition-all duration-300 shadow-xl" 
+                           title="Partager"
+                         >
+                            <Share2 className="w-4 h-4" />
+                         </button>
+                         <button 
+                           onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                           className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300 shadow-xl" 
+                           title="Copier le prompt"
+                         >
+                            <Copy className="w-4 h-4" />
+                         </button>
+                      </div>
 
-// --- SUB-COMPOSANT : PROMPT CARD SURVITAMINÉE ---
-function PromptCard({ prompt, isCopied, onCopy }: { prompt: Prompt, isCopied: boolean, onCopy: () => void }) {
-  const [showVariables, setShowVariables] = useState(false);
+                      {/* Video Play Icon overlay */}
+                      {prompt.type === 'video' && (
+                        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                           <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 group-hover:bg-primary group-hover:border-primary transition-all duration-300 shadow-2xl transform group-hover:scale-110">
+                              <Play className="w-5 h-5 text-white fill-white ml-1" />
+                           </div>
+                        </div>
+                      )}
+                      
+                      {/* Tool Badge */}
+                      <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg z-30">
+                         <div className={`w-2 h-2 rounded-full ${prompt.toolColor}`} />
+                         {prompt.tool}
+                      </div>
 
-  return (
-    <motion.div 
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      className="bg-white rounded-[3rem] border border-slate-100 overflow-hidden hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 group relative"
-    >
-      {/* MEDIA HEADER */}
-      <div className="relative aspect-video overflow-hidden bg-slate-100">
-        {prompt.type === "Video" ? (
-          <video src={prompt.mediaUrl} muted loop onMouseEnter={e => e.currentTarget.play()} onMouseLeave={e => e.currentTarget.pause()} className="w-full h-full object-cover" />
-        ) : (
-          <img src={prompt.mediaUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="" />
-        )}
-        
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-        
-        <div className="absolute top-6 left-6 flex gap-2">
-          <span className="bg-white text-black px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-xl">
-            {prompt.tool}
-          </span>
-          <span className="bg-black/40 backdrop-blur text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/20">
-            {prompt.category}
-          </span>
-        </div>
-
-        <div className="absolute bottom-6 left-6 right-6">
-           <h4 className="text-2xl font-black text-white leading-tight tracking-tighter drop-shadow-md">{prompt.title}</h4>
-        </div>
-      </div>
-
-      {/* BODY */}
-      <div className="p-8">
-        
-        {/* PROMPT BOX & VARIABLES */}
-        <div className="mb-6 space-y-4">
-          <div className="relative bg-slate-50 border border-slate-100 rounded-[2rem] p-6 group/code overflow-hidden">
-            <p className="text-xs font-mono text-slate-500 line-clamp-2 leading-relaxed italic pr-12">
-               "{prompt.content}"
-            </p>
-            <button 
-              onClick={onCopy}
-              className={cn(
-                "absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-2xl transition-all shadow-xl",
-                isCopied ? "bg-green-500 text-white scale-110" : "bg-primary text-black hover:bg-black hover:text-white"
-              )}
-            >
-              {isCopied ? <Check size={20} /> : <Copy size={20} />}
-            </button>
-            {isCopied && <div className="absolute top-2 right-14 text-[8px] font-black text-green-500 animate-bounce">COPIÉ !</div>}
-          </div>
-
-          {prompt.variables && (
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-[10px] font-black text-primary uppercase flex items-center gap-1 bg-primary/5 px-2 py-1 rounded-md">
-                <Database size={10} /> Variables :
-              </span>
-              {prompt.variables.map(v => (
-                <span key={v} className="text-[10px] font-bold bg-slate-100 text-slate-400 px-3 py-1 rounded-full border border-slate-200">
-                  [{v}]
-                </span>
+                      {/* Info Overlaid at bottom of image */}
+                      <div className="absolute bottom-0 left-0 right-0 p-5 z-20 pointer-events-none">
+                        <h3 className="font-extrabold text-lg text-white leading-tight mb-3 drop-shadow-md line-clamp-2 group-hover:text-primary-100 transition-colors">
+                          {prompt.title}
+                        </h3>
+                        
+                        <div className="flex items-center justify-between">
+                           <div className="flex items-center gap-2 pointer-events-auto">
+                             <Image src={prompt.author.avatar} alt={prompt.author.name} width={24} height={24} className="rounded-full border border-white/20" />
+                             <span className="text-[11px] font-bold text-white/90 drop-shadow-md hover:underline">{prompt.author.name}</span>
+                           </div>
+                           <div className="flex items-center gap-3 text-[11px] font-bold text-white/80 drop-shadow-md">
+                              <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" /> {prompt.views}</span>
+                              <span className="flex items-center gap-1"><Star className="w-3.5 h-3.5 fill-white" /> {prompt.likes}</span>
+                           </div>
+                        </div>
+                      </div>
+                   </div>
+                </Link>
               ))}
             </div>
-          )}
-        </div>
 
-        {/* SOCIAL STATS */}
-        <div className="flex items-center justify-between py-6 border-y border-slate-50 mb-6">
-           <div className="flex gap-6">
-              <div className="flex flex-col items-center">
-                <span className="text-sm font-black text-slate-900">{prompt.stats.copies >= 1000 ? (prompt.stats.copies/1000).toFixed(1)+'k' : prompt.stats.copies}</span>
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Copies</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="text-sm font-black text-slate-900">{prompt.stats.comments}</span>
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Avis</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="text-sm font-black text-slate-900">{prompt.stats.likes}</span>
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Likes</span>
-              </div>
-           </div>
-           <div className="flex -space-x-2">
-              {[1,2,3].map(i => <img key={i} src={`https://i.pravatar.cc/100?u=${i+10}`} className="w-8 h-8 rounded-full border-2 border-white shadow-sm" />)}
-              <div className="w-8 h-8 rounded-full bg-slate-50 border-2 border-white flex items-center justify-center text-[8px] font-black text-slate-400">+12</div>
-           </div>
-        </div>
+            {/* Pagination Component */}
+            <div className="flex items-center justify-center gap-2 mt-16">
+              <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-primary transition-colors shadow-sm">
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/25">1</button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">2</button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm hidden sm:flex">3</button>
+              <span className="text-slate-400 font-bold mx-2">...</span>
+              <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">8</button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-primary transition-colors shadow-sm">
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
 
-        {/* FOOTER AUTHOR */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-             <div className="relative">
-                <img src={prompt.author.avatar} className="w-11 h-11 rounded-2xl border-2 border-white shadow-md object-cover" alt="" />
-                {prompt.author.verified && <div className="absolute -top-1 -right-1 bg-blue-500 text-white p-0.5 rounded-full border-2 border-white"><Check size={8} strokeWidth={4}/></div>}
-             </div>
-             <div>
-               <p className="text-xs font-black text-slate-900">{prompt.author.name}</p>
-               <p className="text-[9px] font-black text-primary uppercase">{prompt.author.points} Pts</p>
-             </div>
-          </div>
-          <div className="flex gap-2">
-             <button className="p-3 bg-slate-50 text-slate-400 rounded-xl hover:text-primary transition-colors"><Share2 size={16}/></button>
-             <button className="flex items-center gap-2 bg-slate-900 text-white px-5 py-3 rounded-xl text-[10px] font-black hover:bg-primary hover:text-black transition-all group/btn shadow-lg">
-                RUN TEST <ExternalLink size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-             </button>
+            {/* CTA Contributor Banner */}
+            <div className="mt-20 bg-gradient-to-br from-primary/10 to-blue-500/10 dark:from-primary/20 dark:to-blue-500/20 border border-primary/20 dark:border-primary/30 rounded-[2rem] p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl relative overflow-hidden">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 blur-3xl rounded-full pointer-events-none" />
+              <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-500/20 blur-3xl rounded-full pointer-events-none" />
+              
+              <div className="max-w-2xl relative z-10 text-center lg:text-left">
+                <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-4 flex flex-col md:flex-row items-center justify-center lg:justify-start gap-3">
+                  <Sparkles className="w-8 h-8 text-primary" />
+                  Envie de partager vos créations ?
+                </h2>
+                <p className="text-slate-600 dark:text-slate-300 font-medium text-lg">
+                  Rejoignez notre communauté de créateurs. Proposez vos meilleurs prompts, gagnez en visibilité et générez des revenus en vendant vos créations exclusives.
+                </p>
+              </div>
+              <div className="shrink-0 relative z-10">
+                <button className="px-8 py-4 bg-primary text-white rounded-2xl font-bold text-lg shadow-xl shadow-primary/30 hover:bg-primary/90 transition-all hover:scale-105 transform flex items-center gap-2">
+                  Devenir Contributeur <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            
           </div>
         </div>
 
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -22,18 +22,33 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // === COULEUR PRIMAIRE (Purple) ===
+        // === COULEUR PRIMAIRE (Vivid Blue) ===
         primary: {
-          50: "#FAF5FF",
-          100: "#F3E8FF",
-          200: "#E9D5FF",
-          300: "#D8B4FE",
-          400: "#C084FC",
-          DEFAULT: "#8B5CF6", // ⚡ Couleur signature AI-STOCK
-          600: "#7C3AED",
-          700: "#6D28D9",
-          800: "#5B21B6",
-          900: "#4C1D95",
+          50: "#eff6ff",
+          100: "#dbeafe",
+          200: "#bfdbfe",
+          300: "#93c5fd",
+          400: "#60a5fa",
+          DEFAULT: "#3B82F6", // ⚡ Vivid Blue AI-STOCK
+          600: "#2563eb",
+          700: "#1d4ed8",
+          800: "#1e40af",
+          900: "#1e3a8a",
+          foreground: "#FFFFFF",
+        },
+
+        // === COULEUR SECONDAIRE (Navy) ===
+        secondary: {
+          50: "#f0fdfa",
+          100: "#ccfbf1",
+          200: "#99f6e4",
+          300: "#5eead4",
+          400: "#2dd4bf",
+          DEFAULT: "#1E40AF", // ⚡ Navy AI-STOCK
+          600: "#0d9488",
+          700: "#0f766e",
+          800: "#115e59",
+          900: "#134e4a",
           foreground: "#FFFFFF",
         },
 
@@ -51,12 +66,25 @@ const config: Config = {
           900: "#171717",
         },
 
-        // === COULEURS SÉMANTIQUES ===
-        background: "#FFFFFF",
-        foreground: "#000000",
-        border: "#E5E7EB",
-        input: "#F9FAFB",
-        ring: "#8B5CF6",
+        slate: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a', // Dark Slate
+        },
+
+        // === COULEURS SÉMANTIQUES (viennent surcharger CSS) ===
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
 
         // === ACCENTS & ÉTATS ===
         success: {
@@ -79,24 +107,15 @@ const config: Config = {
           light: "#DBEAFE",
           dark: "#1E40AF",
         },
-        purple: {
-          DEFAULT: "#8B5CF6",
-          light: "#EDE9FE",
-          dark: "#5B21B6",
-        },
 
         // === LEGACY (pour compatibilité) ===
-        secondary: {
-          DEFAULT: "#F5F5F5",
-          foreground: "#262626",
-        },
         accent: {
-          DEFAULT: "#FFFBEB",
-          foreground: "#000000",
+          DEFAULT: "#EFF6FF",
+          foreground: "#1E40AF",
         },
         muted: {
-          DEFAULT: "#737373",
-          foreground: "#A3A3A3",
+          DEFAULT: "#f1f5f9",
+          foreground: "#64748b",
         },
       },
 
@@ -126,6 +145,15 @@ const config: Config = {
 
       // === ANIMATIONS ===
       keyframes: {
+
+        'float': {
+    '0%, 100%': { transform: 'translateY(0)' },
+    '50%': { transform: 'translateY(-20px)' },
+  },
+  'fade-up': {
+    '0%': { opacity: '0', transform: 'translateY(20px)' },
+    '100%': { opacity: '1', transform: 'translateY(0)' },
+  },
         // Accordions
         "accordion-down": {
           from: { height: "0" },
@@ -173,6 +201,8 @@ const config: Config = {
         "scale-in": "scale-in 0.3s ease-out",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
         "spin-slow": "spin-slow 4s linear infinite",
+        'float': 'float 6s ease-in-out infinite',
+  'fade-up': 'fade-up 1s ease-out forwards',
       },
 
       // === TRANSITIONS ===

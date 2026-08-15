@@ -11,7 +11,7 @@ export const TrainingCard: React.FC<{ training: Training }> = ({ training }) => 
   const minutes = durationMinutes % 60;
   const formattedDuration = `${hours}h ${minutes}m`;
 
-  const priceDisplay = isPremium ? "Premium" : price === 0 ? "Gratuit" : `${price} €`;
+  const priceDisplay = price === 0 ? "Gratuit" : `${price} €`;
 
   return (
     <div className="group relative">

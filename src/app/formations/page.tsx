@@ -80,7 +80,7 @@ export default function FormationsPage() {
            
 
             {/* Main Content */}
-            <section className="py-16">
+            <section className="py-16 pt-32">
                 <div className="container mx-auto px-6 max-w-7xl">
                     {/* Filtres */}
                     <TrainingFilterSection

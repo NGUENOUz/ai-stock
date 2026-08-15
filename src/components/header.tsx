@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/store/useAppStore"; 
+import ThemeToggle from "./theme-toggle";
 import {
   Navbar,
   NavBody,
@@ -41,13 +42,13 @@ export default function HeaderComponent() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Configuration des liens de navigation
+  // Configuration des liens de navigation MVP
   const navItems = [
     { name: "Outils IA", link: "/liste" },
     { name: "Prompts", link: "/prompt" },
-    { name: "Formations", link: "/formations" },
-    { name: "Tournois", link: "/tournois" },
-    { name: "Workflows", link: "/workflows" },
+    { name: "Ressources", link: "/ressources" },
+    { name: "Blog", link: "/blog" },
+    { name: "Tarifs", link: "/pricing" },
   ];
 
   const onLogout = () => { 
@@ -60,7 +61,9 @@ export default function HeaderComponent() {
 
   // --- Rendu des boutons d'authentification (Desktop) ---
   const AuthButtons = () => (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
+      <ThemeToggle />
+      <div className="w-px h-6 bg-border mx-2 hidden sm:block" />
       {isLoggedIn ? (
         <>
           <NavbarButton href="/dashboard" variant="secondary" className="hidden sm:inline-block">
@@ -72,10 +75,10 @@ export default function HeaderComponent() {
         </>
       ) : (
         <>
-          <NavbarButton href="/login" variant="secondary" className="hidden sm:inline-block">
-            Connexion
+          <NavbarButton href="/login" variant="secondary" className="hidden sm:inline-block !bg-transparent !text-foreground hover:!bg-muted">
+            Se connecter
           </NavbarButton>
-          <NavbarButton href="/signup" variant="primary">
+          <NavbarButton href="/onboarding" variant="primary" className="bg-primary hover:bg-primary/90 text-white">
             S'inscrire
           </NavbarButton>
         </>

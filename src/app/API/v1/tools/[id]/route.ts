@@ -10,31 +10,39 @@ const toolService = new ToolService();
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
-    // Essayer de récupérer par ID ou par slug
+    console.log('[API] Recherche outil avec:', id);
+
+    // Essayer de récupérer par slug d'abord, puis par ID
     let tool;
+    
     try {
-      tool = await toolService.getToolById(id);
-    } catch {
       tool = await toolService.getToolBySlug(id);
+      console.log('[API] Trouvé par slug:', tool?.name);
+    } catch (slugError) {
+      console.log('[API] Non trouvé par slug, essai par ID...');
+      try {
+        tool = await toolService.getToolById(id);
+        console.log('[API] Trouvé par ID:', tool?.name);
+      } catch (idError) {
+        console.log('[API] Non trouvé par ID non plus');
+      }
     }
 
     if (!tool) {
+      console.log('[API] Outil introuvable:', id);
       return notFoundResponse('Outil');
     }
 
+    console.log('[API] Retour outil:', tool.name);
     return successResponse(tool);
   } catch (error: any) {
-    console.error('Erreur GET /api/v1/tools/[id]:', error);
+    console.error('[API] Erreur GET /api/v1/tools/[id]:', error);
     
-    if (error.message === 'Outil non trouvé') {
-      return notFoundResponse('Outil');
-    }
-
     return errorResponse(
       error.message || 'Erreur lors de la récupération de l\'outil',
       'FETCH_ERROR',

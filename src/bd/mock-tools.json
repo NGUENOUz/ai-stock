@@ -1,0 +1,182 @@
+[
+  {
+    "id": "chatgpt-plus",
+    "slug": "chatgpt-plus",
+    "name": "ChatGPT Plus",
+    "description_short": "Le modèle de langage le plus avancé d'OpenAI. Idéal pour la rédaction, le code, l'analyse et la créativité.",
+    "categories": ["Productivité"],
+    "pricing_type": "Payant",
+    "is_featured": true,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/512px-ChatGPT_logo.svg.png"
+  },
+  {
+    "id": "midjourney",
+    "slug": "midjourney",
+    "name": "Midjourney",
+    "description_short": "Génération d'images IA ultra-réalistes à partir de prompts textuels. Le choix des designers et artistes numériques.",
+    "categories": ["Design"],
+    "pricing_type": "Payant",
+    "is_featured": true,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png"
+  },
+  {
+    "id": "notion-ai",
+    "slug": "notion-ai",
+    "name": "Notion AI",
+    "description_short": "Intégration IA dans Notion pour rédiger, résumer, traduire et organiser vos notes et documents en équipe.",
+    "categories": ["Productivité"],
+    "pricing_type": "Freemium",
+    "is_featured": true,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png"
+  },
+  {
+    "id": "github-copilot",
+    "slug": "github-copilot",
+    "name": "GitHub Copilot",
+    "description_short": "Assistant IA pour les développeurs. Complète votre code en temps réel dans VS Code, JetBrains et plus encore.",
+    "categories": ["Code"],
+    "pricing_type": "Payant",
+    "is_featured": true,
+    "logo_url": "https://github.githubassets.com/images/modules/site/copilot/copilot.png"
+  },
+  {
+    "id": "perplexity-ai",
+    "slug": "perplexity-ai",
+    "name": "Perplexity AI",
+    "description_short": "Moteur de recherche conversationnel alimenté par l'IA. Obtienez des réponses précises avec des sources citées.",
+    "categories": ["Productivité"],
+    "pricing_type": "Freemium",
+    "is_featured": false,
+    "logo_url": "https://avatars.githubusercontent.com/u/110299856?s=200&v=4"
+  },
+  {
+    "id": "claude-3-opus",
+    "slug": "claude-3-opus",
+    "name": "Claude 3 Opus",
+    "description_short": "Le modèle phare d'Anthropic, excellent pour les tâches complexes, l'analyse de documents et la génération de code.",
+    "categories": ["Productivité"],
+    "pricing_type": "Freemium",
+    "is_featured": true,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Claude_AI_logo.svg/512px-Claude_AI_logo.svg.png"
+  },
+  {
+    "id": "runway-ml",
+    "slug": "runway-ml",
+    "name": "Runway ML",
+    "description_short": "Suite créative IA pour la génération et l'édition vidéo. Le standard dans le cinéma et la production audiovisuelle.",
+    "categories": ["Vidéo"],
+    "pricing_type": "Freemium",
+    "is_featured": false,
+    "logo_url": "https://avatars.githubusercontent.com/u/35979576?s=200&v=4"
+  },
+  {
+    "id": "cursor-ide",
+    "slug": "cursor-ide",
+    "name": "Cursor",
+    "description_short": "IDE alimenté par l'IA avec des capacités de compréhension de code avancées. Refactorisez et déboguez en langage naturel.",
+    "categories": ["Code"],
+    "pricing_type": "Freemium",
+    "is_featured": true,
+    "logo_url": "https://cursor.sh/brand/icon.svg"
+  },
+  {
+    "id": "jasper-ai",
+    "slug": "jasper-ai",
+    "name": "Jasper AI",
+    "description_short": "Plateforme de création de contenu marketing IA. Générez des articles, emails et posts réseaux sociaux à grande vitesse.",
+    "categories": ["Marketing"],
+    "pricing_type": "Payant",
+    "is_featured": false,
+    "logo_url": "https://www.jasper.ai/favicon.ico"
+  },
+  {
+    "id": "surfer-seo",
+    "slug": "surfer-seo",
+    "name": "Surfer SEO",
+    "description_short": "Outil SEO IA qui analyse vos concurrents et vous guide pour rédiger du contenu mieux classé sur Google.",
+    "categories": ["Marketing"],
+    "pricing_type": "Payant",
+    "is_featured": false,
+    "logo_url": "https://surferseo.com/favicon.ico"
+  },
+  {
+    "id": "descript",
+    "slug": "descript",
+    "name": "Descript",
+    "description_short": "Éditeur vidéo et audio révolutionnaire. Modifiez vos médias comme un document texte grâce à l'IA.",
+    "categories": ["Vidéo"],
+    "pricing_type": "Freemium",
+    "is_featured": false,
+    "logo_url": "https://www.descript.com/favicon.ico"
+  },
+  {
+    "id": "canva-ai",
+    "slug": "canva-ai",
+    "name": "Canva AI",
+    "description_short": "Le célèbre outil de design enrichi de fonctionnalités IA : génération de texte, d'images et de présentations.",
+    "categories": ["Design"],
+    "pricing_type": "Freemium",
+    "is_featured": true,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Canva_Logo.svg/512px-Canva_Logo.svg.png"
+  },
+  {
+    "id": "replt-agent",
+    "slug": "replit-agent",
+    "name": "Replit Agent",
+    "description_short": "Développez des applications complètes en décrivant simplement ce que vous souhaitez créer. L'IA code pour vous.",
+    "categories": ["Code"],
+    "pricing_type": "Freemium",
+    "is_featured": false,
+    "logo_url": "https://replit.com/public/images/replit-logo-1000x.png"
+  },
+  {
+    "id": "eleven-labs",
+    "slug": "eleven-labs",
+    "name": "ElevenLabs",
+    "description_short": "Synthèse vocale IA ultra-réaliste. Clonez votre voix ou choisissez parmi des centaines de voix multilingues.",
+    "categories": ["Vidéo"],
+    "pricing_type": "Freemium",
+    "is_featured": false,
+    "logo_url": "https://elevenlabs.io/favicon.ico"
+  },
+  {
+    "id": "mailchimp-ai",
+    "slug": "mailchimp-ai",
+    "name": "Mailchimp AI",
+    "description_short": "Plateforme email marketing avec IA intégrée pour personnaliser vos campagnes et optimiser les taux d'ouverture.",
+    "categories": ["Marketing"],
+    "pricing_type": "Freemium",
+    "is_featured": false,
+    "logo_url": "https://cdn-icons-png.flaticon.com/512/5968/5968534.png"
+  },
+  {
+    "id": "figma-ai",
+    "slug": "figma-ai",
+    "name": "Figma AI",
+    "description_short": "L'outil de design collaboratif enrichi d'IA pour générer des composants, du texte et des mises en page automatiquement.",
+    "categories": ["Design"],
+    "pricing_type": "Freemium",
+    "is_featured": false,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg"
+  },
+  {
+    "id": "tableau-ai",
+    "slug": "tableau-ai",
+    "name": "Tableau AI",
+    "description_short": "Plateforme de visualisation de données avec IA générative. Posez des questions en langage naturel sur vos données.",
+    "categories": ["Analyse"],
+    "pricing_type": "Payant",
+    "is_featured": false,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Tableau_Logo.png"
+  },
+  {
+    "id": "grammarly-ai",
+    "slug": "grammarly-ai",
+    "name": "Grammarly AI",
+    "description_short": "Assistant d'écriture IA qui corrige, reformule et améliore vos textes en temps réel dans n'importe quelle application.",
+    "categories": ["Rédaction"],
+    "pricing_type": "Freemium",
+    "is_featured": false,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Grammarly_logo.svg/512px-Grammarly_logo.svg.png"
+  }
+]
