@@ -6,6 +6,7 @@ export type SubscriptionTier = "Gratuit" | "Premium" | "Pro";
 export type UserRole = "user" | "contributor" | "admin";
 
 interface AppState {
+  
   isLoggedIn: boolean;
   userName: string;
   email: string;
