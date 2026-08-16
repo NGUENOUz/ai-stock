@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { 
   Bookmark, Share2, Heart, MoreHorizontal, ArrowLeft,
-  ChevronRight
+  ChevronRight,
+  ChevronLeft
 } from "lucide-react";
 
 // ─── MOCK DATA ─────────────────────────────────────────────────────────────
