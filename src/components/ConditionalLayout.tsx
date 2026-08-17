@@ -3,6 +3,8 @@
 import { usePathname } from 'next/navigation';
 import { Footer } from '@/components/footer';
 import HeaderComponent from '@/components/header';
+import BottomNav from '@/components/BottomNav';
+import PageTransitionWrapper from '@/components/PageTransitionWrapper';
 import { cn } from '@/lib/utils';
 
 export default function ConditionalLayout({ children }: { children: React.ReactNode }) {
@@ -16,14 +18,23 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
     return <>{children}</>;
   }
 
-  // Sinon, on affiche le layout normal avec header et footer
+  // Sinon, on affiche le layout normal avec header, footer et bottom nav mobile
   return (
     <>
       <HeaderComponent />
-      <main className="relative flex flex-col min-h-screen">
-        {children}
+      <main className={cn(
+        "relative flex flex-col min-h-screen",
+        // Padding bottom sur mobile pour ne pas masquer le contenu sous le bottom nav
+        "pb-20 lg:pb-0"
+      )}>
+        <PageTransitionWrapper>
+          {children}
+        </PageTransitionWrapper>
       </main>
       <Footer />
+      {/* Bottom navigation — mobile only */}
+      <BottomNav />
     </>
   );
 }
+

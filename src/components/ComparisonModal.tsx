@@ -7,34 +7,43 @@ interface ComparisonModalProps {
   onClose: () => void;
 }
 
-export default function ComparisonModal({ tools, onClose }: ComparisonModalProps) {
+export default function ComparisonModal({
+  tools,
+  onClose,
+}: ComparisonModalProps) {
   // Normalisation des données
   const normalizedTools = tools.map((t) => {
     let featuresObj = {};
-    
+
     if (Array.isArray(t.features)) {
       // Si c'est un tableau : ['feature1', 'feature2'] -> { feature1: true, feature2: true }
-      featuresObj = t.features.reduce((acc, feat) => ({ ...acc, [feat]: true }), {});
-    } else if (typeof t.features === 'object' && t.features !== null) {
+      featuresObj = t.features.reduce(
+        (acc: Record<string, boolean>, feat: string) => ({ ...acc, [feat]: true }),
+        {},
+      );
+    } else if (typeof t.features === "object" && t.features !== null) {
       // Si c'est déjà un objet : { feature1: true, feature2: false }
       featuresObj = t.features;
     }
-    
+
     return {
       ...t,
-      featuresObj
+      featuresObj,
     };
   });
 
   // Extraction de toutes les fonctionnalités uniques (on prend toutes les clés, même si valeur = false)
   const allFeatures = Array.from(
-    new Set(normalizedTools.flatMap((t) => Object.keys(t.featuresObj || {})))
+    new Set(normalizedTools.flatMap((t) => Object.keys(t.featuresObj || {}))),
   );
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Overlay */}
-      <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
       {/* Modal */}
       <div className="relative bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
@@ -72,9 +81,14 @@ export default function ComparisonModal({ tools, onClose }: ComparisonModalProps
             <tbody className="divide-y divide-slate-100">
               {/* Ligne Prix */}
               <tr>
-                <td className="py-4 text-sm font-bold text-slate-900">Modèle Prix</td>
+                <td className="py-4 text-sm font-bold text-slate-900">
+                  Modèle Prix
+                </td>
                 {tools.map((t) => (
-                  <td key={t.id} className="py-4 text-center text-sm font-bold text-primary">
+                  <td
+                    key={t.id}
+                    className="py-4 text-center text-sm font-bold text-primary"
+                  >
                     {t.pricing || "N/A"}
                   </td>
                 ))}
@@ -100,7 +114,10 @@ export default function ComparisonModal({ tools, onClose }: ComparisonModalProps
                 ))
               ) : (
                 <tr>
-                  <td colSpan={tools.length + 1} className="py-8 text-center text-slate-400 text-sm">
+                  <td
+                    colSpan={tools.length + 1}
+                    className="py-8 text-center text-slate-400 text-sm"
+                  >
                     Aucune fonctionnalité détaillée disponible.
                   </td>
                 </tr>

@@ -1,8 +1,5 @@
 import { AiTool } from '@/types/type';
 import { Training, Lesson } from '@/types/training';
-import { ToolFilter, PaginatedResponse } from '../schemas/tool.schema';
-import { TrainingFilter, PaginatedResponse as TrainingPaginatedResponse } from '../schemas/training.schema';
-import { ApiResponse } from '../schemas/api.schema';
 import mockToolsData from '@/bd/mock-tools.json';
 import { ToolFilter, PaginatedResponse } from '../schemas/tool.schema';
 import { TrainingFilter, PaginatedResponse as TrainingPaginatedResponse } from '../schemas/training.schema';

@@ -29,19 +29,19 @@ export const Navbar = ({ children, className }: NavbarProps) => {
   );
 };
 
-// 2. NAVBODY (Desktop - Transition Pilule -> Barre Pleine)
+// 2. NAVBODY (Desktop - Transition Barre Pleine -> Pilule Flottante)
 export const NavBody = ({ children, className, isScrolled }: NavBodyProps) => {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full flex justify-center">
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className={cn(
-          "relative z-[60] mx-auto hidden flex-row items-center justify-between transition-all duration-300 ease-in-out lg:flex",
-          // État initial : Pilule centrée
-          "mt-4 max-w-7xl rounded-full border border-neutral-100 dark:border-slate-800 bg-white/80 dark:bg-[#0F172A]/80 px-6 py-2.5 backdrop-blur-md shadow-premium",
-          // État au Scroll : Barre pleine largeur sans arrondis sur les côtés
-          isScrolled && "mt-0 max-w-full rounded-none border-none border-b border-neutral-200 dark:border-slate-800 bg-white/95 dark:bg-[#0F172A]/95 py-4 px-10 shadow-md",
+          "relative z-[60] hidden lg:flex flex-row items-center justify-between transition-all duration-500 ease-in-out",
+          // État initial : Barre pleine largeur intégrée
+          "w-full px-6 py-4 bg-white/80 dark:bg-[#0F172A]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800",
+          // État au Scroll : Pilule centrée flottante
+          isScrolled && "mt-4 max-w-5xl rounded-full border border-slate-200/50 dark:border-slate-700/50 bg-white/70 dark:bg-[#0F172A]/70 px-8 py-3 backdrop-blur-xl shadow-2xl border-b-0",
           className
         )}
       >

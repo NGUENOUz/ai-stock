@@ -48,7 +48,7 @@ export default function HeaderComponent() {
     { name: "Prompts", link: "/prompt" },
     { name: "Ressources", link: "/ressources" },
     { name: "Blog", link: "/blog" },
-    { name: "Tarifs", link: "/pricing" },
+    { name: "Créateurs", link: "/createurs" },
   ];
 
   const onLogout = () => { 
@@ -78,7 +78,7 @@ export default function HeaderComponent() {
           <NavbarButton href="/login" variant="secondary" className="hidden sm:inline-block !bg-transparent !text-foreground hover:!bg-muted">
             Se connecter
           </NavbarButton>
-          <NavbarButton href="/onboarding" variant="primary" className="bg-primary hover:bg-primary/90 text-white">
+          <NavbarButton href="/signup" variant="primary" className="bg-primary hover:bg-primary/90 text-white">
             S'inscrire
           </NavbarButton>
         </>

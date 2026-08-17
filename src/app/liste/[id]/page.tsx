@@ -38,7 +38,7 @@ interface ToolData {
 export default function AiToolDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const [isLiked, setIsLiked] = useState(false);
-  const [activeTab, setActiveTab] = useState<"overview" | "features" | "reviews">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "features" | "reviews" | "alternatives">("overview");
   const [tool, setTool] = useState<ToolData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -13,11 +13,13 @@ export interface Lesson {
   duration: string;
   isFreePreview: boolean;
   videoUrl: string;
+  order?: number;
 }
 
 export interface Training {
   id: string;
   title: string;
+  slug?: string;
   imageUrl: string;
   category: string;
   language: string;
