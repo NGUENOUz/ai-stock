@@ -8,7 +8,7 @@ export interface AiToolCategory {
 export type PricingModel = 'Gratuit' | 'Payant' | 'Essai Gratuit' | 'Freemium' | 'Contact pour Prix' | 'Non spécifié';
 
 export interface AiTool {
-  pricing_type: string;
+  pricing_type?: string;
   id: string;
   name: string;
   slug: string;

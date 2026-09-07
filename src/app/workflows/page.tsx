@@ -8,6 +8,7 @@ import {
   ChevronRight, ChevronLeft, Star, Users, Download, Check,
   Zap, Shield, Crown, ExternalLink, Play
 } from "lucide-react";
+import MobileFilterSheet from "@/components/MobileFilterSheet";
 
 // Types
 interface Workflow {
@@ -200,6 +201,7 @@ export default function WorkflowsPage() {
   const [priceFilter, setPriceFilter] = useState("Tous");
   const [sortBy, setSortBy] = useState("Popularité");
   const [currentPage, setCurrentPage] = useState(1);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const itemsPerPage = 9;
 
   const toggleCategory = (cat: string) => {
@@ -272,22 +274,31 @@ export default function WorkflowsPage() {
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex flex-col md:flex-row items-center gap-4">
               {/* Search */}
-              <div className="relative flex-1 w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                <input
-                  type="text"
-                  placeholder="Rechercher un workflow..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-neutral-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20"
-                />
+              <div className="relative flex-1 w-full flex items-center gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                  <input
+                    type="text"
+                    placeholder="Rechercher un workflow..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-white border border-neutral-200 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                {/* Mobile Filter Button */}
+                <button
+                  onClick={() => setMobileFiltersOpen(true)}
+                  className="lg:hidden flex items-center justify-center w-12 h-12 bg-white border border-neutral-200 rounded-2xl text-neutral-600 focus:ring-2 focus:ring-primary/20 shrink-0"
+                >
+                  <SlidersHorizontal className="w-5 h-5" />
+                </button>
               </div>
 
               {/* Platform Filter */}
               <select
                 value={selectedPlatform}
                 onChange={(e) => setSelectedPlatform(e.target.value)}
-                className="px-4 py-3 bg-white border border-neutral-200 rounded-2xl font-semibold text-sm outline-none focus:ring-2 focus:ring-primary/20"
+                className="hidden lg:block px-4 py-3 bg-white border border-neutral-200 rounded-2xl font-semibold text-sm outline-none focus:ring-2 focus:ring-primary/20"
               >
                 {PLATFORMS.map(p => (
                   <option key={p} value={p}>{p}</option>
@@ -310,7 +321,7 @@ export default function WorkflowsPage() {
 
         <div className="max-w-7xl mx-auto px-6 py-16 flex flex-col lg:flex-row gap-16">
           {/* Sidebar Filters */}
-          <aside className="w-full lg:w-64 shrink-0">
+          <aside className="hidden lg:block w-64 shrink-0">
             <div className="sticky top-44 space-y-10">
               {/* Price */}
               <div>
@@ -572,6 +583,53 @@ export default function WorkflowsPage() {
           </div>
         </section>
       </div>
+      
+      <MobileFilterSheet
+        isOpen={mobileFiltersOpen}
+        onClose={() => setMobileFiltersOpen(false)}
+        title="Filtres"
+        resultCount={filteredWorkflows.length}
+        onReset={() => {
+          setPriceFilter("Tous");
+          setSelectedCategories([]);
+          setSelectedSectors([]);
+          setSelectedPlatform("Tous");
+        }}
+        groups={[
+          {
+            id: "platform",
+            label: "Plateforme",
+            type: "select",
+            value: selectedPlatform,
+            onChange: (v) => setSelectedPlatform(v),
+            options: PLATFORMS.map(p => ({ value: p, label: p }))
+          },
+          {
+            id: "price",
+            label: "Prix",
+            type: "pills",
+            value: priceFilter,
+            onChange: (v) => setPriceFilter(v),
+            options: PRICE_FILTERS.map(p => ({ value: p, label: p }))
+          },
+          {
+            id: "categories",
+            label: "Catégories",
+            type: "pills",
+            value: selectedCategories,
+            onChange: (v) => toggleCategory(v),
+            options: CATEGORIES.map(c => ({ value: c, label: c }))
+          },
+          {
+            id: "sectors",
+            label: "Secteurs",
+            type: "pills",
+            value: selectedSectors,
+            onChange: (v) => toggleSector(v),
+            options: SECTORS.map(s => ({ value: s, label: s }))
+          }
+        ]}
+      />
     </div>
   );
 }

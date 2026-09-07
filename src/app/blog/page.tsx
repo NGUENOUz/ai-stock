@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Search, Clock, ArrowRight, ChevronLeft, ChevronRight, Mail } from "lucide-react";
 import BlogIllustration from "@/components/hero-illustrations/BlogIllustration";
 import CursorGlow from "@/components/CursorGlow";
+import MobileFilterSheet, { MobileFilterBar } from "@/components/MobileFilterSheet";
 
 // Mock Data pour les articles de blog
 const categories = ["Tous les articles", "Actualités", "Guides", "Tutos", "Études de cas"];
@@ -89,6 +90,7 @@ export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("Tous les articles");
   const [searchTerm, setSearchTerm] = useState("");
   const [featuredIndex, setFeaturedIndex] = useState(0);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   // Auto-slider logic for featured articles
   const featuredArticles = mockArticles.slice(0, 3);
@@ -141,7 +143,16 @@ export default function BlogPage() {
       {/* Sticky Filter Bar */}
       <div className="sticky top-[72px] lg:top-[80px] z-30 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 shadow-sm transition-all duration-300">
          <div className="max-w-[1400px] mx-auto px-6 lg:px-8 py-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            
+            <MobileFilterBar
+              searchValue={searchTerm}
+              onSearchChange={(v) => setSearchTerm(v)}
+              searchPlaceholder="Rechercher un article..."
+              onFilterOpen={() => setMobileFiltersOpen(true)}
+              activeFiltersCount={activeCategory !== "Tous les articles" ? 1 : 0}
+            />
+
+            <div className="hidden md:flex flex-row md:items-center justify-between gap-4">
               
               {/* Category Pills */}
               <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
@@ -161,7 +172,7 @@ export default function BlogPage() {
               </div>
 
               {/* Search */}
-              <div className="relative shrink-0 w-full md:w-64">
+              <div className="relative shrink-0 w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input 
                   type="text" 
@@ -329,6 +340,24 @@ export default function BlogPage() {
         )}
 
       </div>
+      
+      <MobileFilterSheet
+        isOpen={mobileFiltersOpen}
+        onClose={() => setMobileFiltersOpen(false)}
+        title="Filtres"
+        resultCount={filteredArticles.length}
+        onReset={() => setActiveCategory("Tous les articles")}
+        groups={[
+          {
+            id: "categories",
+            label: "Catégories",
+            type: "pills",
+            value: activeCategory,
+            onChange: (v) => setActiveCategory(v),
+            options: categories.map(c => ({ value: c, label: c }))
+          }
+        ]}
+      />
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAppStore } from "@/store/useAppStore"; 
+import { useAppStore } from "@/store/useAppStore";
 import ThemeToggle from "./theme-toggle";
 import {
   Navbar,
@@ -13,6 +13,7 @@ import {
   MobileNav,
   MobileNavToggle,
   MobileNavMenu,
+  FLAT_NAV_ITEMS,
 } from "./navbar";
 
 /**
@@ -22,44 +23,35 @@ import {
 export default function HeaderComponent() {
   const { isLoggedIn, userName, handleLogout } = useAppStore();
   const router = useRouter();
-  
-  // États pour l'interactivité
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Effet pour détecter le scroll et adapter la UI
   useEffect(() => {
-    const handleScroll = () => {
-      // On déclenche le changement dès 20px de scroll
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Configuration des liens de navigation MVP
-  const navItems = [
-    { name: "Outils IA", link: "/liste" },
-    { name: "Prompts", link: "/prompt" },
-    { name: "Ressources", link: "/ressources" },
-    { name: "Blog", link: "/blog" },
-    { name: "Créateurs", link: "/createurs" },
-  ];
-
-  const onLogout = () => { 
-    handleLogout(); 
-    router.push("/"); 
-    setIsMobileMenuOpen(false); 
-  };
+  // Ferme le menu et bloque le scroll body quand il est ouvert
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isMobileMenuOpen]);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  // --- Rendu des boutons d'authentification (Desktop) ---
+  const onLogout = () => {
+    handleLogout();
+    router.push("/");
+    closeMobileMenu();
+  };
+
+  // Boutons auth — desktop uniquement
   const AuthButtons = () => (
     <div className="flex items-center gap-2">
       <ThemeToggle />
@@ -78,7 +70,7 @@ export default function HeaderComponent() {
           <NavbarButton href="/login" variant="secondary" className="hidden sm:inline-block !bg-transparent !text-foreground hover:!bg-muted">
             Se connecter
           </NavbarButton>
-          <NavbarButton href="/signup" variant="primary" className="bg-primary hover:bg-primary/90 text-white">
+          <NavbarButton href="/signup" variant="primary">
             S'inscrire
           </NavbarButton>
         </>
@@ -89,59 +81,33 @@ export default function HeaderComponent() {
   return (
     <header className="relative w-full">
       <Navbar>
-        {/* VERSION DESKTOP 
-          Le passage de isScrolled permet de switcher entre le mode 'Pill' (centré)
-          et le mode 'Full Width' (recouvrement total des bords).
-        */}
+        {/* ── Desktop nav ─────────────────────────────────────────────── */}
         <NavBody isScrolled={isScrolled}>
           <NavbarLogo />
-          
-          <NavItems items={navItems} onItemClick={closeMobileMenu} />
-          
+          <NavItems items={FLAT_NAV_ITEMS} onItemClick={closeMobileMenu} />
           <AuthButtons />
         </NavBody>
 
-        {/* VERSION MOBILE 
-          Même logique : au scroll, elle perd ses marges latérales pour 
-          recouvrir parfaitement le contenu qui défile derrière.
-        */}
+        {/* ── Mobile nav ──────────────────────────────────────────────── */}
         <MobileNav isScrolled={isScrolled}>
           <NavbarLogo />
-          
-          <MobileNavToggle 
-            isOpen={isMobileMenuOpen} 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-          />
-
-          <MobileNavMenu 
-            isOpen={isMobileMenuOpen} 
-            onClose={closeMobileMenu} 
-            items={navItems}
-            mobileActions={
-              <div className="flex flex-col gap-3 w-full">
-                {isLoggedIn ? (
-                  <>
-                    <NavbarButton href="/dashboard" onClick={closeMobileMenu} variant="black" className="w-full h-12">
-                      Mon Dashboard
-                    </NavbarButton>
-                    <NavbarButton onClick={onLogout} variant="secondary" className="w-full h-12">
-                      Déconnexion
-                    </NavbarButton>
-                  </>
-                ) : (
-                  <>
-                    <NavbarButton href="/login" onClick={closeMobileMenu} variant="secondary" className="w-full h-12">
-                      Connexion
-                    </NavbarButton>
-                    <NavbarButton href="/signup" onClick={closeMobileMenu} variant="primary" className="w-full h-12">
-                      S'inscrire gratuitement
-                    </NavbarButton>
-                  </>
-                )}
-              </div>
-            }
-          />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <MobileNavToggle
+              isOpen={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
+          </div>
         </MobileNav>
+
+        {/* ── Mobile drawer menu ──────────────────────────────────────── */}
+        <MobileNavMenu
+          isOpen={isMobileMenuOpen}
+          onClose={closeMobileMenu}
+          isLoggedIn={isLoggedIn}
+          userName={userName ?? undefined}
+          onLogout={onLogout}
+        />
       </Navbar>
     </header>
   );

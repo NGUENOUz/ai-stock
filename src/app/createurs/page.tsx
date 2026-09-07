@@ -24,6 +24,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import CursorGlow from "@/components/CursorGlow";
 import CreatorsIllustration from "@/components/hero-illustrations/CreatorsIllustration";
+import MobileFilterSheet, { MobileFilterBar } from "@/components/MobileFilterSheet";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -205,6 +206,7 @@ export default function CreateursPage() {
   const [activeSort, setActiveSort] = useState("Rang");
   const [sortOpen, setSortOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   // Filtrage + tri + rang catégorie
   const { rankedCreators, categoryRankMap } = useMemo(() => {
@@ -317,8 +319,19 @@ export default function CreateursPage() {
 
       {/* ── Sticky Filter Bar ─────────────────────────────────────────────── */}
       <div className="sticky top-[72px] lg:top-[80px] z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* ── Mobile: search + filter icon ── */}
+          <MobileFilterBar
+            searchValue={searchQuery}
+            onSearchChange={handleSearch}
+            searchPlaceholder="Rechercher un cr\u00e9ateur..."
+            onFilterOpen={() => setMobileFiltersOpen(true)}
+            activeFiltersCount={(activeCategory !== "Tous" ? 1 : 0) + (activeSort !== "Rang" ? 1 : 0)}
+          />
+
+          {/* ── Desktop: full bar ── */}
+          <div className="hidden md:flex md:items-center justify-between gap-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4 w-full md:w-auto">
               {/* Search */}
               <div className="relative w-full md:w-60 shrink-0">
@@ -389,14 +402,41 @@ export default function CreateursPage() {
             </div>
 
             <div className="hidden md:flex items-center gap-1 text-sm font-bold text-slate-900 dark:text-white shrink-0">
-              {rankedCreators.length} <span className="font-medium text-slate-500 dark:text-slate-400">créateurs</span>
-              {activeCategory !== "Tous" && (
-                <span className="ml-1 text-blue-500">en {activeCategory}</span>
-              )}
+              {rankedCreators.length}{" "}
+                <span className="font-medium text-slate-500 dark:text-slate-400">
+                  cr\u00e9ateurs{activeCategory !== "Tous" && ` en ${activeCategory}`}
+                </span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* ── Mobile filter sheet ─────────────────────────────────────────────── */}
+      <MobileFilterSheet
+        isOpen={mobileFiltersOpen}
+        onClose={() => setMobileFiltersOpen(false)}
+        title="Filtrer les cr\u00e9ateurs"
+        resultCount={rankedCreators.length}
+        onReset={() => { handleCategoryChange("Tous"); setActiveSort("Rang"); }}
+        groups={[
+          {
+            id: "category",
+            label: "Cat\u00e9gorie",
+            type: "pills",
+            value: activeCategory,
+            onChange: (v) => { handleCategoryChange(v); },
+            options: CATEGORIES.map((c) => ({ value: c, label: c })),
+          },
+          {
+            id: "sort",
+            label: "Trier par",
+            type: "select",
+            value: activeSort,
+            onChange: (v) => { setActiveSort(v); setCurrentPage(1); },
+            options: SORT_OPTIONS.map((s) => ({ value: s, label: s })),
+          },
+        ]}
+      />
 
       {/* ── Main Layout ───────────────────────────────────────────────────── */}
       <div className="pt-10 pb-24 max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">

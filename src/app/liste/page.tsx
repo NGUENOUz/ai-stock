@@ -16,6 +16,7 @@ import ComparisonModal from '@/components/ComparisonModal';
 import { cn } from "@/lib/utils";
 import CursorGlow from "@/components/CursorGlow";
 import mockToolsData from '@/bd/mock-tools.json';
+import MobileFilterSheet, { MobileFilterBar } from "@/components/MobileFilterSheet";
 
 // ─── TYPES ────────────────────────────────────────────────────────────────────
 interface LocalTool {
@@ -381,10 +382,18 @@ export default function AiToolsListPage() {
 
       {/* ── BARRE STICKY : recherche + tarification + tri + compteur ─────── */}
       <div className="sticky top-[72px] z-30 bg-white/80 dark:bg-[#0F172A]/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 py-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+          
+          <MobileFilterBar
+            searchValue={searchTerm}
+            onSearchChange={v => { setSearchTerm(v); setCurrentPage(1); }}
+            searchPlaceholder="Rechercher un outil..."
+            onFilterOpen={() => setSidebarOpen(true)}
+            activeFiltersCount={hasActiveFilters ? 1 : 0}
+          />
 
-          {/* Gauche : recherche */}
-          <div className="flex items-center gap-3 flex-wrap">
+          {/* Gauche : recherche (Desktop) */}
+          <div className="hidden lg:flex items-center gap-3 flex-wrap">
             <div className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -426,37 +435,71 @@ export default function AiToolsListPage() {
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
-            </div>
+          </div>
 
-            {/* Filtre mobile */}
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden flex items-center gap-2 h-9 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-semibold text-slate-700 dark:text-slate-200"
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-primary" />}
-            </button>
           </div>
 
           {/* Droite : compteur + reset */}
-          <div className="flex items-center gap-3 text-sm shrink-0">
-            <span className="text-slate-500 dark:text-slate-400">
-              <span className="font-bold text-slate-900 dark:text-white">
-                {loading ? "…" : filtered.length}
-              </span>{" "}
-              {filtered.length > 1 ? "outils" : "outil"}
-            </span>
-            {hasActiveFilters && (
-              <button
-                onClick={resetFilters}
-                className="flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
-              >
-                <RotateCcw className="w-3 h-3" /> Tout effacer
-              </button>
-            )}
+          <div className="hidden lg:flex items-center gap-3 text-sm shrink-0">
+              <span className="text-slate-500 dark:text-slate-400">
+                <span className="font-bold text-slate-900 dark:text-white">
+                  {loading ? "…" : filtered.length}
+                </span>{" "}
+                {filtered.length > 1 ? "outils" : "outil"}
+              </span>
+              {hasActiveFilters && (
+                <button
+                  onClick={resetFilters}
+                  className="flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
+                >
+                  <RotateCcw className="w-3 h-3" /> Tout effacer
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+
+
+      {/* Mobile filter sheet */}
+      <MobileFilterSheet
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        title="Filtrer les outils"
+        resultCount={filtered.length}
+        onReset={resetFilters}
+        groups={[
+          {
+            id: "category",
+            label: "Cat\u00e9gorie",
+            type: "pills",
+            value: selectedCategory,
+            onChange: (v) => { setSelectedCategory(v); setCurrentPage(1); },
+            options: CATEGORIES.map((c) => ({ value: c.id, label: c.label, count: c.count })),
+          },
+          {
+            id: "price",
+            label: "Tarification",
+            type: "pills",
+            value: selectedPrices.length === 0 ? "Tous" : selectedPrices[0],
+            onChange: (v) => { 
+              if (v === "Tous") setSelectedPrices([]); 
+              else {
+                setSelectedPrices([v]); 
+                setCurrentPage(1);
+              }
+            },
+            options: [{value: "Tous", label: "Tous"}, ...PRICE_TYPES.map((s) => ({ value: s, label: s }))],
+          },
+          {
+            id: "sort",
+            label: "Trier par",
+            type: "select",
+            value: sortBy,
+            onChange: (v) => { setSortBy(v); setCurrentPage(1); },
+            options: SORT_OPTIONS,
+          },
+        ]}
+      />
 
       {/* ── LAYOUT PRINCIPAL ─────────────────────────────────────────────────── */}
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-8 py-8 flex gap-8">

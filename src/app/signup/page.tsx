@@ -131,7 +131,15 @@ export default function SignupPage() {
 
     try {
       if (DEV_MODE) {
-        await mockSignUp(formData);
+        await mockSignUp(formData.email, formData.password, {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            jobTitle: formData.jobTitle,
+            company: formData.company,
+            interests: formData.interests,
+            experienceLevel: formData.experienceLevel,
+            goals: formData.goals,
+          });
         loginFromDb({
           userName: `${formData.firstName} ${formData.lastName}`,
           email: formData.email,

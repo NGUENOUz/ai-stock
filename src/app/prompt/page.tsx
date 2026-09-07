@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import PromptsIllustration from "@/components/hero-illustrations/PromptsIllustration";
 import CursorGlow from "@/components/CursorGlow";
+import MobileFilterSheet, { MobileFilterBar } from "@/components/MobileFilterSheet";
 
 // Mock Data
 const leaderboard = [
@@ -115,6 +116,9 @@ const mockPrompts = [
 export default function PromptsCatalogPage() {
   const [activeCategory, setActiveCategory] = useState("Tous");
   const [likedPrompts, setLikedPrompts] = useState<number[]>([]);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeSort, setActiveSort] = useState("Populaires");
 
   const toggleLike = (e: React.MouseEvent, id: number) => {
     e.preventDefault();
@@ -157,58 +161,96 @@ export default function PromptsCatalogPage() {
         </div>
       </div>
 
-      {/* Sticky Filter Bar - Harmonisé avec Outils IA */}
+      {/* Sticky Filter Bar */}
       <div className="sticky top-[72px] lg:top-[80px] z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-8">
-           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Mobile: search + filter icon on one line */}
+          <MobileFilterBar
+            searchValue={searchQuery}
+            onSearchChange={setSearchQuery}
+            searchPlaceholder="Rechercher un prompt..."
+            onFilterOpen={() => setMobileFiltersOpen(true)}
+            activeFiltersCount={(activeCategory !== "Tous" ? 1 : 0) + (activeSort !== "Populaires" ? 1 : 0)}
+          />
+
+          {/* Desktop: full bar */}
+          <div className="hidden md:flex md:flex-row md:items-center justify-between gap-4">
              <div className="flex flex-col md:flex-row md:items-center gap-4 lg:gap-6 w-full md:w-auto">
                
-               {/* Search Bar - Style Pill */}
-               <div className="relative w-full md:w-64 shrink-0">
-                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                   <Search className="w-4 h-4 text-slate-400" />
-                 </div>
-                 <input 
-                   type="text" 
-                   placeholder="Rechercher un prompt..." 
-                   className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#0F172A] border border-slate-200/60 dark:border-slate-800 rounded-full text-sm font-medium focus:outline-none focus:border-primary/50 transition-colors shadow-sm"
-                 />
+              {/* Search Bar - Style Pill */}
+              <div className="relative w-full md:w-64 shrink-0">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search className="w-4 h-4 text-slate-400" />
+                </div>
+                <input 
+                  type="text" 
+                  placeholder="Rechercher un prompt..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#0F172A] border border-slate-200/60 dark:border-slate-800 rounded-full text-sm font-medium focus:outline-none focus:border-primary/50 transition-colors shadow-sm"
+                />
                </div>
                
-               {/* Filter Pills */}
-               <div className="flex items-center gap-1 overflow-x-auto no-scrollbar bg-slate-200/50 dark:bg-slate-800/50 p-1 rounded-full border border-slate-200/30 dark:border-slate-700/30 shrink-0">
-                  {["Tous", "Images", "Vidéos", "Textes", "Code"].map(type => (
-                    <button
-                      key={type}
-                      onClick={() => setActiveCategory(type)}
-                      className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all whitespace-nowrap ${
-                        activeCategory === type 
-                        ? 'bg-white dark:bg-[#0F172A] text-slate-900 dark:text-white shadow-sm' 
-                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
-               </div>
+              {/* Filter Pills */}
+              <div className="flex items-center gap-1 overflow-x-auto no-scrollbar bg-slate-200/50 dark:bg-slate-800/50 p-1 rounded-full border border-slate-200/30 dark:border-slate-700/30 shrink-0">
+                 {["Tous", "Images", "Vidéos", "Textes", "Code"].map(type => (
+                   <button
+                     key={type}
+                     onClick={() => setActiveCategory(type)}
+                     className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all whitespace-nowrap ${
+                       activeCategory === type 
+                       ? 'bg-white dark:bg-[#0F172A] text-slate-900 dark:text-white shadow-sm' 
+                       : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                     }`}
+                   >
+                     {type}
+                   </button>
+                 ))}
+              </div>
                
-               {/* Sort - Text style */}
-               <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 shrink-0 ml-2">
-                 <span>Trier par</span>
-                 <button className="font-bold text-slate-900 dark:text-white flex items-center gap-1 hover:text-primary transition-colors">
-                   Populaires <ChevronDown className="w-4 h-4" />
-                 </button>
-               </div>
-               
-             </div>
-
-             {/* Right: Count */}
-             <div className="text-sm font-bold text-slate-900 dark:text-white shrink-0 hidden md:flex items-center gap-1">
-               {mockPrompts.length} <span className="font-medium text-slate-500 dark:text-slate-400">prompts</span>
-             </div>
-           </div>
+              {/* Sort */}
+              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 shrink-0 ml-2">
+                <span>Trier par</span>
+                <button className="font-bold text-slate-900 dark:text-white flex items-center gap-1 hover:text-primary transition-colors">
+                  {activeSort} <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            {/* Right: Count */}
+            <div className="text-sm font-bold text-slate-900 dark:text-white shrink-0 hidden md:flex items-center gap-1">
+              {mockPrompts.length} <span className="font-medium text-slate-500 dark:text-slate-400">prompts</span>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Mobile filter sheet */}
+      <MobileFilterSheet
+        isOpen={mobileFiltersOpen}
+        onClose={() => setMobileFiltersOpen(false)}
+        title="Filtrer les prompts"
+        resultCount={mockPrompts.length}
+        onReset={() => { setActiveCategory("Tous"); setActiveSort("Populaires"); }}
+        groups={[
+          {
+            id: "type",
+            label: "Type de prompt",
+            type: "pills",
+            value: activeCategory,
+            onChange: setActiveCategory,
+            options: ["Tous", "Images", "Vidéos", "Textes", "Code"].map((t) => ({ value: t, label: t })),
+          },
+          {
+            id: "sort",
+            label: "Trier par",
+            type: "select",
+            value: activeSort,
+            onChange: setActiveSort,
+            options: ["Populaires", "Récents", "Tendances"].map((s) => ({ value: s, label: s })),
+          },
+        ]}
+      />
 
       <div className="pt-10 pb-24 max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row gap-8">
