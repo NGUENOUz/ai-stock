@@ -264,8 +264,6 @@ export default function CreateursPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] font-sans text-slate-900 dark:text-white relative">
-      {/* Scroll bleed blocker */}
-      <div className="fixed top-0 inset-x-0 h-[72px] lg:h-[80px] bg-[#F8FAFC] dark:bg-[#0B1120] z-[35]" />
 
       {/* Background tech grid */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -275,7 +273,7 @@ export default function CreateursPage() {
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <div className="relative">
         <CursorGlow gradientClasses="from-blue-500 to-violet-500" />
-        <div className="relative z-10 pt-28 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between gap-8">
+        <div className="relative z-10 pt-16 lg:pt-8 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between gap-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -318,7 +316,7 @@ export default function CreateursPage() {
       </div>
 
       {/* ── Sticky Filter Bar ─────────────────────────────────────────────── */}
-      <div className="sticky top-[72px] lg:top-[80px] z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
+      <div className="sticky top-16 lg:top-0 z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* ── Mobile: search + filter icon ── */}

@@ -158,9 +158,6 @@ export default function PromptsCatalogPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] font-sans text-slate-900 dark:text-white relative">
-      
-      {/* Scroll Bleed Blocker - Prevents items from showing behind transparent global navbar */}
-      <div className="fixed top-0 inset-x-0 h-[72px] lg:h-[80px] bg-[#F8FAFC] dark:bg-[#0B1120] z-[35]" />
 
       
       {/* Background Interactive Elements */}
@@ -172,7 +169,7 @@ export default function PromptsCatalogPage() {
       {/* Hero Header Harmonisé avec CursorGlow */}
       <div className="relative">
         <CursorGlow gradientClasses="from-blue-500 to-pink-500" />
-        <div className="relative z-10 pt-28 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between">
+        <div className="relative z-10 pt-16 lg:pt-8 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between">
            <div className="w-full md:w-1/2">
              <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
                Prompts IA
@@ -195,7 +192,7 @@ export default function PromptsCatalogPage() {
       </div>
 
       {/* Sticky Filter Bar */}
-      <div className="sticky top-[72px] lg:top-[80px] z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
+      <div className="sticky top-16 lg:top-0 z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Mobile: search + filter icon on one line */}

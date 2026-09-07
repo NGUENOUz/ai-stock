@@ -29,7 +29,7 @@ export default function ClassementPage() {
       <CursorGlow gradientClasses="from-amber-500 to-orange-500" />
       
       {/* HEADER */}
-      <div className="relative pt-28 pb-12 overflow-hidden border-b border-slate-200/50 dark:border-slate-800/50 bg-white dark:bg-[#0F172A]">
+      <div className="relative pt-16 lg:pt-8 pb-12 overflow-hidden border-b border-slate-200/50 dark:border-slate-800/50 bg-white dark:bg-[#0F172A]">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-amber-500/10 blur-[100px] pointer-events-none rounded-full" />
         
@@ -38,11 +38,15 @@ export default function ClassementPage() {
             <Trophy className="w-8 h-8" />
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
-            Classement des Créateurs
+            Leaderboard
           </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Découvrez les membres les plus actifs et créatifs de la communauté AI-STOCK. Gagnez des points en publiant des prompts et en recevant des votes.
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-6">
+            Découvrez les membres les plus actifs et créatifs de la communauté AI-STOCK. Gagnez des points en publiant des prompts, des défis et en recevant des votes.
           </p>
+          <div className="inline-flex flex-col md:flex-row items-center gap-2 bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400 border border-amber-200/50 dark:border-amber-800/30 px-4 py-3 rounded-2xl text-sm max-w-xl mx-auto text-left">
+            <span className="font-bold flex items-center gap-1"><Flame className="w-4 h-4" /> Info :</span> 
+            <span>Le <strong>Classement</strong> représente l'activité dynamique de la communauté. Pour rechercher un professionnel par compétence, utilisez l'annuaire <Link href="/createurs" className="underline font-bold">Créateurs</Link>.</span>
+          </div>
         </div>
       </div>
 

@@ -88,12 +88,12 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ id: s
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 relative z-10 -mt-20">
+      <div className="max-w-5xl mx-auto px-6 relative z-10 -mt-16 md:-mt-20">
         
         {/* Profile Card */}
         <div className="bg-white dark:bg-[#0F172A] rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200/60 dark:border-slate-800 mb-8">
            <div className="flex flex-col md:flex-row gap-6 items-start md:items-end justify-between mb-6">
-             <div className="flex items-end gap-4 -mt-16 md:-mt-20 relative z-20">
+             <div className="flex items-end gap-4 relative z-20">
                 <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-[#0F172A] overflow-hidden bg-slate-100 shadow-xl">
                   <Image src={mockUser.avatar} alt={mockUser.name} fill className="object-cover" />
                 </div>
@@ -159,15 +159,43 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ id: s
             <Grid className="w-4 h-4" /> Prompts ({mockUser.stats.posts})
           </button>
           <button className="pb-4 text-sm font-bold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors flex items-center gap-2">
+            <Star className="w-4 h-4" /> Ressources (12)
+          </button>
+          <button className="pb-4 text-sm font-bold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors flex items-center gap-2 hidden sm:flex">
             <Heart className="w-4 h-4" /> Favoris
           </button>
         </div>
 
-        {/* Feed Posts */}
-        <div className="space-y-6 max-w-2xl mx-auto lg:mx-0">
-          {mockPosts.map((post: any) => (
-            <FeedPost key={post.id} post={post} />
-          ))}
+        <div className="flex flex-col lg:flex-row gap-8">
+          
+          {/* Main Feed Content */}
+          <div className="flex-1 space-y-6">
+            {mockPosts.map((post: any) => (
+              <FeedPost key={post.id} post={post} />
+            ))}
+          </div>
+          
+          {/* Right Sidebar (Stats & Info) */}
+          <div className="lg:w-80 shrink-0 space-y-6">
+            <div className="bg-white dark:bg-[#0F172A] rounded-3xl p-6 border border-slate-200/60 dark:border-slate-800 shadow-sm">
+               <h3 className="font-extrabold text-sm text-slate-900 dark:text-white mb-4">À propos</h3>
+               <div className="space-y-4">
+                 <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-500">Note moyenne</span>
+                    <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1"><Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> 4.9</span>
+                 </div>
+                 <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-500">Spécialité</span>
+                    <span className="font-bold text-slate-900 dark:text-white">Design & UX</span>
+                 </div>
+                 <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-500">Abonnés</span>
+                    <span className="font-bold text-slate-900 dark:text-white">12.5k</span>
+                 </div>
+               </div>
+            </div>
+          </div>
+          
         </div>
 
       </div>

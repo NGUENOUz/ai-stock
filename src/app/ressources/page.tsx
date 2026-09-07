@@ -108,8 +108,6 @@ export default function ResourcesPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] font-sans text-slate-900 dark:text-white relative">
       
-      {/* Scroll Bleed Blocker */}
-      <div className="fixed top-0 inset-x-0 h-[72px] lg:h-[80px] bg-[#F8FAFC] dark:bg-[#0B1120] z-[35]" />
 
       {/* Background Intercatif (Simplifié pour uniformité) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -120,7 +118,7 @@ export default function ResourcesPage() {
       {/* Hero Header Harmonisé avec CursorGlow */}
       <div className="relative">
         <CursorGlow gradientClasses="from-blue-500 to-emerald-500" />
-        <div className="relative z-10 pt-28 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between">
+        <div className="relative z-10 pt-16 lg:pt-8 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between">
            <div className="w-full md:w-1/2">
              <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
                Ressources
@@ -198,18 +196,6 @@ export default function ResourcesPage() {
                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                </div>
 
-                {/* Sort */}
-                <div className="hidden xl:flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 shrink-0 ml-2">
-                  <span>Trier par</span>
-                  <button className="font-bold text-slate-900 dark:text-white flex items-center gap-1 hover:text-primary transition-colors">
-                    {activeSort} <ChevronDown className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* Right: Count */}
-                <div className="text-sm font-bold text-slate-900 dark:text-white shrink-0 ml-auto hidden xl:flex items-center gap-1">
-                  {mockResources.length} <span className="font-medium text-slate-500 dark:text-slate-400">ressources</span>
-                </div>
               </div>
         </div>
       </div>

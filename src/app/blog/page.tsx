@@ -112,9 +112,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] font-sans text-slate-900 dark:text-white relative">
-      
-      {/* Scroll Bleed Blocker */}
-      <div className="fixed top-0 inset-x-0 h-[72px] lg:h-[80px] bg-[#F8FAFC] dark:bg-[#0B1120] z-[35]" />
+
 
       {/* Background Interactive (Simplifié pour uniformité) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -125,7 +123,7 @@ export default function BlogPage() {
       {/* Hero Header avec CursorGlow */}
       <div className="relative">
         <CursorGlow gradientClasses="from-blue-500 to-indigo-500" />
-        <div className="relative z-10 pt-28 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between">
+        <div className="relative z-10 pt-16 lg:pt-8 pb-6 max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between">
            <div className="w-full md:w-1/2">
              <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
                Le Blog

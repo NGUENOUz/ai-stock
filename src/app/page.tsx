@@ -74,49 +74,37 @@ export default function HomeFeedPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
       </div>
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-8">
         
-        {/* ACTION HERO HEADER */}
-        <div className="mb-12">
-          <h1 className="text-3xl md:text-5xl font-black mb-6 tracking-tight text-center lg:text-left">
-            Explorez. Créez. <span className="text-transparent bg-clip-text bg-gradient-ai">Innovez.</span>
-          </h1>
-          
-          <div className="max-w-2xl mx-auto lg:mx-0 bg-white dark:bg-[#151e32] p-2 rounded-2xl md:rounded-full shadow-lg dark:shadow-glow-primary border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center gap-2">
-            <div className="flex-1 flex items-center w-full bg-slate-50 dark:bg-[#0B1120] rounded-xl md:rounded-full px-4 py-2 border border-slate-100 dark:border-slate-700">
-              <Search className="w-5 h-5 text-slate-400 shrink-0" />
-              <input 
-                type="text"
-                placeholder="Rechercher un prompt, un outil, un créateur..."
-                className="w-full bg-transparent border-none focus:outline-none px-3 py-2 text-sm text-slate-900 dark:text-white"
-              />
-            </div>
-            <button 
-              onClick={() => setIsCreateModalOpen(true)}
-              className="w-full md:w-auto shrink-0 bg-gradient-ai hover:bg-gradient-ai-hover text-white px-6 py-3 rounded-xl md:rounded-full font-bold shadow-glow-pink transition-all flex items-center justify-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" /> Publier
-            </button>
-          </div>
-          
-          <div className="mt-6 flex flex-wrap justify-center lg:justify-start gap-3">
-             <Link href="/prompt?category=images" className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 text-sm font-bold hover:border-primary transition-colors">
-               <ImageIcon className="w-4 h-4 text-blue-500" /> Images
-             </Link>
-             <Link href="/prompt?category=textes" className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 text-sm font-bold hover:border-primary transition-colors">
-               <MessageSquare className="w-4 h-4 text-emerald-500" /> Textes
-             </Link>
-             <Link href="/prompt?category=code" className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 text-sm font-bold hover:border-primary transition-colors">
-               <Code className="w-4 h-4 text-purple-500" /> Code
-             </Link>
-          </div>
-        </div>
-
         <div className="flex flex-col lg:flex-row gap-8">
           
           {/* MAIN FEED AREA */}
           <div className="flex-1 max-w-3xl mx-auto lg:mx-0 w-full">
             
+            {/* ACTION HERO HEADER */}
+            <div className="mb-8">
+              <h1 className="text-3xl md:text-4xl font-black mb-6 tracking-tight text-center lg:text-left">
+                Explorez. Créez. <span className="text-transparent bg-clip-text bg-gradient-ai">Innovez.</span>
+              </h1>
+              
+              <div className="bg-white dark:bg-[#151e32] p-2 rounded-2xl md:rounded-full shadow-lg dark:shadow-glow-primary border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center gap-2">
+                <div className="flex-1 flex items-center w-full bg-slate-50 dark:bg-[#0B1120] rounded-xl md:rounded-full px-4 py-2 border border-slate-100 dark:border-slate-700">
+                  <Search className="w-5 h-5 text-slate-400 shrink-0" />
+                  <input 
+                    type="text"
+                    placeholder="Rechercher un prompt, un créateur..."
+                    className="w-full bg-transparent border-none focus:outline-none px-3 py-2 text-sm text-slate-900 dark:text-white"
+                  />
+                </div>
+                <button 
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="w-full md:w-auto shrink-0 bg-gradient-ai hover:bg-gradient-ai-hover text-white px-6 py-3 rounded-xl md:rounded-full font-bold shadow-glow-pink transition-all flex items-center justify-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4" /> Publier
+                </button>
+              </div>
+            </div>
+
             <DailyChallenge />
 
             <FeedHeader 
