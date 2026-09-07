@@ -2,9 +2,9 @@
 
 import { usePathname } from 'next/navigation';
 import { Footer } from '@/components/footer';
-import HeaderComponent from '@/components/header';
-import BottomNav from '@/components/BottomNav';
 import PageTransitionWrapper from '@/components/PageTransitionWrapper';
+import AppSidebar from '@/components/layout/AppSidebar';
+import TopBanner from '@/components/layout/TopBanner';
 import { cn } from '@/lib/utils';
 
 export default function ConditionalLayout({ children }: { children: React.ReactNode }) {
@@ -18,23 +18,26 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
     return <>{children}</>;
   }
 
-  // Sinon, on affiche le layout normal avec header, footer et bottom nav mobile
+  // Sinon, on affiche le layout normal avec sidebar et footer
   return (
-    <>
-      <HeaderComponent />
-      <main className={cn(
-        "relative flex flex-col min-h-screen",
-        // Padding bottom sur mobile pour ne pas masquer le contenu sous le bottom nav
-        "pb-20 lg:pb-0"
-      )}>
-        <PageTransitionWrapper>
-          {children}
-        </PageTransitionWrapper>
-      </main>
-      <Footer />
-      {/* Bottom navigation — mobile only */}
-      <BottomNav />
-    </>
+    <div className="relative flex flex-col min-h-screen font-sans">
+      <TopBanner />
+      <div className="flex flex-1">
+        <AppSidebar />
+        <main className={cn(
+          "flex-1 flex flex-col w-full min-h-[100vh]",
+          // Espace pour la sidebar desktop (lg:280px) et pour le header mobile (pt-16)
+          "lg:pl-[280px] pt-16 lg:pt-0"
+        )}>
+          <div className="flex-1">
+            <PageTransitionWrapper>
+              {children}
+            </PageTransitionWrapper>
+          </div>
+          <Footer />
+        </main>
+      </div>
+    </div>
   );
 }
 

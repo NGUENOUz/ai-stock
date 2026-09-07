@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { 
   IconBrandInstagram, 
   IconBrandTwitter, 
@@ -39,22 +40,22 @@ export function Footer() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             <FooterColumn title="Plateforme" links={[
-              { label: "Outils AI", href: "#" },
-              { label: "Prompts", href: "#" },
-              { label: "Workflows", href: "#" },
-              { label: "Formations", href: "#" }
+              { label: "Outils AI", href: "/liste" },
+              { label: "Prompts", href: "/prompt" },
+              { label: "Workflows", href: "/workflows" },
+              { label: "Formations", href: "/formations" }
             ]} />
             <FooterColumn title="Créateurs" links={[
-              { label: "Devenir Contributeur", href: "#" },
-              { label: "Centre d'aide", href: "#" },
-              { label: "Commissions", href: "#" },
-              { label: "Awards 2024", href: "#" }
+              { label: "Devenir Contributeur", href: "/contributor", disabled: true },
+              { label: "Centre d'aide", href: "#", disabled: true },
+              { label: "Commissions", href: "#", disabled: true },
+              { label: "Awards 2024", href: "#", disabled: true }
             ]} />
             <FooterColumn title="Entreprise" links={[
-              { label: "Ajouter votre Outil", href: "#" },
-              { label: "Solutions B2B", href: "#" },
-              { label: "Publicité", href: "#" },
-              { label: "Contact Pro", href: "#" }
+              { label: "Ajouter votre Outil", href: "#", disabled: true },
+              { label: "Solutions B2B", href: "#", disabled: true },
+              { label: "Publicité", href: "#", disabled: true },
+              { label: "Contact Pro", href: "#", disabled: true }
             ]} />
           </div>
         </div>
@@ -67,7 +68,7 @@ export function Footer() {
               <IconCircleCheckFilled className="text-primary w-5 h-5" />
             </div>
             <p className="text-[11px] text-neutral-400 font-medium uppercase tracking-widest">
-              © 2024 AI STOCK — LA MARKETPLACE DES PIONNIERS
+              © {new Date().getFullYear()} AI STOCK — LA MARKETPLACE DES PIONNIERS
             </p>
           </div>
 
@@ -78,8 +79,8 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-8 text-[12px] font-bold text-neutral-400">
-            <a href="#" className="hover:text-black transition-colors">Confidentialité</a>
-            <a href="#" className="hover:text-black transition-colors">CGU / CGV</a>
+            <Link href="/legal/confidentialite" className="hover:text-black transition-colors">Confidentialité</Link>
+            <Link href="/legal/cgu" className="hover:text-black transition-colors">CGU / CGV</Link>
           </div>
         </div>
       </div>
@@ -87,16 +88,22 @@ export function Footer() {
   );
 }
 
-function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+function FooterColumn({ title, links }: { title: string; links: { label: string; href: string; disabled?: boolean }[] }) {
   return (
     <div className="flex flex-col gap-5">
       <h4 className="text-xs font-black uppercase tracking-[0.2em] text-neutral-300">{title}</h4>
       <ul className="flex flex-col gap-3">
         {links.map((link, i) => (
           <li key={i}>
-            <a href={link.href} className="text-sm font-bold text-neutral-500 hover:text-black transition-colors">
-              {link.label}
-            </a>
+            {link.disabled ? (
+              <span className="text-sm font-bold text-neutral-300 cursor-not-allowed opacity-60" title="Bientôt disponible">
+                {link.label}
+              </span>
+            ) : (
+              <Link href={link.href} className="text-sm font-bold text-neutral-500 hover:text-black transition-colors">
+                {link.label}
+              </Link>
+            )}
           </li>
         ))}
       </ul>

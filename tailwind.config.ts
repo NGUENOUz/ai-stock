@@ -141,6 +141,15 @@ const config: Config = {
         soft: "0 2px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.05)",
         glow: "0 0 40px rgba(139, 92, 246, 0.3)",
         "glow-lg": "0 0 60px rgba(139, 92, 246, 0.4)",
+        "glow-primary": "0 0 30px rgba(59, 130, 246, 0.3)",
+        "glow-pink": "0 0 30px rgba(236, 72, 153, 0.3)",
+      },
+
+      // === BACKGROUND IMAGES (Gradients) ===
+      backgroundImage: {
+        'gradient-ai': 'linear-gradient(135deg, #3B82F6 0%, #EC4899 100%)',
+        'gradient-ai-hover': 'linear-gradient(135deg, #2563EB 0%, #DB2777 100%)',
+        'gradient-dark': 'linear-gradient(180deg, #151e32 0%, #0B1120 100%)',
       },
 
       // === ANIMATIONS ===

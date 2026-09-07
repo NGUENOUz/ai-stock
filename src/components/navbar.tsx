@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   Zap, Cpu, Wand2, BookOpen, Newspaper, Users,
-  ArrowRight, LayoutDashboard, LogOut, ChevronRight, Trophy,
+  ArrowRight, LayoutDashboard, LogOut, ChevronRight, Trophy, Rss
 } from "lucide-react";
 
 interface NavbarProps {
@@ -38,6 +38,7 @@ export const NAV_SECTIONS = [
     label: "Communaut\u00e9",
     items: [
       { name: "Blog",         link: "/blog",        icon: Newspaper,   description: "Articles et actualit\u00e9s IA" },
+      { name: "Feed",         link: "/feed",        icon: Rss,         description: "Publications de la communaut\u00e9 IA" },
     ],
   },
 ];

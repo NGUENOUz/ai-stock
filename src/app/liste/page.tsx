@@ -381,7 +381,7 @@ export default function AiToolsListPage() {
       </div>
 
       {/* ── BARRE STICKY : recherche + tarification + tri + compteur ─────── */}
-      <div className="sticky top-[72px] z-30 bg-white/80 dark:bg-[#0F172A]/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 shadow-sm">
+      <div className="sticky top-16 lg:top-0 z-30 bg-white/80 dark:bg-[#0F172A]/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-8 py-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
           
           <MobileFilterBar

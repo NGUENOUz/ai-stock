@@ -136,7 +136,7 @@ export default function ResourcesPage() {
       </div>
 
       {/* Sticky Filter Bar - Harmonisé */}
-      <div className="sticky top-[72px] lg:top-[80px] z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
+      <div className="sticky top-16 lg:top-0 z-40 bg-[#F8FAFC]/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-y border-slate-200/50 dark:border-slate-800/50 py-3 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
 
            {/* Mobile: search + filter icon */}
@@ -199,7 +199,7 @@ export default function ResourcesPage() {
                </div>
 
                 {/* Sort */}
-                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 shrink-0 ml-2">
+                <div className="hidden xl:flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 shrink-0 ml-2">
                   <span>Trier par</span>
                   <button className="font-bold text-slate-900 dark:text-white flex items-center gap-1 hover:text-primary transition-colors">
                     {activeSort} <ChevronDown className="w-4 h-4" />
@@ -207,7 +207,7 @@ export default function ResourcesPage() {
                 </div>
 
                 {/* Right: Count */}
-                <div className="text-sm font-bold text-slate-900 dark:text-white shrink-0 ml-auto hidden md:flex items-center gap-1">
+                <div className="text-sm font-bold text-slate-900 dark:text-white shrink-0 ml-auto hidden xl:flex items-center gap-1">
                   {mockResources.length} <span className="font-medium text-slate-500 dark:text-slate-400">ressources</span>
                 </div>
               </div>

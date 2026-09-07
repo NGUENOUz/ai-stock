@@ -135,7 +135,7 @@ export default function AiToolDetailPage({ params }: { params: Promise<{ id: str
   const reviews: any[] = [];
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] text-slate-900 dark:text-white pt-24 pb-24">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] text-slate-900 dark:text-white pt-16 lg:pt-8 pb-24">
       {/* Breadcrumb */}
       <div className="max-w-[1200px] mx-auto px-6 mb-6">
         <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-semibold">
