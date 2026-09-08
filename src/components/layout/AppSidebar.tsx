@@ -35,7 +35,7 @@ export default function AppSidebar() {
 
   const communityNav = [
     { name: "Créateurs", href: "/createurs", icon: Users },
-    { name: "Classement", href: "/classement", icon: Trophy, badge: "NEW" },
+    { name: "Tournois", href: "/tournois", icon: Trophy, badge: "NEW" },
     { name: "Blog", href: "/blog", icon: Newspaper },
   ];
 

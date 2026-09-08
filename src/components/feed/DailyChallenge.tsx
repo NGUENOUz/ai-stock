@@ -3,6 +3,7 @@
 import React from "react";
 import { Sparkles, Trophy, ArrowRight, Clock } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function DailyChallenge() {
   return (
@@ -27,9 +28,9 @@ export default function DailyChallenge() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
-            <button className="w-full sm:w-auto px-6 py-3 bg-white text-slate-900 rounded-xl font-bold shadow-xl hover:scale-105 transition-transform flex items-center justify-center gap-2">
+            <Link href="/tournois/defi-neon" className="w-full sm:w-auto px-6 py-3 bg-white text-slate-900 rounded-xl font-bold shadow-xl hover:scale-105 transition-transform flex items-center justify-center gap-2">
               <Sparkles className="w-4 h-4" /> Participer
-            </button>
+            </Link>
             <div className="flex items-center gap-2 text-slate-400 text-sm font-medium">
               <Clock className="w-4 h-4" /> Termine dans 8h 24m
             </div>

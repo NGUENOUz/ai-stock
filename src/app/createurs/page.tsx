@@ -17,14 +17,16 @@ import {
   Zap,
   Users,
   ChevronDown,
-  Flame,
   Medal,
+  Flame,
+  SlidersHorizontal,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import CursorGlow from "@/components/CursorGlow";
 import CreatorsIllustration from "@/components/hero-illustrations/CreatorsIllustration";
 import MobileFilterSheet, { MobileFilterBar } from "@/components/MobileFilterSheet";
+import { globalStats } from "@/data/globalStats";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -49,8 +51,8 @@ const SORT_OPTIONS = ["Rang", "Ressources", "Note", "Abonnés"];
 const ITEMS_PER_PAGE = 9;
 
 const HERO_STATS = [
-  { value: "120+", label: "Créateurs actifs", icon: Users },
-  { value: "50K+", label: "Abonnés cumulés", icon: TrendingUp },
+  { value: `${globalStats.activeCreators}`, label: "Créateurs actifs", icon: Users },
+  { value: `${(globalStats.totalMembers / 1000).toFixed(1)}K+`, label: "Membres cumulés", icon: TrendingUp },
   { value: "4.8★", label: "Note moyenne", icon: Star },
 ];
 
@@ -362,48 +364,13 @@ export default function CreateursPage() {
                 ))}
               </div>
 
-              {/* Sort dropdown */}
-              <div className="relative shrink-0">
-                <button
-                  onClick={() => setSortOpen(!sortOpen)}
-                  className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 ml-2"
-                >
-                  <span>Trier par</span>
-                  <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1 hover:text-blue-500 transition-colors">
-                    {activeSort} <ChevronDown className={`w-4 h-4 transition-transform ${sortOpen ? "rotate-180" : ""}`} />
-                  </span>
-                </button>
-                <AnimatePresence>
-                  {sortOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -8, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -8, scale: 0.96 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 mt-2 w-44 bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl overflow-hidden z-50"
-                    >
-                      {SORT_OPTIONS.map((opt) => (
-                        <button
-                          key={opt}
-                          onClick={() => { setActiveSort(opt); setSortOpen(false); setCurrentPage(1); }}
-                          className={`w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors ${
-                            activeSort === opt ? "text-blue-600 dark:text-blue-400 font-bold" : "text-slate-700 dark:text-slate-300"
-                          }`}
-                        >
-                          {opt}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            <div className="hidden md:flex items-center gap-1 text-sm font-bold text-slate-900 dark:text-white shrink-0">
-              {rankedCreators.length}{" "}
-                <span className="font-medium text-slate-500 dark:text-slate-400">
-                  cr\u00e9ateurs{activeCategory !== "Tous" && ` en ${activeCategory}`}
-                </span>
+              {/* Filter Button - Desktop */}
+              <button 
+                onClick={() => setMobileFiltersOpen(true)}
+                className="w-11 h-11 shrink-0 rounded-full bg-white dark:bg-[#0F172A] border border-slate-200/60 dark:border-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors shadow-sm ml-auto"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>

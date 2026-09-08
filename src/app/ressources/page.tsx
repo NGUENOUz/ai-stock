@@ -9,16 +9,17 @@ import {
 import ResourcesIllustration from "@/components/hero-illustrations/ResourcesIllustration";
 import CursorGlow from "@/components/CursorGlow";
 import MobileFilterSheet, { MobileFilterBar } from "@/components/MobileFilterSheet";
+import { globalStats } from "@/data/globalStats";
 
 // Mock Data
 const categories = [
-  { name: "Tous", count: 120 },
-  { name: "Marketing", count: 24 },
-  { name: "Productivité", count: 22 },
-  { name: "Développement", count: 18 },
-  { name: "Design", count: 15 },
-  { name: "Business", count: 12 },
-  { name: "No-Code", count: 9 },
+  { name: "Tous", count: globalStats.totalResources },
+  { name: "Marketing", count: globalStats.resourcesByCategory["Marketing"] },
+  { name: "Productivité", count: globalStats.resourcesByCategory["Productivité"] },
+  { name: "Développement", count: globalStats.resourcesByCategory["Développement"] },
+  { name: "Design", count: globalStats.resourcesByCategory["Design"] },
+  { name: "Business", count: globalStats.resourcesByCategory["Business"] },
+  { name: "No-Code", count: globalStats.resourcesByCategory["No-Code"] },
 ];
 
 const types = [

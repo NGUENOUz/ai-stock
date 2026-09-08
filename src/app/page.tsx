@@ -7,6 +7,7 @@ import FeedHeader from "@/components/feed/FeedHeader";
 import FeedPost from "@/components/feed/FeedPost";
 import FeedSidebar from "@/components/feed/FeedSidebar";
 import CreatePostModal from "@/components/feed/CreatePostModal";
+import StoriesBar from "@/components/feed/StoriesBar";
 import { Search, Plus, Sparkles, Image as ImageIcon, MessageSquare, Code } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -104,6 +105,8 @@ export default function HomeFeedPage() {
                 </button>
               </div>
             </div>
+            
+            <StoriesBar />
 
             <DailyChallenge />
 

@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import CursorGlow from "@/components/CursorGlow";
 import mockToolsData from '@/bd/mock-tools.json';
 import MobileFilterSheet, { MobileFilterBar } from "@/components/MobileFilterSheet";
+import { globalStats } from "@/data/globalStats";
 
 // ─── TYPES ────────────────────────────────────────────────────────────────────
 interface LocalTool {
@@ -36,13 +37,13 @@ interface LocalTool {
 
 // ─── FILTRES MAQUETTE ─────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id: "all", label: "Tous les outils", count: 200 },
+  { id: "all", label: "Tous les outils", count: globalStats.totalTools },
   { id: "Productivité", label: "Productivité", count: 34 },
-  { id: "Design", label: "Design & Image", count: 28 },
-  { id: "Code", label: "Code & Dev", count: 21 },
-  { id: "Marketing", label: "Marketing", count: 19 },
-  { id: "Rédaction", label: "Rédaction", count: 16 },
-  { id: "Vidéo", label: "Vidéo & Audio", count: 14 },
+  { id: "Design", label: "Design & Image", count: globalStats.toolsByCategory["Design"] },
+  { id: "Code", label: "Code & Dev", count: globalStats.toolsByCategory["Developpement"] },
+  { id: "Marketing", label: "Marketing", count: globalStats.toolsByCategory["Marketing"] },
+  { id: "Rédaction", label: "Rédaction", count: globalStats.toolsByCategory["Redaction"] },
+  { id: "Vidéo", label: "Vidéo & Audio", count: globalStats.toolsByCategory["Video"] + globalStats.toolsByCategory["Audio"] },
   { id: "Analyse", label: "Analyse de données", count: 12 },
   { id: "Autre", label: "Autre", count: 56 },
 ];

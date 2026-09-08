@@ -1,18 +1,39 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function TopBanner() {
   const [isVisible, setIsVisible] = useState(true);
+  const bannerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isVisible && bannerRef.current) {
+      document.documentElement.style.setProperty('--banner-height', `${bannerRef.current.offsetHeight}px`);
+    } else {
+      document.documentElement.style.setProperty('--banner-height', '0px');
+    }
+    
+    // Resize observer to handle window resizing
+    if (isVisible && bannerRef.current) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          document.documentElement.style.setProperty('--banner-height', `${entry.contentRect.height}px`);
+        }
+      });
+      resizeObserver.observe(bannerRef.current);
+      return () => resizeObserver.disconnect();
+    }
+  }, [isVisible]);
 
   if (!isVisible) return null;
 
   return (
     <AnimatePresence>
       <motion.div 
+        ref={bannerRef}
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: "auto", opacity: 1 }}
         exit={{ height: 0, opacity: 0 }}

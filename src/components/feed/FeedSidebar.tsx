@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Trophy, TrendingUp, Users } from "lucide-react";
+import { globalStats } from "@/data/globalStats";
 
 export default function FeedSidebar() {
   const topCreators = [
@@ -31,11 +32,13 @@ export default function FeedSidebar() {
         
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl text-center">
-            <div className="text-2xl font-black text-slate-900 dark:text-white mb-1">12.5k</div>
+            <div className="text-2xl font-black text-slate-900 dark:text-white mb-1">
+              {(globalStats.totalMembers / 1000).toFixed(1)}k
+            </div>
             <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Membres</div>
           </div>
           <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl text-center">
-            <div className="text-2xl font-black text-primary mb-1">842</div>
+            <div className="text-2xl font-black text-primary mb-1">{globalStats.totalPrompts + globalStats.totalResources}</div>
             <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Posts</div>
           </div>
         </div>

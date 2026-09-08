@@ -3,9 +3,11 @@
 import React, { use } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Edit3, Settings, Share2, MapPin, Link as LinkIcon, Calendar, Twitter, Github, Linkedin, Grid, Heart, Star, Award, MessageCircle, MoreHorizontal } from "lucide-react";
+import { ArrowLeft, Edit3, Settings, Share2, MapPin, Link as LinkIcon, Calendar, Twitter, Github, Linkedin, Grid, Heart, Star, Award, MessageCircle, MoreHorizontal, BarChart3 } from "lucide-react";
 import CursorGlow from "@/components/CursorGlow";
 import FeedPost from "@/components/feed/FeedPost";
+import CreatorDashboard from "@/components/creators/CreatorDashboard";
+import { cn } from "@/lib/utils";
 
 // Mock data
 const mockUser = {
@@ -60,6 +62,7 @@ const mockPosts = [
 export default function CreatorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const isMe = resolvedParams.id === "me" || resolvedParams.id === mockUser.id;
+  const [activeTab, setActiveTab] = React.useState(isMe ? 'dashboard' : 'prompts');
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] pb-24">
@@ -154,25 +157,50 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ id: s
         </div>
 
         {/* Content Tabs */}
-        <div className="flex items-center gap-8 border-b border-slate-200/60 dark:border-slate-800 mb-8">
-          <button className="pb-4 text-sm font-bold border-b-2 border-primary text-slate-900 dark:text-white flex items-center gap-2">
+        <div className="flex items-center gap-6 md:gap-8 border-b border-slate-200/60 dark:border-slate-800 mb-8 overflow-x-auto no-scrollbar">
+          {isMe && (
+            <button 
+              onClick={() => setActiveTab('dashboard')}
+              className={cn("pb-4 text-sm font-bold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors", activeTab === 'dashboard' ? "border-primary text-slate-900 dark:text-white" : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200")}
+            >
+              <BarChart3 className="w-4 h-4" /> Tableau de bord
+            </button>
+          )}
+          <button 
+            onClick={() => setActiveTab('prompts')}
+            className={cn("pb-4 text-sm font-bold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors", activeTab === 'prompts' ? "border-primary text-slate-900 dark:text-white" : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200")}
+          >
             <Grid className="w-4 h-4" /> Prompts ({mockUser.stats.posts})
           </button>
-          <button className="pb-4 text-sm font-bold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => setActiveTab('resources')}
+            className={cn("pb-4 text-sm font-bold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors", activeTab === 'resources' ? "border-primary text-slate-900 dark:text-white" : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200")}
+          >
             <Star className="w-4 h-4" /> Ressources (12)
           </button>
-          <button className="pb-4 text-sm font-bold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors flex items-center gap-2 hidden sm:flex">
+          <button 
+            onClick={() => setActiveTab('favorites')}
+            className={cn("pb-4 text-sm font-bold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors hidden sm:flex", activeTab === 'favorites' ? "border-primary text-slate-900 dark:text-white" : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200")}
+          >
             <Heart className="w-4 h-4" /> Favoris
           </button>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           
-          {/* Main Feed Content */}
-          <div className="flex-1 space-y-6">
-            {mockPosts.map((post: any) => (
-              <FeedPost key={post.id} post={post} />
-            ))}
+          {/* Main Content Area */}
+          <div className="flex-1 space-y-6 overflow-hidden">
+            {activeTab === 'dashboard' && isMe ? (
+              <CreatorDashboard />
+            ) : activeTab === 'prompts' ? (
+              mockPosts.map((post: any) => (
+                <FeedPost key={post.id} post={post} />
+              ))
+            ) : (
+              <div className="py-12 text-center text-slate-500 font-medium bg-slate-50 dark:bg-[#151E32] rounded-3xl border border-slate-200/50 dark:border-slate-800">
+                Contenu en cours de développement...
+              </div>
+            )}
           </div>
           
           {/* Right Sidebar (Stats & Info) */}

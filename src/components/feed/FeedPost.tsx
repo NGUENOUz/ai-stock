@@ -111,9 +111,14 @@ export default function FeedPost({ post }: { post: FeedPostType }) {
       </div>
 
       {/* MEDIA CONTENT */}
-      {post.content.mediaUrl && (
-        <div className="relative w-full aspect-video sm:aspect-[4/3] bg-slate-100 dark:bg-slate-900 overflow-hidden">
-          {post.content.type === 'video' ? (
+      {(post.content.mediaUrl || post.content.type === 'text' || post.content.type === 'code') && (
+        <div className={cn(
+          "relative w-full overflow-hidden flex items-center justify-center",
+          post.content.type === 'image' || post.content.type === 'video' 
+            ? "aspect-video sm:aspect-[4/3] bg-slate-100 dark:bg-slate-900" 
+            : "min-h-[200px] p-6 bg-slate-50 dark:bg-[#0B1120]"
+        )}>
+          {post.content.mediaUrl && post.content.type === 'video' ? (
             <video 
               src={post.content.mediaUrl} 
               autoPlay 
@@ -122,8 +127,23 @@ export default function FeedPost({ post }: { post: FeedPostType }) {
               playsInline 
               className="w-full h-full object-cover"
             />
-          ) : post.content.type === 'image' ? (
+          ) : post.content.mediaUrl && post.content.type === 'image' ? (
             <Image src={post.content.mediaUrl} alt="Post content" fill className="object-cover" />
+          ) : post.content.type === 'code' ? (
+            <div className="w-full h-full bg-[#1e1e1e] rounded-xl border border-slate-700/50 p-4 font-mono text-sm text-green-400 overflow-hidden relative shadow-inner text-left flex flex-col">
+              <div className="flex items-center gap-1.5 mb-3 shrink-0">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+              </div>
+              <p className="opacity-90 line-clamp-6">{post.content.prompt}</p>
+            </div>
+          ) : post.content.type === 'text' ? (
+            <div className="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-800/40 dark:to-slate-900/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50 p-6 flex items-center justify-center text-center shadow-inner">
+              <p className="text-lg md:text-xl font-medium text-slate-700 dark:text-slate-300 italic leading-relaxed">
+                "{post.content.prompt.length > 150 ? post.content.prompt.substring(0, 150) + '...' : post.content.prompt}"
+              </p>
+            </div>
           ) : (
              <div className="w-full h-full flex items-center justify-center text-slate-400">
                 [Media Placeholder]
@@ -144,16 +164,18 @@ export default function FeedPost({ post }: { post: FeedPostType }) {
             <button 
               onClick={handleCopyPrompt}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-colors shadow-sm"
-              title="Copier le prompt"
+              title="Copier"
             >
               <Copy className="w-3.5 h-3.5" />
               Copier
             </button>
           </div>
           
-          <div className="bg-slate-50 dark:bg-[#151E32] rounded-xl p-4 font-mono text-sm text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-slate-800/50">
-            <p className="line-clamp-3">{post.content.prompt}</p>
-          </div>
+          {(post.content.type === 'image' || post.content.type === 'video') && (
+            <div className="bg-slate-50 dark:bg-[#151E32] rounded-xl p-4 font-mono text-sm text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-slate-800/50 mt-3">
+              <p className="line-clamp-3">{post.content.prompt}</p>
+            </div>
+          )}
         </div>
 
         {/* ACTIONS */}
