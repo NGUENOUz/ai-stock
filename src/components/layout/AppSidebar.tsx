@@ -14,7 +14,6 @@ import {
   Trophy, 
   Bell, 
   Plus,
-  CircleCheckFilled,
   Menu,
   X
 } from "lucide-react";
